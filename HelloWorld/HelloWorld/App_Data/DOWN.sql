@@ -3,42 +3,42 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
-	WHERE tables.name = 'Records'
+	WHERE tables.name = 'Record'
 
 )
 BEGIN
-	DROP TABLE dbo.Records
+	DROP TABLE dbo.Record
 END
 
 IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
-	WHERE tables.name = 'Workouts'
+	WHERE tables.name = 'Workout'
 
 )
 BEGIN
-	DROP TABLE dbo.Workouts
+	DROP TABLE dbo.Workout
 END
 
 IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
-	WHERE tables.name = 'Athletes'
+	WHERE tables.name = 'Athlete'
 
 )
 BEGIN
-	DROP TABLE dbo.Athletes
+	DROP TABLE dbo.Athlete
 END
 
 IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
-	WHERE tables.name = 'Coachs'
+	WHERE tables.name = 'Coach'
 
 )
 BEGIN
-	DROP TABLE dbo.Coachs
+	DROP TABLE dbo.Coach
 END
