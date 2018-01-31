@@ -37,6 +37,7 @@ CREATE TABLE dbo.Record
 	AthleteID	INT NOT NULL,
 	WorkoutID	INT NOT NULL,
 	WorkoutTime	NVARCHAR,	--Time in hrs:mins:secs
+
 	Distance	FLOAT, --Allows for fractional miles
 	Steps		INT, 
 	HeartRate	INT, --IN BPM
@@ -47,6 +48,7 @@ CREATE TABLE dbo.Record
 	REFERENCES  dbo.Athlete (ID),
 	CONSTRAINT  [FK2_dbo.Record] FOREIGN KEY (WorkoutID)
 	REFERENCES  dbo.Workout (ID)
+
 );
 
 -- Seed the data

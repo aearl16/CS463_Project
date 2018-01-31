@@ -46,6 +46,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -53,6 +59,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -142,15 +150,26 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AthletesController.cs" />
+    <Compile Include="Controllers\CoachesController.cs" />
+    <Compile Include="Controllers\RecordsController.cs" />
+    <Compile Include="Controllers\WorkoutsController.cs" />
+    <Compile Include="Models\Athlete.cs" />
+    <Compile Include="Models\Coach.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Models\Record.cs" />
+    <Compile Include="Models\Workout.cs" />
+    <Compile Include="Models\XCStatsContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\DOWN.sql" />
-    <Content Include="App_Data\UP.sql" />
+    <Content Include="App_Data\XCStats.mdf" />
+    <Content Include="App_Data\XCStats_log.ldf">
+      <DependentUpon>XCStats.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -187,9 +206,24 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Coaches\Create.cshtml" />
+    <Content Include="Views\Coaches\Delete.cshtml" />
+    <Content Include="Views\Coaches\Details.cshtml" />
+    <Content Include="Views\Coaches\Edit.cshtml" />
+    <Content Include="Views\Coaches\Index.cshtml" />
+    <Content Include="Views\Athletes\Create.cshtml" />
+    <Content Include="Views\Athletes\Delete.cshtml" />
+    <Content Include="Views\Athletes\Details.cshtml" />
+    <Content Include="Views\Athletes\Edit.cshtml" />
+    <Content Include="Views\Athletes\Index.cshtml" />
+    <Content Include="Views\Workouts\Create.cshtml" />
+    <Content Include="Views\Workouts\Delete.cshtml" />
+    <Content Include="Views\Workouts\Details.cshtml" />
+    <Content Include="Views\Workouts\Edit.cshtml" />
+    <Content Include="Views\Workouts\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Folder Include="Views\Records\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
