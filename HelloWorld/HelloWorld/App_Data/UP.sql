@@ -36,7 +36,7 @@ CREATE TABLE dbo.Record
 	ID			INT NOT NULL,
 	AthleteID	INT NOT NULL,
 	WorkoutID	INT NOT NULL,
-	WorkoutTime	TIME,	--Time in hrs:mins:secs
+	WorkoutTime	NVARCHAR,	--Time in hrs:mins:secs
 	Distance	FLOAT, --Allows for fractional miles
 	Steps		INT, 
 	HeartRate	INT, --IN BPM
