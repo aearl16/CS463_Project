@@ -166,6 +166,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\DOWN.sql" />
+    <Content Include="App_Data\UP.sql" />
     <Content Include="App_Data\XCStats.mdf" />
     <Content Include="App_Data\XCStats_log.ldf">
       <DependentUpon>XCStats.mdf</DependentUpon>
