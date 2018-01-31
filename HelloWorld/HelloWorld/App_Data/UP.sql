@@ -27,7 +27,7 @@ CREATE TABLE dbo.Workout
 	WorkoutType NVARCHAR(255) NOT NULL,
 	CONSTRAINT  [PK_dbo.Workout] PRIMARY KEY CLUSTERED (ID ASC),
 	CONSTRAINT  [FK_dbo.Workout] FOREIGN KEY (AthleteID)
-	REFERENCES  [dbo.Athlete] (ID)
+	REFERENCES  dbo.Athlete (ID)
 );
 
 -- Records: talbe name left unplural for DAL
@@ -44,9 +44,9 @@ CREATE TABLE dbo.Record
 	GPSLog			NVARCHAR(255), -- Unkown Data left as VARCHAR
 	CONSTRAINT  [PK_dbo.Record] PRIMARY KEY (ID ASC),
 	CONSTRAINT  [FK_dbo.Record] FOREIGN KEY (AthleteID)
-	REFERENCES  [dbo.Athlete] (ID),
+	REFERENCES  dbo.Athlete (ID),
 	CONSTRAINT  [FK2_dbo.Record] FOREIGN KEY (WorkoutID)
-	REFERENCES  [dbo.Workout] (ID)
+	REFERENCES  dbo.Workout (ID)
 );
 
 -- Seed the data
