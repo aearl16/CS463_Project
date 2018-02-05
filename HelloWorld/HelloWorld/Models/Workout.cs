@@ -22,6 +22,7 @@ namespace HelloWorld.Controllers
 
         [Required]
         [StringLength(255)]
+        [Display(Name ="Workout Type")]
         public string WorkoutType { get; set; }
 
         public virtual Athlete Athlete { get; set; }

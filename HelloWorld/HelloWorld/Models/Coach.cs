@@ -20,8 +20,10 @@ namespace HelloWorld.Controllers
 
         [Required]
         [StringLength(50)]
+        [Display(Name ="Name")]
         public string FullName { get; set; }
 
+        [Display(Name ="Date of Birth")]
         public DateTime DOB { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
