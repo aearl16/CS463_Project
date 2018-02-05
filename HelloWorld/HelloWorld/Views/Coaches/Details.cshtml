@@ -21,13 +21,21 @@
         <dt>
             @Html.DisplayNameFor(model => model.DOB)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.DOB)
         </dd>
 
+        <dt>
+            Number of Athletes
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Athletes.Count)
+        </dd>
+
     </dl>
 </div>
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
     @Html.ActionLink("Back to List", "Index")
