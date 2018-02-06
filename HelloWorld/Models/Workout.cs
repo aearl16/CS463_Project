@@ -16,12 +16,15 @@ namespace HelloWorld.Models
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Display(Name  = "Workout ID")]
         public int ID { get; set; }
 
+        [Display(Name = "Athlete ID")]
         public int AthleteID { get; set; }
 
         [Required]
         [StringLength(255)]
+        [Display(Name = "Workout Type")]
         public string WorkoutType { get; set; }
 
         public virtual Athlete Athlete { get; set; }

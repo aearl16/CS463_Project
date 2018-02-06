@@ -20,8 +20,10 @@ namespace HelloWorld.Models
 
         [Required]
         [StringLength(50)]
+        [Display(Name = "Coach Name")]
         public string FullName { get; set; }
 
+        [Display(Name = "Date of Brith")]
         public DateTime DOB { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

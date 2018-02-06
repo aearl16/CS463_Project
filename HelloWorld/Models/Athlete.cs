@@ -23,8 +23,10 @@ namespace HelloWorld.Models
 
         [Required]
         [StringLength(50)]
+        [Display(Name = "Athlete Name")]
         public string FullName { get; set; }
 
+        [Display(Name = "Date of Birth")]
         public DateTime DOB { get; set; }
 
         public virtual Coach Coach { get; set; }
