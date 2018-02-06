@@ -1,2 +1,2 @@
 [config]
-project = dptest/dptest/dptest.csproj
+project = dptest/dptest.sln
