@@ -10,17 +10,20 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        @Html.ActionLink("Hello World", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        @Html.ActionLink("XCStats Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav">
-                <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</li>
+                @*This is redundant, users can press on XCStats home that does the same things
+                <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</li>*@
                 <li class="nav-item">@Html.ActionLink("Athletes", "Index", "Athletes", null, new { @class = "nav-link" })</li>
                 <li class="nav-item">@Html.ActionLink("Coaches", "Index", "Coaches", null, new { @class = "nav-link" })</li>
                 <li class="nav-item">@Html.ActionLink("Workouts", "Index", "Workouts", null, new { @class = "nav-link" })</li>
                 <li class="nav-item">@Html.ActionLink("Records", "Index", "Records", null, new { @class = "nav-link" })</li>
+                <li class="nav-item">@Html.ActionLink("About", "About", "Home", null, new { @class = "nav-link" })</li>
+                <li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", null, new { @class = "nav-link" })</li>
             </ul>
         </div>
     </nav>
@@ -29,7 +32,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Powered by SquareOne</p>
         </footer>
     </div>
 
