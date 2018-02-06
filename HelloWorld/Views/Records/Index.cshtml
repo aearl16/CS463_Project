@@ -1,0 +1,75 @@
+﻿@model IEnumerable<HelloWorld.Models.Record>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Records</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Athlete.FullName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Workout.WorkoutType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkoutTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Distance)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Steps)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HeartRate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkoutDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GPSLog)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Athlete.FullName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Workout.WorkoutType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkoutTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Distance)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Steps)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HeartRate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkoutDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GPSLog)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
