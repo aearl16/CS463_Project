@@ -101,8 +101,6 @@
   <ItemGroup>
     <Content Include="App_Data\DOWN.sql" />
     <Content Include="App_Data\UP.sql" />
-    <Content Include="App_Data\XCStatsClass.mdf" />
-    <Content Include="App_Data\XCStatsClass_log.ldf" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
