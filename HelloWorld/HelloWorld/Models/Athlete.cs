@@ -19,6 +19,7 @@ namespace HelloWorld.Controllers
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
 
+        [Display(Name ="Coach")]
         public int CoachID { get; set; }
 
         [Required]
@@ -27,9 +28,9 @@ namespace HelloWorld.Controllers
         public string FullName { get; set; }
 
         [Display(Name ="Date of Birth")]
+        [DataType(DataType.Date)]
         public DateTime DOB { get; set; }
-
-        [Display(Name ="Coach")]
+        
         public virtual Coach Coach { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

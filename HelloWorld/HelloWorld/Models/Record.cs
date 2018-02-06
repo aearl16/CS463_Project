@@ -23,14 +23,16 @@ namespace HelloWorld.Controllers
         [Display(Name ="Time")]
         public string WorkoutTime { get; set; }
 
+        [Display(Name ="Distance in Miles")]
         public double? Distance { get; set; }
 
         public int? Steps { get; set; }
 
-        [Display(Name ="Heart Rate")]
+        [Display(Name ="Heart Rate (BPM)")]
         public int? HeartRate { get; set; }
 
         [Display(Name ="Date")]
+        [DataType(DataType.Date)]
         public DateTime WorkoutDate { get; set; }
 
         [StringLength(255)]

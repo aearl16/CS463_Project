@@ -18,6 +18,7 @@ namespace HelloWorld.Controllers
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
 
+        [Display(Name ="Athlete")]
         public int AthleteID { get; set; }
 
         [Required]

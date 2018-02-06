@@ -1,55 +1,33 @@
 ﻿@model IEnumerable<HelloWorld.Controllers.Athlete>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Athletes";
     
 }
 
-<h2>Index</h2>
+<h2>Athletes</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            <p>Coach </p>
-            @*@Html.DisplayNameFor(model => model.Coach.FullName)*@
-        </th>
-        <th>
-            <p>Athlete Name</p>
-            @*@Html.DisplayNameFor(model => model.FullName)*@
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DOB)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Coach.ID)
-        </td>
-
-        <td>
-            @Html.DisplayFor(modelItem => item.Coach.FullName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FullName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DOB)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
-}
-
+<table id="tableData">
+    <thead>
+        <tr>
+            <th onclick="sortTableBy(0)">@Html.DisplayNameFor(model => model.FullName)</th>
+            <th onclick="sortTableBy(1)">@Html.DisplayNameFor(model => model.DOB)</th>
+            <th onclick="sortTableBy(2)">@Html.DisplayNameFor(model => model.CoachID)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(ModelItem => item.FullName)</td>
+                <td>@Html.DisplayFor(ModelItem => item.DOB)</td>
+                <td>@Html.DisplayFor(ModelItem => item.Coach.FullName)</td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>

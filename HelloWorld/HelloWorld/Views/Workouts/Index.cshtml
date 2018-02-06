@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<HelloWorld.Controllers.Workout>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Workouts";
 }
 
-<h2>Index</h2>
+<h2>Workouts</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -12,7 +12,7 @@
 <table class="table">
     <tr>
         <th>
-           Athlete Name
+           Athlete
         </th>
         <th>
             @Html.DisplayNameFor(model => model.WorkoutType)
@@ -30,7 +30,6 @@
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.ID })
         </td>
     </tr>

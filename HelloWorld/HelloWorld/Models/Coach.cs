@@ -24,6 +24,7 @@ namespace HelloWorld.Controllers
         public string FullName { get; set; }
 
         [Display(Name ="Date of Birth")]
+        [DataType(DataType.Date)]
         public DateTime DOB { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
