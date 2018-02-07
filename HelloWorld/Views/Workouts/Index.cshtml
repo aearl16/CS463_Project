@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HelloWorld.Controllers.Workout>
+﻿@model IEnumerable<HelloWorld.Models.Workout>
 
 @{
     ViewBag.Title = "Workouts";
@@ -9,12 +9,12 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
+<table id="tableData" class="table">
     <tr>
-        <th>
+        <th onclick="sortTableBy(0)">
            Athlete
         </th>
-        <th>
+        <th onclick="sortTableBy(1)">
             @Html.DisplayNameFor(model => model.WorkoutType)
         </th>
         <th></th>
