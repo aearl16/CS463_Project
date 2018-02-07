@@ -1,0 +1,40 @@
+﻿@model IEnumerable<HelloWorld.Controllers.Record>
+
+@{
+    ViewBag.Title = "Records";
+}
+
+<h2>Records</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<table id="tableData">
+    <thead>
+        <tr>
+            <th onclick="sortTableBy(0)">@Html.DisplayNameFor(model => model.ID)</th>
+            <th onclick="sortTableByDate(1)">@Html.DisplayNameFor(model => model.WorkoutDate)</th>
+            <th onclick="sortTableBy(2)">@Html.DisplayNameFor(model => model.Distance)</th>
+            <th onclick="sortTableBy(3)">@Html.DisplayNameFor(model => model.WorkoutTime)</th>
+            <th onclick="sortTableBy(4)">@Html.DisplayNameFor(model => model.HeartRate)</th>
+            <th onclick="sortTableBy(5)">@Html.DisplayNameFor(model => model.AthleteID)</th>
+            <th onclick="sortTableBy(6)">@Html.DisplayNameFor(model => model.WorkoutID)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(ModelItem => item.ID)</td>
+                <td>@Html.DisplayFor(ModelItem => item.WorkoutDate)</td>
+                <td>@Html.DisplayFor(ModelItem => item.Distance)</td>
+                <td>@Html.DisplayFor(ModelItem => item.WorkoutTime)</td>
+                <td>@Html.DisplayFor(ModelItem => item.HeartRate)</td>
+                <td>@Html.DisplayFor(ModelItem => item.Athlete.FullName)</td>
+                <td>@Html.DisplayFor(ModelItem => item.Workout.WorkoutType)</td>
+                <td>@Html.ActionLink("Edit", "Edit", new { id=item.ID }) | @Html.ActionLink("Details", "Details", new { id=item.ID }) | @Html.ActionLink("Delete", "Delete", new { id=item.ID })</td>
+            </tr>
+        }
+    </tbody>
+</table>

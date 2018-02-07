@@ -1,0 +1,45 @@
+﻿body {
+    background-color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.titleHeader {
+    background-color: #17ace5;
+    margin-bottom: 0;
+}
+
+.navbar {
+    background-color: #000;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.navbar ul {
+    margin-bottom: 0;
+}
+
+.navbar li {
+    float: left;
+    padding-right: 30px;
+    font-family: "Carrois Gothic SC", sans-serif;
+    list-style: none;
+}
+
+.navbar li a {
+    color: #fff;
+}
+
+.navbar li .current {
+    color: #13d5ff;
+}
+
+h1 {
+    font-family: "Permanent Marker";
+    margin-left: 10px;
+    margin-bottom: 0;
+    color: #2239ab;
+}
+
+h2 {
+    font-family: "Bree Serif", serif;
+}

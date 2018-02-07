@@ -1,0 +1,54 @@
+﻿@model HelloWorld.Controllers.Athlete
+
+@{
+    ViewBag.Title = "Athlete Details";
+}
+
+<h2>Athlete Details</h2>
+
+<div>
+    <h4>@Html.DisplayFor(model => model.FullName)</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.DOB)</dt>
+        <dd>@Html.DisplayFor(model => model.DOB)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.CoachID)</dt>
+        <dd>@Html.DisplayFor(model => model.Coach.FullName)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Records)</dt>
+        <dd>
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th onclick="sortTableBy(0)">@Html.DisplayNameFor(model => model.Records.FirstOrDefault().ID)</th>
+                        <th onclick="sortTableByDate(1)">@Html.DisplayNameFor(model => model.Records.FirstOrDefault().WorkoutDate)</th>
+                        <th onclick="sortTableBy(2)">@Html.DisplayNameFor(model => model.Records.FirstOrDefault().Distance)</th>
+                        <th onclick="sortTableBy(3)">@Html.DisplayNameFor(model => model.Records.FirstOrDefault().WorkoutTime)</th>
+                        <th onclick="sortTableBy(4)">@Html.DisplayNameFor(model => model.Records.FirstOrDefault().HeartRate)</th>
+                        <th onclick="sortTableBy(5)">@Html.DisplayNameFor(model => model.Records.FirstOrDefault().AthleteID)</th>
+                        <th onclick="sortTableBy(6)">@Html.DisplayNameFor(model => model.Records.FirstOrDefault().WorkoutID)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Records)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(ModelItem => item.ID)</td>
+                            <td>@Html.DisplayFor(ModelItem => item.WorkoutDate)</td>
+                            <td>@Html.DisplayFor(ModelItem => item.Distance)</td>
+                            <td>@Html.DisplayFor(ModelItem => item.WorkoutTime)</td>
+                            <td>@Html.DisplayFor(ModelItem => item.HeartRate)</td>
+                            <td>@Html.DisplayFor(ModelItem => item.Athlete.FullName)</td>
+                            <td>@Html.DisplayFor(ModelItem => item.Workout.WorkoutType)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

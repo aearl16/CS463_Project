@@ -1,0 +1,45 @@
+﻿@model HelloWorld.Controllers.Coach
+
+@{
+    ViewBag.Title = "Coach Details";
+}
+
+<h2>Coach Details</h2>
+
+<div>
+    <h4>@Html.DisplayFor(model => model.FullName)</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.DOB)</dt>
+        <dd>@Html.DisplayFor(model => model.DOB)</dd>
+
+        <dt>Number of Athletes</dt>
+        <dd>@Html.DisplayFor(model => model.Athletes.Count)</dd>
+
+        <dt>Athletes</dt>
+        <dd>
+            <table>
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Athletes.FirstOrDefault().FullName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Athletes.FirstOrDefault().DOB)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.Athletes)
+                    {
+                    <tr>
+                        <td>@Html.DisplayFor(ModelItem => item.FullName)</td>
+                        <td>@Html.DisplayFor(ModelItem => item.DOB)</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </dd>
+    </dl>
+</div>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
