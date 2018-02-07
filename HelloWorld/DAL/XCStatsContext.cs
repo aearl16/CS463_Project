@@ -1,9 +1,10 @@
-namespace HelloWorld.Controllers
+namespace HelloWorld.DAL
 {
     using System;
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
+    using HelloWorld.Models;
 
     public partial class XCStatsContext : DbContext
     {

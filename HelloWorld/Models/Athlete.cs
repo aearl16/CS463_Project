@@ -1,4 +1,4 @@
-namespace HelloWorld.Controllers
+namespace HelloWorld.Models
 {
     using System;
     using System.Collections.Generic;
