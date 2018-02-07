@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HelloWorld.Controllers.Athlete>
+﻿@model IEnumerable<HelloWorld.Models.Athlete>
 
 @{
     ViewBag.Title = "Athletes";
@@ -7,7 +7,7 @@
 
 <h2>Athletes</h2>
 
-<table id="tableData">
+<table id="tableData" class="table">
     <thead>
         <tr>
             <th onclick="sortTableBy(0)">@Html.DisplayNameFor(model => model.FullName)</th>
