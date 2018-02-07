@@ -47,5 +47,59 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 
     @RenderSection("scripts", required: false)
+    <script>
+        function sortTableBy(n) {
+            var tData, rows, key;
+
+            tData = document.getElementById("tableData");
+            rows = tData.getElementsByTagName("tr");
+
+            //starting with 2 because we are not sorting the headers and 1 is covered by j
+            for (i = 2; i < rows.length; i++) {
+
+                var current = i;
+                var j = i - 1;
+
+                key = rows[i].getElementsByTagName("td")[n].innerHTML.toLowerCase();
+
+                while (j >= 1) {
+                    if (key < rows[j].getElementsByTagName("td")[n].innerHTML.toLowerCase()) {
+                        current = j; //setting current to the row with the lowest value data that the key is lower than
+                    }
+                    j = j - 1;
+                }
+
+                $(rows[i]).insertBefore(rows[current]); //always done because if none of them are lower than key, current never changes and the row stays in the same place
+
+            }
+        }
+
+        function sortTableByDate(n) {
+            var tData, rows, key, cData;
+
+            tData = document.getElementById("tableData");
+            rows = tData.getElementsByTagName("tr");
+
+            //starting with 2 because we are not sorting the headers and 1 is covered by j
+            for (i = 2; i < rows.length; i++) {
+
+                var current = i;
+                var j = i - 1;
+
+                key = rows[i].getElementsByTagName("td")[n].innerHTML.split("/");
+
+                while (j >= 1) {
+                    cData = rows[j].getElementsByTagName("td")[n].innerHTML.split("/");
+                    if (key[2] < cData[2] || (key[2] == cData[2] && key[0] < cData[0]) || (key[2] == cData[2] && key[0] == cData[0] && key[1] < cData[1])) {
+                        current = j; //setting current to the row with the lowest value data that the key is lower than
+                    }
+                    j = j - 1;
+                }
+
+                $(rows[i]).insertBefore(rows[current]); //always done because if none of them are lower than key, current never changes and the row stays in the same place
+
+            }
+        }
+    </script>
 </body>
 </html>

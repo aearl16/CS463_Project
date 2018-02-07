@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Athletes";
-    
+
 }
 
 <h2>Athletes</h2>
@@ -11,7 +11,7 @@
     <thead>
         <tr>
             <th onclick="sortTableBy(0)">@Html.DisplayNameFor(model => model.FullName)</th>
-            <th onclick="sortTableBy(1)">@Html.DisplayNameFor(model => model.DOB)</th>
+            <th onclick="sortTableByDate(1)">@Html.DisplayNameFor(model => model.DOB)</th>
             <th onclick="sortTableBy(2)">@Html.DisplayNameFor(model => model.CoachID)</th>
         </tr>
     </thead>

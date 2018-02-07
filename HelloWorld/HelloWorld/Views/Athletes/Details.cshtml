@@ -22,7 +22,7 @@
                 <thead>
                     <tr>
                         <th onclick="sortTableBy(0)">@Html.DisplayNameFor(model => model.Records.FirstOrDefault().ID)</th>
-                        <th onclick="sortTableBy(1)">@Html.DisplayNameFor(model => model.Records.FirstOrDefault().WorkoutDate)</th>
+                        <th onclick="sortTableByDate(1)">@Html.DisplayNameFor(model => model.Records.FirstOrDefault().WorkoutDate)</th>
                         <th onclick="sortTableBy(2)">@Html.DisplayNameFor(model => model.Records.FirstOrDefault().Distance)</th>
                         <th onclick="sortTableBy(3)">@Html.DisplayNameFor(model => model.Records.FirstOrDefault().WorkoutTime)</th>
                         <th onclick="sortTableBy(4)">@Html.DisplayNameFor(model => model.Records.FirstOrDefault().HeartRate)</th>
@@ -31,7 +31,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var item in Model.Records)
+                    @foreach (var item in Model.Records)
                     {
                         <tr>
                             <td>@Html.DisplayFor(ModelItem => item.ID)</td>
