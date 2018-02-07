@@ -1,4 +1,4 @@
-namespace HelloWorld.Models
+namespace HelloWorld.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -9,30 +9,30 @@ namespace HelloWorld.Models
     [Table("Record")]
     public partial class Record
     {
+        [Display(Name ="Record #")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [Display(Name = "Record ID")]
         public int ID { get; set; }
 
-        [Display(Name = "Athlete ID")]
+        [Display(Name ="Athlete")]
         public int AthleteID { get; set; }
 
-        [Display(Name = "Workout ID")]
+        [Display(Name ="Workout Type")]
         public int WorkoutID { get; set; }
 
-        [StringLength(30)]
-        [Display(Name = "Workout Time")]
+        [StringLength(64)]
+        [Display(Name ="Time")]
         public string WorkoutTime { get; set; }
 
-        [Display(Name = "Run Distance")]
+        [Display(Name ="Distance in Miles")]
         public double? Distance { get; set; }
 
-        [Display(Name = "Step Count")]
         public int? Steps { get; set; }
 
-        [Display(Name = "Heart Rate")]
+        [Display(Name ="Heart Rate (BPM)")]
         public int? HeartRate { get; set; }
 
-        [Display(Name = "Workout Date")]
+        [Display(Name ="Date")]
+        [DataType(DataType.Date)]
         public DateTime WorkoutDate { get; set; }
 
         [StringLength(255)]

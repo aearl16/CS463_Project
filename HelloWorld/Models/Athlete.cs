@@ -1,4 +1,4 @@
-namespace HelloWorld.Models
+namespace HelloWorld.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -19,16 +19,18 @@ namespace HelloWorld.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
 
+        [Display(Name ="Coach")]
         public int CoachID { get; set; }
 
         [Required]
         [StringLength(50)]
-        [Display(Name = "Athlete Name")]
+        [Display(Name ="Name")]
         public string FullName { get; set; }
 
-        [Display(Name = "Date of Birth")]
+        [Display(Name ="Date of Birth")]
+        [DataType(DataType.Date)]
         public DateTime DOB { get; set; }
-
+        
         public virtual Coach Coach { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

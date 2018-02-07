@@ -1,4 +1,4 @@
-namespace HelloWorld.Models
+namespace HelloWorld.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -20,10 +20,11 @@ namespace HelloWorld.Models
 
         [Required]
         [StringLength(50)]
-        [Display(Name = "Coach Name")]
+        [Display(Name ="Name")]
         public string FullName { get; set; }
 
-        [Display(Name = "Date of Brith")]
+        [Display(Name ="Date of Birth")]
+        [DataType(DataType.Date)]
         public DateTime DOB { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

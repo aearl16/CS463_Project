@@ -1,4 +1,4 @@
-namespace HelloWorld.Models
+namespace HelloWorld.Controllers
 {
     using System;
     using System.Data.Entity;

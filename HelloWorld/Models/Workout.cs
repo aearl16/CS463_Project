@@ -1,4 +1,4 @@
-namespace HelloWorld.Models
+namespace HelloWorld.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -16,15 +16,14 @@ namespace HelloWorld.Models
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [Display(Name  = "Workout ID")]
         public int ID { get; set; }
 
-        [Display(Name = "Athlete ID")]
+        [Display(Name ="Athlete")]
         public int AthleteID { get; set; }
 
         [Required]
         [StringLength(255)]
-        [Display(Name = "Workout Type")]
+        [Display(Name ="Workout Type")]
         public string WorkoutType { get; set; }
 
         public virtual Athlete Athlete { get; set; }
