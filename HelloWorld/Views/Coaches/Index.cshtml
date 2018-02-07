@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HelloWorld.Controllers.Coach>
+﻿@model IEnumerable<HelloWorld.Models.Coach>
 
 @{
     ViewBag.Title = "Coaches";
@@ -6,12 +6,12 @@
 
 <h2>Coaches</h2>
 
-<table class="table">
+<table id="tableData" class="table">
     <tr>
-        <th>
+        <th onclick="sortTableBy(0)">
             @Html.DisplayNameFor(model => model.FullName)
         </th>
-        <th>
+        <th onclick="sortTableByDate(1)">
             @Html.DisplayNameFor(model => model.DOB)
         </th>
         <th></th>

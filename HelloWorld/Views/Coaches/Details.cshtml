@@ -1,4 +1,4 @@
-﻿@model HelloWorld.Controllers.Coach
+﻿@model HelloWorld.Models.Coach
 
 @{
     ViewBag.Title = "Coach Details";
@@ -18,11 +18,11 @@
 
         <dt>Athletes</dt>
         <dd>
-            <table>
+            <table id="tableData" class="table">
                 <thead>
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.Athletes.FirstOrDefault().FullName)</th>
-                        <th>@Html.DisplayNameFor(model => model.Athletes.FirstOrDefault().DOB)</th>
+                        <th onclick="sortTableBy(0)">@Html.DisplayNameFor(model => model.Athletes.FirstOrDefault().FullName)</th>
+                        <th onclick="sortTableByDate(1)">@Html.DisplayNameFor(model => model.Athletes.FirstOrDefault().DOB)</th>
                     </tr>
                 </thead>
                 <tbody>

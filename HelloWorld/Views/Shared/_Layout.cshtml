@@ -100,6 +100,32 @@
 
             }
         }
+
+        function sortTableByInt(n) {
+            var tData, rows, key;
+
+            tData = document.getElementById("tableData");
+            rows = tData.getElementsByTagName("tr");
+
+            //starting with 2 because we are not sorting the headers and 1 is covered by j
+            for (i = 2; i < rows.length; i++) {
+
+                var current = i;
+                var j = i - 1;
+
+                key = rows[i].getElementsByTagName("td")[n].innerHTML.toLowerCase();
+
+                while (j >= 1) {
+                    if (key.length < rows[j].getElementsByTagName("td").innerHTML.length || (key.length == rows[j].getElementsByTagName("td").innerHTML.length && key < rows[j].getElementsByTagName("td")[n].innerHTML.toLowerCase())) {
+                        current = j; //setting current to the row with the lowest value data that the key is lower than
+                    }
+                    j = j - 1;
+                }
+
+                $(rows[i]).insertBefore(rows[current]); //always done because if none of them are lower than key, current never changes and the row stays in the same place
+
+            }
+        }
     </script>
 </body>
 </html>
