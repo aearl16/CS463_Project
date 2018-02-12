@@ -1,9 +1,3 @@
----
-title: LandingPad
----
-
-----
-
 # Welcome to our site
 
 This Readme will contain information and links to information on LandingPad and Penfolio
@@ -29,7 +23,6 @@ C# and MVC Naming Schemes please refer to MSDN Documentation: [MSDN Styleguide](
 Agile Methodoligies (Scrum)
 Visual Studio 2017
 Bitbucket (with Git)
-
 
 ## Links and Resources
 
