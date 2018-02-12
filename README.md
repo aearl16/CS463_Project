@@ -26,4 +26,7 @@ Bitbucket (with Git)
 
 ## Links and Resources
 
+[Rich Text Editor](https://code.tutsplus.com/tutorials/using-squire-a-lightweight-html5-rich-text-editor--cms-22934)
+[Link to LandingPad on Azure](https://landingpad.azurewebsites.net/)
+
  ----
