@@ -51,10 +51,12 @@ CREATE TABLE dbo.Pseudonym
 (
 	PseudonymID INT IDENTITY(1,1) NOT NULL,
 	ProfileID INT NOT NULL,
+	UserID INT NOT NULL,
 	Pseudonym VARCHAR(MAX) NOT NULL
 	CONSTRAINT [PK_dbo.PseudonymID] PRIMARY KEY (PseudonymID),
 	CONSTRAINT [FK_dbo.LPProfile] FOREIGN KEY (ProfileID)
-	REFERENCES dbo.LPProfile (ProfileID)
-
-)
+	REFERENCES dbo.LPProfile (ProfileID),
+	CONSTRAINT [FK2_dbo.Pseudonym] FOREIGN KEY (UserID)
+	REFERENCES dbo.LPUser (UserID)
+);
 
