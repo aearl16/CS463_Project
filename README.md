@@ -1,5 +1,5 @@
 
-<img style="float: Left;" src="Docs\SquareOneLogoV1.0.jpg" alt="some text"  width="50" height="50">
+<img style="float: Left;" src="./Docs/SquareOneLogoV1.0.jpg" alt="some text"  width="50" height="50">
 
 # Welcome to the SquareOne Site 
 
@@ -21,12 +21,17 @@ Contact : aearl16@wou.edu
 **Melissa Calawa**
 
 Contact : mcalawa15@wou.edu
+
+[View Resume](./Docs/Resumes/Melissa1_16_2018.pdf)
+
 * English Post-Bach
 * Computer Science major
 
 **Rahevin Slade**
 
 Contact : rpotterclark15@wou.edu
+
+[View Resume](./Docs/Resumes/Rahevin1_15_2018.pdf)
 
 * Dual Computer Science and Mathematic major
 
@@ -147,6 +152,6 @@ git push --set-upstream origin "your branches name"
 ~ Powered by SquareOne 2018
 
 <p align="center">
-<img src="Docs\SquareOneLogoV1.0.jpg" alt="some text"  width="80" height="80">
+<img src="./Docs/SquareOneLogoV1.0.jpg" alt="some text"  width="80" height="80">
 </p>
  ----
