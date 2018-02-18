@@ -1,9 +1,9 @@
 
-<img style="float: Left;" src="./Docs/SquareOneLogoV1.0.jpg" alt="some text"  width="50" height="50">
+<!-- <img style="float: Left;" src="./Docs/SquareOneLogoV1.0.jpg" alt="some text"  width="50" height="50"> -->
 
 # Welcome to the SquareOne Site 
 
-This Readme will contain information and links to information on LandingPad and Penfolio
+This Readme will contain information and links to information on LandingPad and Penfolio. To view SquareOnes logo click [here](./Docs/SquareOneLogoV1.0.jpg).
 
 **Disclaimer:** This is a senior project for Western Oregon computer science Software Engineering classes of Winter and Spring terms of 2018. 
 
@@ -151,7 +151,9 @@ git push --set-upstream origin "your branches name"
 
 ~ Powered by SquareOne 2018
 
-<p align="center">
+
+
+<!-- <p align="center">
 <img src="./Docs/SquareOneLogoV1.0.jpg" alt="some text"  width="80" height="80">
-</p>
+</p> -->
  ----
