@@ -13,7 +13,7 @@ This Readme will contain information and links to information on LandingPad and 
 
 Contact : aearl16@wou.edu
 
-[View Resume](\Docs\Resumes\Aaron1_16_2018.pdf)
+[View Resume](./Docs/Resumes/Aaron1_16_2018.pdf)
 
 * Computer Science major
 * Entrepreneur minor
