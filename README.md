@@ -11,7 +11,9 @@ This Readme will contain information and links to information on LandingPad and 
 
 Contact : aearl16@wou.edu
 
-[View Resume](./Docs/Resumes/AaronResume.jpg)
+* [View Resume](./Docs/Resumes/AaronResume.jpg)
+
+* [View Portfolio]()
 
 * Computer Science major
 * Entrepreneur minor
@@ -20,7 +22,9 @@ Contact : aearl16@wou.edu
 
 Contact : mcalawa15@wou.edu
 
-[View Resume](./Docs/Resumes/MelissaResume.jpg)
+* [View Resume](./Docs/Resumes/MelissaResume.jpg)
+
+* [View Portfolio]()
 
 * English Post-Bach
 * Computer Science major
@@ -29,7 +33,9 @@ Contact : mcalawa15@wou.edu
 
 Contact : rpotterclark15@wou.edu
 
-[View Resume](./Docs/Resumes/RahevinResume.jpg)
+* [View Resume](./Docs/Resumes/RahevinResume.jpg)
+
+* [View Portfolio](https://rahevinslade.github.io/)
 
 * Dual Computer Science and Mathematic major
 
