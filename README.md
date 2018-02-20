@@ -13,7 +13,7 @@ Contact : aearl16@wou.edu
 
 * [View Resume](./Docs/Resumes/AaronResume.jpg)
 
-* [View Portfolio]()
+* [View Portfolio](https://aearl16.github.io/)
 
 * Computer Science major
 * Entrepreneur minor
