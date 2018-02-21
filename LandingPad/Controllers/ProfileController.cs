@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-﻿using System;
-=======
 ﻿using LandingPad.DAL;
 using System;
->>>>>>> bbb2415edf38e44468055dbeb522865fda7ab03e
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,26 +7,14 @@ using System.Web.Mvc;
 
 namespace LandingPad.Controllers
 {
-    public class WritingController : Controller
+    public class ProfileController : Controller
     {
-<<<<<<< HEAD
-        // GET: Writing
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        public ActionResult Document()
-        {
-            return View();
-        }
-=======
         LandingPadContext db = new LandingPadContext();
 
         // GET: Pseudonym
         public ActionResult Index()
         {
-            return View(db.Writings.ToList());
+            return View(db.LPProfiles.ToList());
         }
 
         [HttpGet]
@@ -40,12 +24,12 @@ namespace LandingPad.Controllers
             {
                 return HttpNotFound();
             }
-            Writing wr = db.Writings.Find(id);
-            if (wr == null)
+            LPProfile pf = db.LPProfiles.Find(id);
+            if (pf == null)
             {
                 return HttpNotFound();
             }
-            return View(wr);
+            return View(pf);
         }
 
         [HttpGet]
@@ -56,12 +40,11 @@ namespace LandingPad.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProfileID, Title, Title, Document, AddDate, EditDate, LikesOn," +
-        "CommentsOn, CritiqueOn, DocType, DescriptionText")] Writing wr)
+        public ActionResult Create([Bind(Include = "UserID, ProfilePhoto, DisplayRealName, Friends, Followers, Writers")] LPProfile pf)
         {
             if (ModelState.IsValid)
             {
-                db.Writings.Add(wr);
+                db.LPProfiles.Add(pf);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -77,12 +60,12 @@ namespace LandingPad.Controllers
                 return HttpNotFound();
             }
 
-            Writing wr = db.Writings.Find(id);
-            if (wr == null)
+            LPProfile pf = db.LPProfiles.Find(id);
+            if (pf == null)
             {
                 return HttpNotFound();
             }
-            return View(wr);
+            return View(pf);
         }
 
         [HttpGet]
@@ -92,23 +75,22 @@ namespace LandingPad.Controllers
             {
                 return HttpNotFound();
             }
-            Writing wr = db.Writings.Find(id);
-            if (wr == null)
+            LPProfile pf = db.LPProfiles.Find(id);
+            if (pf == null)
             {
                 return HttpNotFound();
             }
-            return View(wr);
+            return View(pf);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Writing wr = db.Writings.Find(id);
-            db.Writings.Remove(wr);
+            LPProfile pf = db.LPProfiles.Find(id);
+            db.LPProfiles.Remove(pf);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
->>>>>>> bbb2415edf38e44468055dbeb522865fda7ab03e
     }
 }
