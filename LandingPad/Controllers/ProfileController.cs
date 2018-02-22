@@ -20,11 +20,14 @@ namespace LandingPad.Controllers
         [HttpGet]
         public ActionResult Details(int? id)
         {
+
+
             if (id == null)
             {
                 return HttpNotFound();
             }
             LPProfile pf = db.LPProfiles.Find(id);
+            
             if (pf == null)
             {
                 return HttpNotFound();
