@@ -2,18 +2,20 @@
 
 @{
     ViewBag.Title = "Details";
-    //var db = LandingPad.Open("");
 }
 
 
-<h2>@Html.DisplayFor(model => model.LPUser.Username) </h2>
+@*<h2>@Html.DisplayFor(model => model.LPUser.Username) </h2>*@
+@*@Html.DisplayFor(model => model.LPUser.FirstName) @Html.DisplayFor(model => model.LPUser.LastName)*@
+<h2 id="Name" style="display:block">
+   @Html.DisplayFor(model => model.LPUser.Username)
+</h2>
 
 <div>
-
     <dl class="dl-horizontal">
 
         <dt>
-            @Html.DisplayNameFor(model => model.LPUser.Birthdate)
+            Birthday
         </dt>
 
         <dd>
@@ -21,7 +23,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.LPUser.Email)
+            Email
         </dt>
 
         <dd>
@@ -29,10 +31,24 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.DisplayRealName)
+            Phone Number
         </dt>
+
         <dd>
-            @Html.DisplayFor(model => model.DisplayRealName)
+            @Html.DisplayFor(model => model.LPUser.PhoneNumber)
+        </dd>
+
+        <dt>
+            Display Real Name
+        </dt>
+
+        <dd>
+
+            <input type="checkbox" id="FullName"
+            onclick="DisplayFullName()" /> By checking this box, you allow others to view your FULL real name
+
+            @*@Html.DisplayFor(model => model.DisplayRealName)*@
+
         </dd>
 
         <dt>
@@ -70,6 +86,25 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ProfileID }) |
-    @Html.ActionLink("Back to List", "Index")
+    <button>
+        @Html.ActionLink("Settings", "Edit", new { id = Model.ProfileID })
+    </button> |
+    <button>
+        @Html.ActionLink("Back", "Index")
+    </button>
 </p>
+
+<script>
+    function DisplayFullName() {
+        var checkBox = document.getElementById("FullName");
+        var Name = document.getElementById("Name");
+        if (checkBox.checked == true) {
+            Name.innerHTML = " @Html.DisplayFor(model => model.LPUser.FirstName) @Html.DisplayFor(model => model.LPUser.LastName)";
+            Name.style.display = "block";
+        } else {
+            Name.innerHTML = "@Html.DisplayFor(model => model.LPUser.Username)";
+            Name.style.display = "block";
+        }
+    }
+
+</script>
