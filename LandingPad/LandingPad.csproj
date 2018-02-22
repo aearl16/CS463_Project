@@ -214,10 +214,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\DOWN.sql" />
-    <Content Include="App_Data\LPdb.mdf" />
-    <Content Include="App_Data\LPdb_log.ldf">
-      <DependentUpon>LPdb.mdf</DependentUpon>
-    </Content>
     <Content Include="App_Data\UP.sql" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -241,6 +237,8 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\squire-raw.js" />
+    <Content Include="Scripts\squire.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -295,6 +293,7 @@
     <Content Include="Views\Writing\Edit.cshtml" />
     <Content Include="Views\Writing\Details.cshtml" />
     <Content Include="Views\Writing\Delete.cshtml" />
+    <Content Include="Views\Shared\_Document.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
