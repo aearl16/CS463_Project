@@ -5,6 +5,7 @@
 }
 
 <h2>@ViewBag.Title.</h2>
+<body>
 <div class="row">
     <div class="col-md-8">
         <section id="loginForm">
@@ -57,7 +58,9 @@
         </section>
     </div>
 </div>
+</body>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <link href="@Url.Content("~/Content/gradient.css")" rel="stylesheet" type="text/css" />
 }
