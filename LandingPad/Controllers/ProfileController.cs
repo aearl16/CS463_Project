@@ -1,9 +1,12 @@
-﻿using LandingPad.DAL;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using LandingPad.DAL;
 
 namespace LandingPad.Controllers
 {
@@ -46,14 +49,20 @@ namespace LandingPad.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "UserID, ProfilePhoto, DisplayRealName, Friends, Followers, Writers")] LPProfile pf)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.LPProfiles.Add(pf);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.LPProfiles.Add(pf);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-
-            return View("Index");
+            catch (DataException)
+            {
+                ModelState.AddModelError(".", "An Error occured, please try again or contact our Admin on our Contact Page.");
+            }
+            return View(pf);
         }
 
         [HttpGet]
@@ -70,6 +79,20 @@ namespace LandingPad.Controllers
                 return HttpNotFound();
             }
             return View(pf);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "ProfileID,UserID,ProfilePhoto,DisplayRealName,Friends,Followers,Writers")] LPProfile lPProfile)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(lPProfile).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", lPProfile.UserID);
+            return View(lPProfile);
         }
 
         [HttpGet]

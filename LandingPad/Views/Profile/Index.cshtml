@@ -12,14 +12,17 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.LPUser.Email)
+            @Html.DisplayNameFor(model => model.LPUser.Username)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.LPUser.Email)
+        </th>
+        @*<th>
             @Html.DisplayNameFor(model => model.ProfilePhoto)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.DisplayRealName)
-        </th>
+        </th>*@
         <th>
             @Html.DisplayNameFor(model => model.Friends)
         </th>
@@ -35,14 +38,17 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.LPUser.Email)
+            @Html.DisplayFor(modelItem => item.LPUser.Username)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.LPUser.Email)
+        </td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.ProfilePhoto)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.DisplayRealName)
-        </td>
+        </td>*@
         <td>
             @Html.DisplayFor(modelItem => item.Friends)
         </td>
