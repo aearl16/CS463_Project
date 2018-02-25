@@ -27,6 +27,25 @@ else
         <dd>
             @Html.DisplayFor(model => model.LPUser.Birthdate)
         </dd>
+
+        <dt>
+            Age :
+        </dt>
+
+        <dd>
+
+            @if (Model.LPUser.Birthdate.HasValue) {
+            var today = DateTime.Today;
+            var age = today.Year - Model.LPUser.Birthdate.Value.Year;
+            if (Model.LPUser.Birthdate > today.AddYears(-age))
+            {
+            age--;
+            }
+            <span>@age </span>
+            }
+
+        </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.LPUser.Email)
         </dt>
