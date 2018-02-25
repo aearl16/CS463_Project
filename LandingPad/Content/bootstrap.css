@@ -275,6 +275,7 @@ table {
     page-break-after: avoid;
   }
   .navbar {
+    position: fixed;
     display: none;
   }
   .table td,

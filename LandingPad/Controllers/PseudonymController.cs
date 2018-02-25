@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace LandingPad.Controllers
 {
+    [Authorize]
     public class PseudonymController : Controller
     {
         LandingPadContext db = new LandingPadContext();

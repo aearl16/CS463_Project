@@ -214,9 +214,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\DOWN.sql" />
+    <Content Include="App_Data\SECDOWN.sql" />
+    <Content Include="App_Data\SECUP.sql" />
     <Content Include="App_Data\UP.sql" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\login.css" />
+    <Content Include="Content\SquareOneLogo.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -323,7 +327,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>62605</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

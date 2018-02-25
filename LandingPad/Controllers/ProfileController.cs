@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace LandingPad.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         LandingPadContext db = new LandingPadContext();
@@ -20,11 +21,14 @@ namespace LandingPad.Controllers
         [HttpGet]
         public ActionResult Details(int? id)
         {
+
+
             if (id == null)
             {
                 return HttpNotFound();
             }
             LPProfile pf = db.LPProfiles.Find(id);
+            
             if (pf == null)
             {
                 return HttpNotFound();
