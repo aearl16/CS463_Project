@@ -54,7 +54,7 @@ namespace LandingPad.Controllers
             {
                 db.LPProfiles.Add(lPProfile);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details");
             }
 
             ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", lPProfile.UserID);

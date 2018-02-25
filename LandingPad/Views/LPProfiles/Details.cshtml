@@ -1,15 +1,32 @@
 ﻿@model LandingPad.DAL.LPProfile
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Profile";
 }
 
-<h2>Details</h2>
+<h2>@if (Model.DisplayRealName == false)
+{
+    @Html.DisplayFor(model => model.LPUser.Username)
+}
+else
+{
+    <p>
+        @Html.DisplayFor(model => model.LPUser.FirstName)  @Html.DisplayFor(model => model.LPUser.LastName)
+    </p>}
+    </h2>
 
 <div>
-    <h4>LPProfile</h4>
+    <h4>Profile Page</h4>
+    
     <hr />
     <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.LPUser.Birthdate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LPUser.Birthdate)
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.LPUser.Email)
         </dt>
@@ -26,13 +43,13 @@
             @Html.DisplayFor(model => model.ProfilePhoto)
         </dd>
 
-        <dt>
+        @*<dt>
             @Html.DisplayNameFor(model => model.DisplayRealName)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.DisplayRealName)
-        </dd>
+        </dd>*@
 
         <dt>
             @Html.DisplayNameFor(model => model.Friends)
@@ -61,6 +78,10 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ProfileID }) |
-    @Html.ActionLink("Back to List", "Index")
+    <button>
+        @Html.ActionLink("Settings", "Edit", new { id = Model.ProfileID })
+    </button>
+    <button>
+        @Html.ActionLink("Back", "Index")
+    </button>
 </p>
