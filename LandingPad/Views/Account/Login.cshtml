@@ -11,51 +11,49 @@
 <br />
 <br />
 <body>
-<div align="center">
-    <section id="loginForm">
-        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-            @Html.AntiForgeryToken()
-                <!--<h4>Use your LandingPad credentials to login.</h4>-->
-            <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group" align="center">
-                    <div>
-                        @Html.LabelFor(m => m.Email, "Email/Username")
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+    <div align="center">
+        <section id="loginForm">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                @Html.AntiForgeryToken()
+                    <!--<h4>Use your LandingPad credentials to login.</h4>-->
+                <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group" align="center">
+                        <div>
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email/Username"})
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
                     </div>
-                </div>
-                <div class="form-group" align="center">
-                    <div>
-                        @Html.LabelFor(m => m.Password, "Password")
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    <div class="form-group" align="center">
+                        <div>
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password"})
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <label>
-                        Remember Me?
+                    <div>
+                        <label>
+                            Remember Me?
 
-                        @Html.CheckBoxFor(m => m.RememberMe)
-                    </label>
-                </div>
-                <div class="form-group">
-                    <div>
-                        <input type="submit" value="Log in" class="btn btn-default" />
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                        </label>
                     </div>
-                </div>
-                <p>
-                <p>Dont Have an account?</p>
-                <p>You can register here: @Html.ActionLink("Account Registration", "Register")</p>
-                </p>
-                @* Enable this once you have account confirmation enabled for password reset functionality
+                    <div class="form-group">
+                        <div>
+                            <input type="submit" value="Log in" class="btn btn-default" />
+                        </div>
+                    </div>
                     <p>
-                        @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                    </p>*@
-        }
-    </section>
-</div>
+                        <p>Dont Have an account?</p>
+                        <p>You can register here: @Html.ActionLink("Account Registration", "Register")</p>
+                    </p>
+                    @* Enable this once you have account confirmation enabled for password reset functionality
+                        <p>
+                            @Html.ActionLink("Forgot your password?", "ForgotPassword")
+                        </p>*@
+                 }
+        </section>
+    </div>
 </body>
 
 @section Scripts {
