@@ -1,0 +1,66 @@
+﻿@model LandingPad.DAL.LPProfile
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>LPProfile</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.LPUser.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LPUser.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProfilePhoto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProfilePhoto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DisplayRealName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DisplayRealName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Friends)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Friends)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Followers)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Followers)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Writers)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Writers)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ProfileID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

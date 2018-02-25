@@ -193,16 +193,16 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LPProfilesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\PseudonymController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WritingController.cs" />
     <Compile Include="DAL\LandingPadContext.cs" />
-    <Compile Include="DAL\LPProfile.cs" />
-    <Compile Include="DAL\LPUser.cs" />
-    <Compile Include="DAL\Pseudonym.cs" />
-    <Compile Include="DAL\Writing.cs" />
+    <Compile Include="Models\LPProfile.cs" />
+    <Compile Include="Models\LPUser.cs" />
+    <Compile Include="Models\Pseudonym.cs" />
+    <Compile Include="Models\Writing.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -285,15 +285,10 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Writing\Index.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
-    <Content Include="Views\Profile\Index.cshtml" />
     <Content Include="Views\Pseudonym\Index.cshtml" />
-    <Content Include="Views\Profile\Edit.cshtml" />
-    <Content Include="Views\Profile\Details.cshtml" />
-    <Content Include="Views\Profile\Create.cshtml" />
     <Content Include="Views\Pseudonym\Create.cshtml" />
     <Content Include="Views\Pseudonym\Edit.cshtml" />
     <Content Include="Views\Pseudonym\Details.cshtml" />
-    <Content Include="Views\Profile\Delete.cshtml" />
     <Content Include="Views\Pseudonym\Delete.cshtml" />
     <Content Include="Views\User\Create.cshtml" />
     <Content Include="Views\User\Edit.cshtml" />
@@ -304,6 +299,11 @@
     <Content Include="Views\Writing\Details.cshtml" />
     <Content Include="Views\Writing\Delete.cshtml" />
     <Content Include="Views\Shared\_Document.cshtml" />
+    <Content Include="Views\LPProfiles\Create.cshtml" />
+    <Content Include="Views\LPProfiles\Delete.cshtml" />
+    <Content Include="Views\LPProfiles\Details.cshtml" />
+    <Content Include="Views\LPProfiles\Edit.cshtml" />
+    <Content Include="Views\LPProfiles\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
