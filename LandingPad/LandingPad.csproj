@@ -214,10 +214,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\DOWN.sql" />
-    <Content Include="App_Data\LPdb.mdf" />
-    <Content Include="App_Data\LPdb_log.ldf">
-      <DependentUpon>LPdb.mdf</DependentUpon>
-    </Content>
     <Content Include="App_Data\SECDOWN.sql" />
     <Content Include="App_Data\SECUP.sql" />
     <Content Include="App_Data\UP.sql" />
