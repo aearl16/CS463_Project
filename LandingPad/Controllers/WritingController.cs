@@ -1,5 +1,9 @@
+<<<<<<< HEAD
+﻿using System;
+=======
 ﻿using LandingPad.DAL;
 using System;
+>>>>>>> bbb2415edf38e44468055dbeb522865fda7ab03e
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +14,18 @@ namespace LandingPad.Controllers
     [Authorize]
     public class WritingController : Controller
     {
+<<<<<<< HEAD
+        // GET: Writing
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult Document()
+        {
+            return View();
+        }
+=======
         LandingPadContext db = new LandingPadContext();
 
         // GET: Pseudonym
@@ -94,5 +110,6 @@ namespace LandingPad.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+>>>>>>> bbb2415edf38e44468055dbeb522865fda7ab03e
     }
 }

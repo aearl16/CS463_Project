@@ -192,7 +192,11 @@
             }
             catch (t) {
                 r.didError({
+<<<<<<< HEAD
                     name: "Squire: fixCursor – " + t,
+=======
+                    name: "Squire: fixCursor – " + t,
+>>>>>>> d0a117bf3f2087f7d07377a396e42ad05258e8b6
                     message: "Parent: " + e.nodeName + "/" + e.innerHTML + " appendChild: " + n.nodeName
                 });
             }
