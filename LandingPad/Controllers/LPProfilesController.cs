@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LandingPad.DAL;
+using System.Data.Entity.Infrastructure;
 
 namespace LandingPad.Controllers
 {
@@ -48,15 +49,21 @@ namespace LandingPad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProfileID,UserID, LPDescription,ProfilePhoto,DisplayRealName,Friends,Followers,Writers")] LPProfile lPProfile)
+        public ActionResult Create([Bind(Include = "ProfileID,UserID,PseudonymID,Birthdate,PhoneNumber,LPDescription,ProfilePhoto,DisplayRealName,Friends,Followers,Writers,Pseudonym")] LPProfile lPProfile)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.LPProfiles.Add(lPProfile);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.LPProfiles.Add(lPProfile);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-
+            catch (RetryLimitExceededException)
+            {
+                ModelState.AddModelError("", "Failed to create Profile");
+            }
             ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", lPProfile.UserID);
             return View(lPProfile);
         }
@@ -82,15 +89,22 @@ namespace LandingPad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProfileID,UserID,LPDescription,ProfilePhoto,DisplayRealName,Friends,Followers,Writers")] LPProfile lPProfile)
+        public ActionResult Edit([Bind(Include = "ProfileID,UserID,PseudonymID,Birthdate,PhoneNumber,LPDescription,ProfilePhoto,DisplayRealName,Friends,Followers,Writers,Pseudonym")] LPProfile lPProfile)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(lPProfile).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(lPProfile).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-            ViewBag.UserID = new SelectList(db.LPUsers, "UserID","Birthdate", "Email", lPProfile.UserID);
+            catch (RetryLimitExceededException)
+            {
+                ModelState.AddModelError("", "Failed to edit Profile");
+            }
+            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", lPProfile.UserID);
             return View(lPProfile);
         }
 
