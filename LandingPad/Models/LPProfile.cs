@@ -20,6 +20,8 @@ namespace LandingPad.DAL
 
         public int UserID { get; set; }
 
+        public string LPDescription { get; set; }
+
         public byte[] ProfilePhoto { get; set; }
 
         public bool DisplayRealName { get; set; }
