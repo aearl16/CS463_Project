@@ -194,9 +194,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LPProfilesController.cs" />
+    <Compile Include="Controllers\LPUsersController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PseudonymController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WritingController.cs" />
     <Compile Include="DAL\LandingPadContext.cs" />
     <Compile Include="Models\LPProfile.cs" />
@@ -396,16 +396,11 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Writing\Index.cshtml" />
-    <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Pseudonym\Index.cshtml" />
     <Content Include="Views\Pseudonym\Create.cshtml" />
     <Content Include="Views\Pseudonym\Edit.cshtml" />
     <Content Include="Views\Pseudonym\Details.cshtml" />
     <Content Include="Views\Pseudonym\Delete.cshtml" />
-    <Content Include="Views\User\Create.cshtml" />
-    <Content Include="Views\User\Edit.cshtml" />
-    <Content Include="Views\User\Details.cshtml" />
-    <Content Include="Views\User\Delete.cshtml" />
     <Content Include="Views\Writing\Create.cshtml" />
     <Content Include="Views\Writing\Edit.cshtml" />
     <Content Include="Views\Writing\Details.cshtml" />
@@ -416,6 +411,11 @@
     <Content Include="Views\LPProfiles\Details.cshtml" />
     <Content Include="Views\LPProfiles\Edit.cshtml" />
     <Content Include="Views\LPProfiles\Index.cshtml" />
+    <Content Include="Views\LPUsers\Create.cshtml" />
+    <Content Include="Views\LPUsers\Delete.cshtml" />
+    <Content Include="Views\LPUsers\Details.cshtml" />
+    <Content Include="Views\LPUsers\Edit.cshtml" />
+    <Content Include="Views\LPUsers\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

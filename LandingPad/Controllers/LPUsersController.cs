@@ -10,112 +10,107 @@ using LandingPad.DAL;
 
 namespace LandingPad.Controllers
 {
-    public class LPProfilesController : Controller
+    public class LPUsersController : Controller
     {
         private LandingPadContext db = new LandingPadContext();
 
-        // GET: LPProfiles
+        // GET: LPUsers
         public ActionResult Index()
         {
-            var lPProfiles = db.LPProfiles.Include(l => l.LPUser);
-            return View(lPProfiles.ToList());
+            return View(db.LPUsers.ToList());
         }
 
-        // GET: LPProfiles/Details/5
+        // GET: LPUsers/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LPProfile lPProfile = db.LPProfiles.Find(id);
-            if (lPProfile == null)
+            LPUser lPUser = db.LPUsers.Find(id);
+            if (lPUser == null)
             {
                 return HttpNotFound();
             }
-            return View(lPProfile);
+            return View(lPUser);
         }
 
-        // GET: LPProfiles/Create
+        // GET: LPUsers/Create
         public ActionResult Create()
         {
-            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email");
             return View();
         }
 
-        // POST: LPProfiles/Create
+        // POST: LPUsers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProfileID,UserID, LPDescription,ProfilePhoto,DisplayRealName,Friends,Followers,Writers")] LPProfile lPProfile)
+        public ActionResult Create([Bind(Include = "UserID,Email,Birthdate,FirstName,LastName,PhoneNumber,Username")] LPUser lPUser)
         {
             if (ModelState.IsValid)
             {
-                db.LPProfiles.Add(lPProfile);
+                db.LPUsers.Add(lPUser);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", lPProfile.UserID);
-            return View(lPProfile);
+            return View(lPUser);
         }
 
-        // GET: LPProfiles/Edit/5
+        // GET: LPUsers/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LPProfile lPProfile = db.LPProfiles.Find(id);
-            if (lPProfile == null)
+            LPUser lPUser = db.LPUsers.Find(id);
+            if (lPUser == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", lPProfile.UserID);
-            return View(lPProfile);
+            return View(lPUser);
         }
 
-        // POST: LPProfiles/Edit/5
+        // POST: LPUsers/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProfileID,UserID,LPDescription,ProfilePhoto,DisplayRealName,Friends,Followers,Writers")] LPProfile lPProfile)
+        public ActionResult Edit([Bind(Include = "UserID,Email,Birthdate,FirstName,LastName,PhoneNumber,Username")] LPUser lPUser)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(lPProfile).State = EntityState.Modified;
+                db.Entry(lPUser).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UserID = new SelectList(db.LPUsers, "UserID","Birthdate", "Email", lPProfile.UserID);
-            return View(lPProfile);
+            return View(lPUser);
         }
 
-        // GET: LPProfiles/Delete/5
+        // GET: LPUsers/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LPProfile lPProfile = db.LPProfiles.Find(id);
-            if (lPProfile == null)
+            LPUser lPUser = db.LPUsers.Find(id);
+            if (lPUser == null)
             {
                 return HttpNotFound();
             }
-            return View(lPProfile);
+            return View(lPUser);
         }
 
-        // POST: LPProfiles/Delete/5
+        // POST: LPUsers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            LPProfile lPProfile = db.LPProfiles.Find(id);
-            db.LPProfiles.Remove(lPProfile);
+            LPUser lPUser = db.LPUsers.Find(id);
+            db.LPUsers.Remove(lPUser);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

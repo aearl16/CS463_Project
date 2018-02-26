@@ -22,6 +22,8 @@ namespace LandingPad.DAL
         [Required]
         public string Email { get; set; }
 
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? Birthdate { get; set; }
 
         [Required]
