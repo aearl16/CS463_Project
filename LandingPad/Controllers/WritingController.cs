@@ -1,4 +1,4 @@
-﻿using LandingPad.DAL;
+using LandingPad.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
