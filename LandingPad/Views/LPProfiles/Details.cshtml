@@ -12,7 +12,8 @@ else
 {
     <p>
         @Html.DisplayFor(model => model.LPUser.FirstName)  @Html.DisplayFor(model => model.LPUser.LastName)
-    </p>}
+    </p>
+}
     </h2>
 
 <div>
@@ -34,6 +35,14 @@ else
 
         <dd>
             @Html.DisplayFor(model => model.LPUser.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProfilePhoto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProfilePhoto)
         </dd>
 
         <dt>
@@ -77,15 +86,6 @@ else
 
         <dd>
             @Html.DisplayFor(model => model.LPDescription)
-        </dd>
-
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ProfilePhoto)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ProfilePhoto)
         </dd>
 
         <dt>

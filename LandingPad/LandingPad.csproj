@@ -201,6 +201,7 @@
     <Compile Include="DAL\LandingPadContext.cs" />
     <Compile Include="Models\LPProfile.cs" />
     <Compile Include="Models\LPUser.cs" />
+    <Compile Include="Models\ProfileUser.cs" />
     <Compile Include="Models\Pseudonym.cs" />
     <Compile Include="Models\Writing.cs" />
     <Compile Include="Global.asax.cs">

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LandingPad.DAL;
+using LandingPad.Models;
 using System.Data.Entity.Infrastructure;
 
 namespace LandingPad.Controllers
@@ -16,10 +17,17 @@ namespace LandingPad.Controllers
         private LandingPadContext db = new LandingPadContext();
 
         // GET: LPProfiles
+
         public ActionResult Index()
         {
-            var lPProfiles = db.LPProfiles.Include(l => l.LPUser);
+            var lPProfiles = db.LPProfiles.Include(l => l.LPUser); 
             return View(lPProfiles.ToList());
+
+            //var model = new ProfileUser();
+            //model.LPProfile = db.LPProfiles.ToList();
+            //model.LPUser = db.LPUsers.ToList();
+            //model.Pseudonym = db.Pseudonyms.ToList();
+            //return View(model);
         }
 
         // GET: LPProfiles/Details/5
@@ -75,7 +83,9 @@ namespace LandingPad.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             LPProfile lPProfile = db.LPProfiles.Find(id);
+
             if (lPProfile == null)
             {
                 return HttpNotFound();
@@ -87,6 +97,7 @@ namespace LandingPad.Controllers
         // POST: LPProfiles/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ProfileID,UserID,PseudonymID,Birthdate,PhoneNumber,LPDescription,ProfilePhoto,DisplayRealName,Friends,Followers,Writers,Pseudonym")] LPProfile lPProfile)
@@ -95,6 +106,7 @@ namespace LandingPad.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    
                     db.Entry(lPProfile).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index");
