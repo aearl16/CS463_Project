@@ -10,6 +10,7 @@ using LandingPad.DAL;
 
 namespace LandingPad.Controllers
 {
+    [Authorize]
     public class LPUsersController : Controller
     {
         private LandingPadContext db = new LandingPadContext();

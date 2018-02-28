@@ -12,6 +12,7 @@ using System.Data.Entity.Infrastructure;
 
 namespace LandingPad.Controllers
 {
+    [Authorize]
     public class LPProfilesController : Controller
     {
         private LandingPadContext db = new LandingPadContext();
