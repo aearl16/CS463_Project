@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LandingPad.DAL;
+using LandingPad.Models;
+using System.Data.Entity.Infrastructure;
 
 namespace LandingPad.Controllers
 {
@@ -15,10 +17,17 @@ namespace LandingPad.Controllers
         private LandingPadContext db = new LandingPadContext();
 
         // GET: LPProfiles
+
         public ActionResult Index()
         {
-            var lPProfiles = db.LPProfiles.Include(l => l.LPUser);
+            var lPProfiles = db.LPProfiles.Include(l => l.LPUser); 
             return View(lPProfiles.ToList());
+
+            //var model = new ProfileUser();
+            //model.LPProfile = db.LPProfiles.ToList();
+            //model.LPUser = db.LPUsers.ToList();
+            //model.Pseudonym = db.Pseudonyms.ToList();
+            //return View(model);
         }
 
         // GET: LPProfiles/Details/5
@@ -48,15 +57,21 @@ namespace LandingPad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProfileID,UserID, LPDescription,ProfilePhoto,DisplayRealName,Friends,Followers,Writers")] LPProfile lPProfile)
+        public ActionResult Create([Bind(Include = "ProfileID,UserID,PseudonymID,Birthdate,PhoneNumber,LPDescription,ProfilePhoto,DisplayRealName,Friends,Followers,Writers,Pseudonym")] LPProfile lPProfile)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.LPProfiles.Add(lPProfile);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.LPProfiles.Add(lPProfile);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-
+            catch (RetryLimitExceededException)
+            {
+                ModelState.AddModelError("", "Failed to create Profile");
+            }
             ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", lPProfile.UserID);
             return View(lPProfile);
         }
@@ -68,7 +83,9 @@ namespace LandingPad.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             LPProfile lPProfile = db.LPProfiles.Find(id);
+
             if (lPProfile == null)
             {
                 return HttpNotFound();
@@ -80,17 +97,26 @@ namespace LandingPad.Controllers
         // POST: LPProfiles/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProfileID,UserID,LPDescription,ProfilePhoto,DisplayRealName,Friends,Followers,Writers")] LPProfile lPProfile)
+        public ActionResult Edit([Bind(Include = "ProfileID,UserID,PseudonymID,Birthdate,PhoneNumber,LPDescription,ProfilePhoto,DisplayRealName,Friends,Followers,Writers,Pseudonym")] LPProfile lPProfile)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(lPProfile).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    
+                    db.Entry(lPProfile).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-            ViewBag.UserID = new SelectList(db.LPUsers, "UserID","Birthdate", "Email", lPProfile.UserID);
+            catch (RetryLimitExceededException)
+            {
+                ModelState.AddModelError("", "Failed to edit Profile");
+            }
+            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", lPProfile.UserID);
             return View(lPProfile);
         }
 
