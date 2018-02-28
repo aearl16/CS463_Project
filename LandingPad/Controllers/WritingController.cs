@@ -7,7 +7,6 @@ using System.Web.Mvc;
 
 namespace LandingPad.Controllers
 {
-    [Authorize]
     public class WritingController : Controller
     {
         LandingPadContext db = new LandingPadContext();

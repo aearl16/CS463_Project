@@ -24,7 +24,7 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    <li>@Html.ActionLink("Profile", "Index", "LPProfiles")</li>
+                    <li>@Html.ActionLink("Profile", "Index", "Profile")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -34,7 +34,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p><img src="~/Content/SquareOneLogo.png" height="25" hspace="5"> SquareOne&trade; @DateTime.Now.Year</p>
+            <p>SquareOne&trade; @DateTime.Now.Year</p>
         </footer>
     </div>
 

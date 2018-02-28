@@ -7,29 +7,32 @@ using System.Web.Mvc;
 
 namespace LandingPad.Controllers
 {
-    public class PseudonymController : Controller
+    public class ProfileController : Controller
     {
         LandingPadContext db = new LandingPadContext();
 
         // GET: Pseudonym
         public ActionResult Index()
         {
-            return View(db.Pseudonyms.ToList());
+            return View(db.LPProfiles.ToList());
         }
 
         [HttpGet]
         public ActionResult Details(int? id)
         {
+
+
             if (id == null)
             {
                 return HttpNotFound();
             }
-            Pseudonym pn = db.Pseudonyms.Find(id);
-            if (pn == null)
+            LPProfile pf = db.LPProfiles.Find(id);
+            
+            if (pf == null)
             {
                 return HttpNotFound();
             }
-            return View(pn);
+            return View(pf);
         }
 
         [HttpGet]
@@ -40,11 +43,11 @@ namespace LandingPad.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProfileID, Pseudonym")] Pseudonym ps)
+        public ActionResult Create([Bind(Include = "UserID, ProfilePhoto, DisplayRealName, Friends, Followers, Writers")] LPProfile pf)
         {
             if (ModelState.IsValid)
             {
-                db.Pseudonyms.Add(ps);
+                db.LPProfiles.Add(pf);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -60,12 +63,12 @@ namespace LandingPad.Controllers
                 return HttpNotFound();
             }
 
-            Pseudonym ps = db.Pseudonyms.Find(id);
-            if (ps == null)
+            LPProfile pf = db.LPProfiles.Find(id);
+            if (pf == null)
             {
                 return HttpNotFound();
             }
-            return View(ps);
+            return View(pf);
         }
 
         [HttpGet]
@@ -75,20 +78,20 @@ namespace LandingPad.Controllers
             {
                 return HttpNotFound();
             }
-            Pseudonym ps = db.Pseudonyms.Find(id);
-            if (ps == null)
+            LPProfile pf = db.LPProfiles.Find(id);
+            if (pf == null)
             {
                 return HttpNotFound();
             }
-            return View(ps);
+            return View(pf);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Pseudonym ps = db.Pseudonyms.Find(id);
-            db.Pseudonyms.Remove(ps);
+            LPProfile pf = db.LPProfiles.Find(id);
+            db.LPProfiles.Remove(pf);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

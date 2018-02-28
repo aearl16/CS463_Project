@@ -1,7 +1,7 @@
 ﻿-- User Table
 CREATE TABLE dbo.LPUser
 (
-	UserID INT Identity(1,1), -- TO CONNECT TO ASP.NET IDENTITY
+	UserID INT NOT NULL, -- TO CONNECT TO ASP.NET IDENTITY
 	Email VARCHAR(MAX) NOT NULL,
 	Birthdate DATETIME,
 	FirstName VARCHAR(MAX) NOT NULL,
@@ -16,7 +16,6 @@ CREATE TABLE dbo.LPProfile
 (
 	ProfileID INT IDENTITY(1,1) NOT NULL,
 	UserID INT NOT NULL,
-	LPDescription VarChar(120), 
 	ProfilePhoto VARBINARY(MAX),
 	DisplayRealName BIT NOT NULL DEFAULT 0, --Defualt off
 	Friends INT,
@@ -58,15 +57,15 @@ CREATE TABLE dbo.Pseudonym
 	REFERENCES dbo.LPProfile (ProfileID),
 );
 
-INSERT INTO dbo.LPUser ( Email, Birthdate, FirstName, LastName, PhoneNumber, Username) VALUES
-('dude@dude.com', '2010-04-12 12:00', 'Dude', 'Crush', '555-555-5555', 'RandomDude01'),
-( 'saltshaker@oldnsalty.net', '1999-09-09 12:00','Phil', 'Forrest', '555-555-5555', ''),
-( 'thestanza@gc.org','1978-06-09 12:00', 'George', 'Castanzna', '', 'TheBubbleBoy');
+INSERT INTO dbo.LPUser (UserID, Email, Birthdate, FirstName, LastName, PhoneNumber, Username) VALUES
+(1, 'dude@dude.com', 4/12/2001, 'Dude', 'Crush', '555-555-5555', 'RandomDude01'),
+(2, 'saltshaker@oldnsalty.net', 9/9/99,'Phil', 'Forrest', '555-555-5555', ''),
+(3, 'thestanza@gc.org', 6/9/1978, 'George', 'Castanzna', '', 'TheBubbleBoy');
 
-INSERT INTO dbo.LPProfile(UserID,LPDescription, ProfilePhoto, DisplayRealName, Friends, Followers, Writers) VALUES
-(1,'I like to ride bikes', NULL, 0, 1, 1, 1),
-(2,'I dont like to ride bikes', NULL, 0, 1, 1, 1),
-(3,'', NULL, 0, 1, 1, 1);
+INSERT INTO dbo.LPProfile(UserID, ProfilePhoto, DisplayRealName, Friends, Followers, Writers) VALUES
+(1, NULL, 0, 1, 1, 1),
+(2, NULL, 0, 1, 1, 1),
+(3, NULL, 0, 1, 1, 1);
 
 INSERT INTO dbo.Writing (ProfileID, Title, Document, AddDate, EditDate, LikesOn, CommentsOn, CritiqueOn, DocType, DescriptionText) VALUES
 (1, 'Lord of the Things', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 0, 0, 'DOCX', 'A humorous play on lord of the rings'),
