@@ -6,10 +6,10 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+
+    <div class="navbar navbar-inverse navbar-fixed-top center">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -17,16 +17,59 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("LandingPad", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
+
             <div class="navbar-collapse collapse">
+
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    @*LandingPad Menu*@
+                    <li><button class="w3-button" onclick="plusDivs(-1)">&#10094;</button></li>
+                    <li>@Html.ActionLink("LandingPad", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                     <li>@Html.ActionLink("Profile", "Index", "LPProfiles")</li>
+                    <li><button class="w3-button" onclick="plusDivs(1)">&#10095;</button></li>
+                    <li>@Html.ActionLink("Login", "Login", "Account")</li>
+                    <li>@Html.ActionLink("Register", "Register", "Account")</li>
                 </ul>
-                @Html.Partial("_LoginPartial")
+
+                <ul class="nav navbar-nav">
+                    @*Facebook Menu*@
+                    <li><button class="w3-button" onclick="plusDivs(-1)">&#10094;</button></li>
+                    <li>@Html.ActionLink("Facebook", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About 2", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact 2", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Profile 2", "Index", "LPProfiles")</li>
+                    <li><button class="w3-button" onclick="plusDivs(1)">&#10095;</button></li>
+                    <li>@Html.ActionLink("Login", "Login", "Account")</li>
+                    <li>@Html.ActionLink("Register", "Register", "Account")</li>
+                </ul>
+
+                <ul class="nav navbar-nav">
+                    @*Instagram Menu*@
+                    <li><button class="w3-button" onclick="plusDivs(-1)">&#10094;</button></li>
+                    <li>@Html.ActionLink("Instagram", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About 3", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact 3", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Profile 3", "Index", "LPProfiles")</li>
+                    <li><button class="w3-button" onclick="plusDivs(1)">&#10095;</button></li>
+                    <li>@Html.ActionLink("Login", "Login", "Account")</li>
+                    <li>@Html.ActionLink("Register", "Register", "Account")</li>
+                </ul>
+
+                <ul class="nav navbar-nav">
+                    @*Writers Menu*@
+                    <li><button class="w3-button" onclick="plusDivs(-1)">&#10094;</button></li>
+                    <li>@Html.ActionLink("Writers", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About 3", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact 3", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Profile 3", "Index", "LPProfiles")</li>
+                    <li><button class="w3-button" onclick="plusDivs(1)">&#10095;</button></li>
+                    <li>@Html.ActionLink("Login", "Login", "Account")</li>
+                    <li>@Html.ActionLink("Register", "Register", "Account")</li>
+                </ul>
+                @*@Html.Partial("_LoginPartial")*@
             </div>
         </div>
     </div>
@@ -37,11 +80,29 @@
             <p><img src="~/Content/SquareOneLogo.png" height="25" hspace="5"> SquareOne&trade; @DateTime.Now.Year</p>
         </footer>
     </div>
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     <script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
     <script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
     @RenderSection("scripts", required: false)
+    <script>
+        var slideIndex = 1;
+        showDivs(slideIndex);
+
+        function plusDivs(n) {
+            showDivs(slideIndex += n);
+        }
+
+        function showDivs(n) {
+            var i;
+            var x = document.getElementsByClassName("nav navbar-nav");
+            if (n > x.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = x.length }
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            x[slideIndex - 1].style.display = "block";
+        }
+    </script>
 </body>
 </html>

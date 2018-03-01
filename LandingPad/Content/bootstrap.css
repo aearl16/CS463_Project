@@ -21,6 +21,17 @@
 
 /*! normalize.css v2.1.0 | MIT License | git.io/normalize */
 
+.center.navbar .nav,
+.center.navbar .nav > li {
+    float: none;
+    display: inline-block;
+    *display: inline; /* ie7 fix */
+    *zoom: 1; /* hasLayout ie7 trigger */
+    vertical-align: top;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
 article,
 aside,
 details,
@@ -274,10 +285,11 @@ table {
   h3 {
     page-break-after: avoid;
   }
-  .navbar {
-    position: fixed;
-    display: none;
-  }
+    .navbar {
+        text-align: center;
+        position: fixed;
+        display: none;
+    }
   .table td,
   .table th {
     background-color: #fff !important;
@@ -940,7 +952,7 @@ pre code {
   .col-sm-9,
   .col-sm-10,
   .col-sm-11 {
-    float: left;
+    float: none;
   }
   .col-sm-1 {
     width: 8.333333333333332%;
@@ -4024,11 +4036,13 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 
 .navbar {
-  position: relative;
-  z-index: 1000;
-  min-height: 50px;
-  margin-bottom: 20px;
-  border: 1px solid transparent;
+    position: center;
+    text-align: center;
+    float: none;
+    z-index: 1000;
+    min-height: 50px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
 }
 
 .navbar:before,
@@ -4210,7 +4224,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
   }
 }
 
-.navbar-toggle {
+navbar-toggle {
   position: relative;
   float: right;
   padding: 9px 10px;
@@ -4240,11 +4254,14 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 
 .navbar-nav {
-  margin: 7.5px -15px;
+    text-align: center;
+    position: center;
+    margin: 7.5px -15px;
 }
 
 .navbar-nav > li > a {
   padding-top: 10px;
+  float: none;
   padding-bottom: 10px;
   line-height: 20px;
 }
