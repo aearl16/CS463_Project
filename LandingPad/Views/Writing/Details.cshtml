@@ -91,6 +91,24 @@
         </dd>
 
     </dl>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Format</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.WritingFormats)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(ModelItem => item.FormatTag.FormatName)</td>
+                    <td>@Html.DisplayFor(ModelItem => item.FormatTag.Explanation)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.WritingID }) |
