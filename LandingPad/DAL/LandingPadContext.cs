@@ -1,9 +1,11 @@
+using System;
+using System.Data.Entity;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using LandingPad.Models;
+
 namespace LandingPad.DAL
 {
-    using System;
-    using System.Data.Entity;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
 
     public partial class LandingPadContext : DbContext
     {
@@ -16,6 +18,9 @@ namespace LandingPad.DAL
         public virtual DbSet<LPUser> LPUsers { get; set; }
         public virtual DbSet<Pseudonym> Pseudonyms { get; set; }
         public virtual DbSet<Writing> Writings { get; set; }
+        public virtual DbSet<WritingPseudonym> WritingPseudonyms { get; set; }
+        public virtual DbSet<FormatTag> FormatTags { get; set; }
+        public virtual DbSet<WritingFormat> WritingFormats { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
