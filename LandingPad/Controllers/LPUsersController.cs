@@ -7,9 +7,11 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LandingPad.DAL;
+using LandingPad.Models;
 
 namespace LandingPad.Controllers
 {
+    [Authorize]
     public class LPUsersController : Controller
     {
         private LandingPadContext db = new LandingPadContext();

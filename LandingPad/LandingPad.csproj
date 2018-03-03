@@ -670,6 +670,7 @@
     <Compile Include="Controllers\PseudonymController.cs" />
     <Compile Include="Controllers\WritingController.cs" />
     <Compile Include="DAL\LandingPadContext.cs" />
+    <Compile Include="Models\FormatTag.cs" />
     <Compile Include="Models\LPProfile.cs" />
     <Compile Include="Models\LPUser.cs" />
     <Compile Include="Models\ProfileUser.cs" />
@@ -681,6 +682,8 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\WritingFormat.cs" />
+    <Compile Include="Models\WritingPseudonym.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
