@@ -1,0 +1,16 @@
+﻿html, body {
+    background: radial-gradient(circle, Green, Grey, DimGrey);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+}
+
+h1, h2, h3, h4 {
+    text-align: center;
+}
+
+.float {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+}

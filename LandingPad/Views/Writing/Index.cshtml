@@ -1,0 +1,87 @@
+﻿@model IEnumerable<LandingPad.Models.Writing>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProfileID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Document)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AddDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EditDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LikesOn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CommentsOn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CritiqueOn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DocType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DescriptionText)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProfileID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Document)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AddDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EditDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LikesOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CommentsOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CritiqueOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DocType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DescriptionText)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.WritingID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.WritingID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.WritingID })
+        </td>
+    </tr>
+}
+
+</table>

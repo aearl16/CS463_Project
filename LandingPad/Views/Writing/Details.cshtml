@@ -1,0 +1,116 @@
+﻿@model LandingPad.Models.Writing
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Writing</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ProfileID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProfileID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Document)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Document)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AddDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AddDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EditDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EditDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LikesOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LikesOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CommentsOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CommentsOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CritiqueOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CritiqueOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DocType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DocType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DescriptionText)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DescriptionText)
+        </dd>
+
+    </dl>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Format</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.WritingFormats)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(ModelItem => item.FormatTag.FormatName)</td>
+                    <td>@Html.DisplayFor(ModelItem => item.FormatTag.Explanation)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.WritingID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

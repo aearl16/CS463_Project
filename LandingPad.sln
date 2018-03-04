@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandingPad", "LandingPad\LandingPad.csproj", "{72B9D687-F9E6-4661-80FC-7B56AD5B7300}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{72B9D687-F9E6-4661-80FC-7B56AD5B7300}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72B9D687-F9E6-4661-80FC-7B56AD5B7300}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72B9D687-F9E6-4661-80FC-7B56AD5B7300}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72B9D687-F9E6-4661-80FC-7B56AD5B7300}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {45E59D70-17D6-406C-87F9-D1F3A9BFC18C}
+	EndGlobalSection
+EndGlobal
