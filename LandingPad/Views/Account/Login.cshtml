@@ -17,7 +17,6 @@
                 {
                 @Html.AntiForgeryToken()
                     <!--<h4>Use your LandingPad credentials to login.</h4>-->
-                <hr />
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group" align="center">
                         <div>
@@ -47,11 +46,16 @@
                         <p>Dont Have an account?</p>
                         <p>You can register here: @Html.ActionLink("Account Registration", "Register")</p>
                     </p>
-                    @* Enable this once you have account confirmation enabled for password reset functionality
+                    @* Enable this once you have account confirmation enabled for password reset functionality*@
                         <p>
                             @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                        </p>*@
+                        </p>
                  }
+        </section>
+    </div>
+    <div class="float">
+        <section id="socialLoginForm">
+            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
         </section>
     </div>
 </body>
