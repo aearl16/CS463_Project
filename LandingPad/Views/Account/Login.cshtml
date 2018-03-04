@@ -53,6 +53,11 @@
                  }
         </section>
     </div>
+    <div class="float">
+        <section id="socialLoginForm">
+            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+        </section>
+    </div>
 </body>
 
 @section Scripts {
