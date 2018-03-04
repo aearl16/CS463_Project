@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
+using Owin.Security.Providers.LinkedIn;
 using Owin;
 using LandingPad.Models;
 
@@ -54,15 +55,17 @@ namespace LandingPad
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "410083656118019",
+               appSecret: "fa745dc69329a1c81fe8a189fa979f48");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "1057905657192-orjfo2hjcarcr46ge06kq29joughf6cu.apps.googleusercontent.com",
+                ClientSecret = "SZA08x-2nIJ0_uoYrJ7awKP2"
+            });
+
+            app.UseLinkedInAuthentication("86b05kpr1v1gl2", "L5Ifw8jffC7SmBQe");
         }
     }
 }

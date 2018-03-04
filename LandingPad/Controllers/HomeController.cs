@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace LandingPad.Controllers
 {
+    [RequireHttps]
     public class HomeController : Controller
     {
         [Authorize]
