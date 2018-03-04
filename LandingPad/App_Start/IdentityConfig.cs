@@ -28,7 +28,8 @@ namespace LandingPad
         {
             try
             {
-                var client = new SendGridClient("SG.WVw7JGp9SS6sE2dw4MNTNw.z9eLnTLpLBrDDKCwfvyDDfMawd6fKgUA1PPsY - 6j770");
+                var apiKey = Environment.GetEnvironmentVariable("SendGrid_Key");
+                var client = new SendGridClient(apiKey);
                 var myMessage = new SendGridMessage();
                 myMessage.Subject = "Sending with SendGrid is Fun";
                 myMessage.AddTo(message.Destination);
@@ -37,7 +38,7 @@ namespace LandingPad
                 myMessage.PlainTextContent = message.Body;
                 myMessage.HtmlContent = message.Body;
                 var response = await client.SendEmailAsync(myMessage);
-                Console.WriteLine("Message Sent");
+                System.Diagnostics.Debug.WriteLine("Message Sent");
             }
             catch (Exception ex)
             {
@@ -74,6 +75,27 @@ namespace LandingPad
                 Trace.TraceError("Failed to create Web transport.");
                 await Task.FromResult(0);
             }*/
+        }
+
+        internal static void SendEmailMessage(string Email)
+        {
+            try
+            {
+                var client = new SendGridClient("SG.WVw7JGp9SS6sE2dw4MNTNw.z9eLnTLpLBrDDKCwfvyDDfMawd6fKgUA1PPsY - 6j770");
+                var newMessage = new SendGridMessage();
+                newMessage.Subject = "Sending with SendGrid is Fun";
+                newMessage.AddTo(Email);
+                newMessage.From = new EmailAddress("aearl16@wou.edu", "Aaron Earl");
+                newMessage.Subject = "Welcome to LandingPad!";
+                newMessage.PlainTextContent = "Hi";
+                newMessage.HtmlContent = "<p>Hello</p>";
+                var response = client.SendEmailAsync(newMessage);
+                Console.WriteLine("Message Sent");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 
