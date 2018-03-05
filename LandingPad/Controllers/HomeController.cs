@@ -8,6 +8,7 @@ using System.Text;
 
 namespace LandingPad.Controllers
 {
+    [RequireHttps]
     public class HomeController : Controller
     {
         //[Authorize]
