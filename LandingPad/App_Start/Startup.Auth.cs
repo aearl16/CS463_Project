@@ -7,6 +7,8 @@ using Microsoft.Owin.Security.Google;
 using Owin.Security.Providers.LinkedIn;
 using Owin;
 using LandingPad.Models;
+using Microsoft.Owin.Security.Twitter;
+using Owin.Security.Providers.Instagram;
 
 namespace LandingPad
 {
@@ -51,21 +53,37 @@ namespace LandingPad
             //    clientId: "",
             //    clientSecret: "");
 
-            //app.UseTwitterAuthentication(
-            //   consumerKey: "",
-            //   consumerSecret: "");
+            //Get config values
+            string fbID = System.Configuration.ConfigurationManager.AppSettings["fbID"];
+            string fbSecret = System.Configuration.ConfigurationManager.AppSettings["fbSecret"];
+            string gcID = System.Configuration.ConfigurationManager.AppSettings["gcID"];
+            string gcSecret = System.Configuration.ConfigurationManager.AppSettings["gcSecret"];
+            string lic = System.Configuration.ConfigurationManager.AppSettings["lic"];
+            string liSecret = System.Configuration.ConfigurationManager.AppSettings["liSecret"];
+            string twKey = System.Configuration.ConfigurationManager.AppSettings["twKey"];
+            string twSecret = System.Configuration.ConfigurationManager.AppSettings["twSecret"];
+            string inKey = System.Configuration.ConfigurationManager.AppSettings["inKey"];
+            string inSecret = System.Configuration.ConfigurationManager.AppSettings["inSecret"];
+
 
             app.UseFacebookAuthentication(
-               appId: "410083656118019",
-               appSecret: "fa745dc69329a1c81fe8a189fa979f48");
+               appId: fbID,
+               appSecret: fbSecret);
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
-                ClientId = "1057905657192-orjfo2hjcarcr46ge06kq29joughf6cu.apps.googleusercontent.com",
-                ClientSecret = "SZA08x-2nIJ0_uoYrJ7awKP2"
+                ClientId = gcID,
+                ClientSecret = gcSecret
             });
 
-            app.UseLinkedInAuthentication("86b05kpr1v1gl2", "L5Ifw8jffC7SmBQe");
+            app.UseLinkedInAuthentication(lic, liSecret);
+
+            app.UseTwitterAuthentication(
+               consumerKey: twKey,
+               consumerSecret: twSecret);
+
+            app.UseInstagramInAuthentication(inKey, inSecret);
+
         }
     }
 }
