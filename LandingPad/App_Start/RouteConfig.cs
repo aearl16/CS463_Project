@@ -18,6 +18,12 @@ namespace LandingPad
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(name: "signin-google", url: "signin-google", defaults: new { controller = "Account", action = "LoginCallback" });
+            routes.MapRoute(name: "signin-facebook", url: "signin-facebook", defaults: new { controller = "Account", action = "LoginCallback" });
+            routes.MapRoute(name: "signin-linkedin", url: "signin-linkedin", defaults: new { controller = "Account", action = "LoginCallback" });
+            routes.MapRoute(name: "signin-twitter", url: "signin-twitter", defaults: new { controller = "Account", action = "LoginCallback" });
+            routes.MapRoute(name: "signin-instagram", url: "signin-instagram", defaults: new { controller = "Account", action = "LoginCallback" });
         }
     }
 }
