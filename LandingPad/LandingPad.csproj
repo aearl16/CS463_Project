@@ -541,6 +541,7 @@
     <Content Include="Views\LPUsers\Edit.cshtml" />
     <Content Include="Views\LPUsers\Index.cshtml" />
     <Content Include="Views\Shared\Info.cshtml" />
+    <Content Include="Views\Writing\Editor.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
