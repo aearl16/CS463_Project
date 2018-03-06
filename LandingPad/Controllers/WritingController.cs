@@ -101,6 +101,11 @@ namespace LandingPad.Controllers
             return PartialView();
         }
 
+        public PartialViewResult TestEditor()
+        {
+            return PartialView();
+        }
+
 
     }
 }
