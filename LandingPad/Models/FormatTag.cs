@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace LandingPad.Models
 {
-    public class FormatTag
+    [Table("FormatTag")]
+    public partial class FormatTag
     {
         public FormatTag()
         {
@@ -19,6 +21,8 @@ namespace LandingPad.Models
 
         [Required]
         public string FormatName { get; set; }
+
+        public string AltName { get; set; }
 
         [Required]
         public string CategoryType { get; set; }

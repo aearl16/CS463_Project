@@ -95,5 +95,17 @@ namespace LandingPad.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+        public PartialViewResult Editor()
+        {
+            return PartialView();
+        }
+
+        public PartialViewResult TestEditor()
+        {
+            return PartialView();
+        }
+
+
     }
 }
