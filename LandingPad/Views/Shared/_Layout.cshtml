@@ -4,11 +4,51 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <!-- Include Quill stylesheet -->
     <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
+    <style>
+        /* Set default font-family */
+        #editorContainer .ql-container {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            height: 375px;
+        }
+
+        .ql-editor .ql-font-times {
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .ql-editor .ql-font-courier {
+            font-family: Courier New, Courier, monospace;
+        }
+
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label[data-value='arial']:not([data-label])::before,
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-item[data-value='arial']::before,
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label::before {
+            content: 'Arial';
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label[data-value='times']:not([data-label])::before,
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-item[data-value='times']::before,
+        #editorContainer .ql-font-times .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label::before {
+            content: 'Times';
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label[data-value='courier']:not([data-label])::before,
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-item[data-value='courier']::before,
+        #editorContainer .ql-font-courier .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label::before {
+            content: 'Courier New';
+            font-family: Courier New, Courier, monospace;
+        }
+
+        .ql-snow .ql-picker.ql-font {
+            width: 125px;
+        }
+    </style>
 </head>
 <body>
 
@@ -112,20 +152,9 @@
 
     <!-- Initialize Quill editor -->
     <script>
-        var quill = new Quill('#editor', {
-            modules: {
-                formula: true,
-                syntax: true,
-                toolbar: '#toolbar'
-            },
-            placeholder: 'Poetry, script, and prose, it all belongs here...',
-            theme: 'snow'
-        });
-    </script>
-    <script>
             (function () {
                 $(document).ready(function () {
-                    var fonts = ['Courier New', 'slabo', 'roboto', 'inconsolata', 'ubuntu'];
+                    var fonts = ['arial', 'times', 'courier'];
                     var Font = Quill.import('formats/font');
                     Font.whitelist = fonts;
                     Quill.register(Font, true);
@@ -133,19 +162,21 @@
                     var editor = new Quill('#editorContainer .editor', {
                         bounds: '#editorContainer .editor',
                         modules: {
-                            'formula': false,
+                            'formula': true,
                             'syntax': true,
                             'toolbar': [
                                 [{ 'font': fonts }, { 'size': [] }],
                                 ['bold', 'italic', 'underline', 'strike'],
                                 [{ 'color': [] }, { 'background': [] }],
-                                [{ 'header': '1' }, { 'header': '2' }, { 'script': 'super' }, { 'script': 'sub' }, 'blockquote'],
+                                [{ 'script': 'super' }, { 'script': 'sub' }],
+                                [{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block'],
                                 [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
                                 [{ 'align': [] }],
-                                ['link', 'image'],
+                                ['link', 'image', 'formula'],
                                 ['clean']
                             ],
                         },
+                        placeholder: 'Write your own destiny...',
                         theme: 'snow'
                     });
 
