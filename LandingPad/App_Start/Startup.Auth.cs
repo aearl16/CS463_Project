@@ -4,8 +4,11 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
+using Owin.Security.Providers.LinkedIn;
 using Owin;
 using LandingPad.Models;
+using Microsoft.Owin.Security.Twitter;
+using Owin.Security.Providers.Instagram;
 
 namespace LandingPad
 {
@@ -50,19 +53,37 @@ namespace LandingPad
             //    clientId: "",
             //    clientSecret: "");
 
-            //app.UseTwitterAuthentication(
-            //   consumerKey: "",
-            //   consumerSecret: "");
+            //Get config values
+            string fbID = System.Configuration.ConfigurationManager.AppSettings["fbID"];
+            string fbSecret = System.Configuration.ConfigurationManager.AppSettings["fbSecret"];
+            string gcID = System.Configuration.ConfigurationManager.AppSettings["gcID"];
+            string gcSecret = System.Configuration.ConfigurationManager.AppSettings["gcSecret"];
+            string lic = System.Configuration.ConfigurationManager.AppSettings["lic"];
+            string liSecret = System.Configuration.ConfigurationManager.AppSettings["liSecret"];
+            string twKey = System.Configuration.ConfigurationManager.AppSettings["twKey"];
+            string twSecret = System.Configuration.ConfigurationManager.AppSettings["twSecret"];
+            string inKey = System.Configuration.ConfigurationManager.AppSettings["inKey"];
+            string inSecret = System.Configuration.ConfigurationManager.AppSettings["inSecret"];
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseFacebookAuthentication(
+               appId: fbID,
+               appSecret: fbSecret);
+
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = gcID,
+                ClientSecret = gcSecret
+            });
+
+            app.UseLinkedInAuthentication(lic, liSecret);
+
+            app.UseTwitterAuthentication(
+               consumerKey: twKey,
+               consumerSecret: twSecret);
+
+            app.UseInstagramInAuthentication(inKey, inSecret);
+
         }
     }
 }

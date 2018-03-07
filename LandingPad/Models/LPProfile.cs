@@ -1,10 +1,11 @@
-namespace LandingPad.DAL
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.Spatial;
+
+namespace LandingPad.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     [Table("LPProfile")]
     public partial class LPProfile
@@ -13,6 +14,7 @@ namespace LandingPad.DAL
         public LPProfile()
         {
             Pseudonyms = new HashSet<Pseudonym>();
+            Writings = new HashSet<Writing>();
         }
 
         [Key]
@@ -34,6 +36,9 @@ namespace LandingPad.DAL
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Pseudonym> Pseudonyms { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Writing> Writings { get; set; }
 
         public virtual LPUser LPUser { get; set; }
     }
