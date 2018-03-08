@@ -15,22 +15,24 @@
     <div id="fb-root"></div>
 
     <script>
-        var fbId = '@(ViewBag.Message)';
+        var fbID = @System.Configuration.ConfigurationManager.AppSettings["fbID"]
         // initialize and setup facebook js sdk
         window.fbAsyncInit = function () {
             FB.init({
-                appId: fbId,
+                appId: fbID,
                 xfbml: true,
                 version: 'v2.12'
             });
             FB.getLoginStatus(function (response) {
                 if (response.status === 'connected') {
-                    document.getElementById('status').innerHTML = 'We are connected.';
-                    document.getElementById('login').style.visibility = 'hidden';
+                    var accessToken = response.authResponse.accessToken;
+                    console.log(response.authResponse.accessToken);
+                    document.getElementById('Name').innerHTML = 'We are connected.';
+                    //document.getElementById('login').style.visibility = 'hidden';
                 } else if (response.status === 'not_authorized') {
-                    document.getElementById('status').innerHTML = 'We are not logged in.'
+                    document.getElementById('Name').innerHTML = 'We are not logged in.'
                 } else {
-                    document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
+                    document.getElementById('Name').innerHTML = 'You are not logged into Facebook.';
                 }
             });
         };
@@ -46,21 +48,35 @@
         function login() {
             FB.login(function (response) {
                 if (response.status === 'connected') {
-                    document.getElementById('status').innerHTML = 'We are connected.';
+                    document.getElementById('Name').innerHTML = 'We are connected.';
                     document.getElementById('login').style.visibility = 'hidden';
                 } else if (response.status === 'not_authorized') {
-                    document.getElementById('status').innerHTML = 'We are not logged in.'
+                    document.getElementById('Name').innerHTML = 'We are not logged in.'
                 } else {
-                    document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
+                    document.getElementById('Name').innerHTML = 'You are not logged into Facebook.';
                 }
             }, { scope: 'email' });
         }
 
         // getting basic user info
         function getInfo() {
-            FB.api('/me', 'GET', { fields: 'first_name,last_name,name,id,picture.width(150).height(150)' }, function (response) {
-                document.getElementById('status').innerHTML = response.first_name + " " + response.last_name;
-            });
+
+            FB.api(
+                '/me',
+                'GET',
+                { "fields": "id,name,age_range,email,first_name,last_name,gender,cover,birthday,about,address,hometown,posts{actions}" },
+                function (response) {
+                    // Insert your code here
+                    document.getElementById('Name').innerHTML = response.first_name + " " + response.last_name;
+                    document.getElementById('email').innerHTML = response.email;
+                    document.getElementById('birthday').innerHTML = response.birthday;
+                    document.getElementById('gender').innerHTML = response.gender;
+                    document.getElementById('about').innerHTML = response.about;
+                    document.getElementById('address').innerHTML = response.address;
+                    document.getElementById('posts').innerHTML = response.posts;
+                }
+            );
+
         }
 
         function logout() {
@@ -71,7 +87,13 @@
 
     </script>
     <h4>Facebook Connection Status</h4>
-    <div id="status"></div>
+    <div id="Name"></div>
+    <div id="email"></div>
+    <div id="birthday"></div>
+    <div id="gender"></div>
+    <div id="about"></div>
+    <div id="address"></div>
+    <div id="posts"></div>
 
     <div class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="true"></div>
 

@@ -25,13 +25,6 @@ namespace LandingPad.Controllers
 
         public ActionResult Contact()
         {
-            string fbId;
-            var fileStream = new FileStream(@"C:\Users\Rahevin\Desktop\LandingPad\fbId.txt", FileMode.Open, FileAccess.Read);
-            using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
-            {
-                fbId = streamReader.ReadToEnd();
-            }
-            ViewBag.Message = fbId;
             return View();
         }
     }
