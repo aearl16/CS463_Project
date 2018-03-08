@@ -45,36 +45,6 @@ namespace LandingPad
                 Console.WriteLine(ex);
             }
 
-            //Test Code
-            //var apiKey = Environment.GetEnvironmentVariable("NAME_OF_THE_ENVIRONMENT_VARIABLE_FOR_YOUR_SENDGRID_KEY");
-            //var client = new SendGridClient("SG.WVw7JGp9SS6sE2dw4MNTNw.z9eLnTLpLBrDDKCwfvyDDfMawd6fKgUA1PPsY - 6j770");
-            //var from = new EmailAddress("aearl16@wou.edu", "Aaron Earl");
-            //var subject = "Sending with SendGrid is Fun";
-            //var to = new EmailAddress("test@example.com", "Example User");
-            //var plainTextContent = "and easy to do anywhere, even with C#";
-            //var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
-            //var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-            //var response = await client.SendEmailAsync(msg);
-
-            /*
-            var credentials = new NetworkCredential(
-                       ConfigurationManager.AppSettings["mailAccount"],
-                       ConfigurationManager.AppSettings["mailPassword"]
-                       );
-
-            // Create a Web transport for sending email.
-            var transportWeb = new Web(credentials);
-
-            // Send the email.
-            if (transportWeb != null)
-            {
-                await transportWeb.DeliverAsync(myMessage);
-            }
-            else
-            {
-                Trace.TraceError("Failed to create Web transport.");
-                await Task.FromResult(0);
-            }*/
         }
 
         internal static void SendEmailMessage(string Email)

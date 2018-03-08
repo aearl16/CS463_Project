@@ -454,6 +454,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\DOWN.sql" />
+    <Content Include="App_Data\LPdb.mdf" />
+    <Content Include="App_Data\LPdb_log.ldf">
+      <DependentUpon>LPdb.mdf</DependentUpon>
+    </Content>
     <Content Include="App_Data\SECDOWN.sql" />
     <Content Include="App_Data\SECUP.sql" />
     <Content Include="App_Data\UP.sql" />
@@ -541,8 +545,6 @@
     <Content Include="Views\LPUsers\Edit.cshtml" />
     <Content Include="Views\LPUsers\Index.cshtml" />
     <Content Include="Views\Shared\Info.cshtml" />
-    <Content Include="Views\Writing\Editor.cshtml" />
-    <Content Include="Views\Writing\TestEditor.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
