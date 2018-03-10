@@ -100,6 +100,25 @@ namespace LandingPad.Controllers
         {
             return PartialView();
         }
+
+        public PartialViewResult _FormatSearch()
+        {
+            return PartialView(db.FormatTags.ToList());
+        }
+
+        public PartialViewResult _SelectFormat()
+        {
+            return PartialView(db.FormatTags.ToList());
+        }
         
+        public PartialViewResult _Menu()
+        {
+            return PartialView(db);
+        }
+
+        public ActionResult Test()
+        {
+            return View(db);
+        }
     }
 }
