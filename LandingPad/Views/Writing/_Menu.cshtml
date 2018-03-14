@@ -18,7 +18,7 @@
             <!--Format Tags-->
             <div class="slide">
                 <div class="inputGroup">
-                    @Html.Partial("_SelectFormat", Model.FormatTags.ToList())
+                    @Html.Partial("_SelectFormat", Model.FormatTags.Except(Model.FormatTags.Where(t => (Model.FormatCategories.Select(u => u.FormatID).Contains(t.FormatID)))).ToList())
                 </div>
 
                 <div class="buttonGroup">

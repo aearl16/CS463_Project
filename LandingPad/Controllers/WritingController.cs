@@ -101,14 +101,11 @@ namespace LandingPad.Controllers
             return PartialView();
         }
 
-        public PartialViewResult _FormatSearch()
-        {
-            return PartialView(db.FormatTags.ToList());
-        }
-
         public PartialViewResult _SelectFormat()
         {
-            return PartialView(db.FormatTags.ToList());
+            IEnumerable<FormatTag> initialTags = db.FormatTags.Except(db.FormatTags.Where(t => (db.FormatCategories.Select(u => u.FormatID).Contains(t.FormatID))));
+
+            return PartialView(initialTags);
         }
         
         public PartialViewResult _Menu()

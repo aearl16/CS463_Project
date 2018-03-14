@@ -19,7 +19,9 @@ namespace LandingPad.Models
 
         [Required]
         public int ParentID { get; set; }
+        
+        public int? SecondaryParentID { get; set; }
 
-        public int SecondaryParentID { get; set; }
+        public virtual FormatTag FormatTag { get; set; }
     }
 }

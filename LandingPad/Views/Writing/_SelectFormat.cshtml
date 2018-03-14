@@ -1,21 +1,38 @@
 ﻿@model IEnumerable<LandingPad.Models.FormatTag>
 
 <div class="tagSelector">
-    Search <input list="formatTagSearch" />
-    <datalist id="formatTagSearch">
-        <!--[if lte IE 9]><select data-datalist="formatTagSearch"><![endif]-->
-        @foreach (var item in Model)
-        {
-            <option value="@Html.DisplayFor(ModelItem => item.FormatName)" name="@Html.DisplayFor(ModelItem => item.FormatID)"></option>
-            foreach (var subitem in item.AltFormatNames)
+    <div class="tagSearch">
+        Search <input list="formatTagSearch" />
+        <datalist id="formatTagSearch">
+            <!--[if lte IE 9]><select data-datalist="formatTagSearch"><![endif]-->
+            @foreach (var item in Model)
             {
-                <option value="@Html.DisplayFor(ModelItem => subitem.AltName)" name="@Html.DisplayFor(ModelItem => subitem.FormatID)"></option>
+                <option value="@item.FormatName"></option>
+                foreach(var itemCategory in item.SubFormats)
+                {
+                    <option value="@itemCategory.FormatTag.FormatName"></option>
+                    foreach(var altname in itemCategory.FormatTag.AltFormatNames)
+                    {
+                        <option value="@altname.AltName"></option>
+                    }
+                }
+                foreach (var subitem in item.AltFormatNames)
+                {
+                    <option value="@subitem.AltName"></option>
+                }
             }
-        }
-        <!--[if lte IE 9]></select><![endif]-->
-     </datalist>
-</div>
+            <!--[if lte IE 9]></select><![endif]-->
+         </datalist>
+    </div>
 
-@section scripts{
-    <script src="https://raw.githubusercontent.com/Fyrd/purejs-datalist-polyfill/master/datalist.polyfill.min.js" type="text/javascript"></script>
-}
+    <div id="formatTagContainer">
+        @foreach(var item in Model)
+        {
+            <span class="@item.FormatID" onmouseover='showExplanation("@item.Explanation")'><input type="checkbox" value="@item.FormatID" name="formatTags"/> @item.FormatName</span>
+        }
+    </div>
+
+    <div id="formatTagDescription">
+
+    </div>
+</div>
