@@ -23,7 +23,7 @@ namespace LandingPad.Controllers
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult Settings()
         {
             return View();
         }
