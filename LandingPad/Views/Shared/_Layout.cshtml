@@ -6,7 +6,18 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" type="text/css" href="layout.css" />
+    <style>
+        .w3-button {
+            background-color: green;
+            padding: 15px 15px;
+            text-align: center;
+            border: none;
+            padding-top: 20px;
+        }
+    </style>
 </head>
+
 <body>
 
     <div class="navbar navbar-inverse navbar-fixed-top center">
@@ -27,7 +38,7 @@
                     <li><button class="w3-button" onclick="plusDivs(-1)">&#10094;</button></li>
                     <li>@Html.ActionLink("LandingPad", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Settings", "Settings", "Home")</li>
                     <li>@Html.ActionLink("Profile", "Index", "LPProfiles")</li>
                     <li><button class="w3-button" onclick="plusDivs(1)">&#10095;</button></li>
                     <li>@Html.ActionLink("Login", "Login", "Account")</li>
