@@ -2,25 +2,25 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
+using System.Data.Entity.Spatial;
 
 namespace LandingPad.Models
 {
-    [Table("WritingFormat")]
-    public partial class WritingFormat
+
+    [Table("FormatCategory")]
+    public partial class FormatCategory
     {
         [Key]
         [Required]
-        public int WritingFormatID { get; set; }
-
-        [Required]
-        public int WritingID { get; set; }
+        public int FormatCategoryID { get; set; }
 
         [Required]
         public int FormatID { get; set; }
 
-        public virtual Writing Writing { get; set; }
+        [Required]
+        public int ParentID { get; set; }
+        
+        public int? SecondaryParentID { get; set; }
 
         public virtual FormatTag FormatTag { get; set; }
     }

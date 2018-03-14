@@ -41,5 +41,7 @@ namespace LandingPad.Models
         public virtual ICollection<Writing> Writings { get; set; }
 
         public virtual LPUser LPUser { get; set; }
+
+        public virtual AccessPermission AccessPermission { get; set; }
     }
 }

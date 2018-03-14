@@ -1,0 +1,55 @@
+﻿@model LandingPad.DAL.LandingPadContext
+<div class="editorMenu">
+    <div class="slideshowContainer">
+        <form method="post" id="editorForm">
+            <!--Title, description, and editor-->
+            <div class="slide">
+                <div class="inputGroup">
+                    Title <input type="text" id="title" name="Title" /><br />
+                    Description <textarea id="description" name="DescriptionText"></textarea><br />
+                    @Html.Partial("Editor")
+                </div>
+
+                <div class="buttonGroup">
+                    <button class="nextPage">Next</button>
+                </div>
+            </div>
+
+            <!--Format Tags-->
+            <div class="slide">
+                <div class="inputGroup">
+                    @Html.Partial("_SelectFormat", Model.FormatTags.Except(Model.FormatTags.Where(t => (Model.FormatCategories.Select(u => u.FormatID).Contains(t.FormatID)))).ToList())
+                </div>
+
+                <div class="buttonGroup">
+                    <button class="prevPage">Back</button>
+                    <button class="nextPage">Next</button>
+                </div>
+            </div>
+
+            <!--Permissions-->
+            <div class="slide">
+                <div class="inputGroup">
+
+                </div>
+
+                <div class="buttonGroup">
+                    <button class="prevPage">Back</button>
+                    <button class="nextPage">Next</button>
+                </div>
+            </div>
+
+            <!--Confirmation-->
+            <div class="slide">
+                <div class="inputGroup">
+
+                </div>
+
+                <div class="buttonGroup">
+                    <button class="prevPage">Back</button>
+                    <input type="submit" value="Save" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

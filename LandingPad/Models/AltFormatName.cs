@@ -7,21 +7,17 @@ using System.Web;
 
 namespace LandingPad.Models
 {
-    [Table("WritingFormat")]
-    public partial class WritingFormat
+    [Table("AltFormatName")]
+    public partial class AltFormatName
     {
         [Key]
         [Required]
-        public int WritingFormatID { get; set; }
-
-        [Required]
-        public int WritingID { get; set; }
+        public int AltFormatNameID { get; set; }
 
         [Required]
         public int FormatID { get; set; }
 
-        public virtual Writing Writing { get; set; }
-
-        public virtual FormatTag FormatTag { get; set; }
+        [Required]
+        public string AltName { get; set; }
     }
 }
