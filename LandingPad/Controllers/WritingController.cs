@@ -100,6 +100,22 @@ namespace LandingPad.Controllers
         {
             return PartialView();
         }
+
+        public PartialViewResult _SelectFormat()
+        {
+            IEnumerable<FormatTag> initialTags = db.FormatTags.Except(db.FormatTags.Where(t => (db.FormatCategories.Select(u => u.FormatID).Contains(t.FormatID))));
+
+            return PartialView(initialTags);
+        }
         
+        public PartialViewResult _Menu()
+        {
+            return PartialView(db);
+        }
+
+        public ActionResult Test()
+        {
+            return View(db);
+        }
     }
 }

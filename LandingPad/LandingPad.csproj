@@ -435,6 +435,9 @@
     <Compile Include="Controllers\PseudonymController.cs" />
     <Compile Include="Controllers\WritingController.cs" />
     <Compile Include="DAL\LandingPadContext.cs" />
+    <Compile Include="Models\AccessPermission.cs" />
+    <Compile Include="Models\AltFormatName.cs" />
+    <Compile Include="Models\FormatCategory.cs" />
     <Compile Include="Models\FormatTag.cs" />
     <Compile Include="Models\LPProfile.cs" />
     <Compile Include="Models\LPUser.cs" />
@@ -471,6 +474,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\formatTags.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -541,7 +545,13 @@
     <Content Include="Views\LPUsers\Edit.cshtml" />
     <Content Include="Views\LPUsers\Index.cshtml" />
     <Content Include="Views\Shared\Info.cshtml" />
+<<<<<<< HEAD
     <Content Include="Views\Writing\Editor.cshtml" />
+=======
+    <Content Include="Views\Writing\_Menu.cshtml" />
+    <Content Include="Views\Writing\Test.cshtml" />
+    <Content Include="Views\Writing\_SelectFormat.cshtml" />
+>>>>>>> Dev
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
