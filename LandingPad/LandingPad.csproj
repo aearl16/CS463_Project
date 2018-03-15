@@ -545,13 +545,9 @@
     <Content Include="Views\LPUsers\Edit.cshtml" />
     <Content Include="Views\LPUsers\Index.cshtml" />
     <Content Include="Views\Shared\Info.cshtml" />
-<<<<<<< HEAD
-    <Content Include="Views\Writing\Editor.cshtml" />
-=======
     <Content Include="Views\Writing\_Menu.cshtml" />
     <Content Include="Views\Writing\Test.cshtml" />
     <Content Include="Views\Writing\_SelectFormat.cshtml" />
->>>>>>> Dev
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
