@@ -11,15 +11,61 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using LandingPad.Models;
+using SendGrid.Helpers.Mail;
+using SendGrid;
 
 namespace LandingPad
 {
     public class EmailService : IIdentityMessageService
     {
-        public Task SendAsync(IdentityMessage message)
+        public async Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            await ConfigSendGridasync(message);
+        }
+
+        // Use NuGet to install SendGrid (Basic C# client lib) 
+        private async Task ConfigSendGridasync(IdentityMessage message)
+        {
+            try
+            {
+                var apiKey = Environment.GetEnvironmentVariable("SendGrid_Key");
+                var client = new SendGridClient(apiKey);
+                var myMessage = new SendGridMessage();
+                myMessage.Subject = "Sending with SendGrid is Fun";
+                myMessage.AddTo(message.Destination);
+                myMessage.From = new EmailAddress("aearl16@wou.edu", "Aaron Earl");
+                myMessage.Subject = message.Subject;
+                myMessage.PlainTextContent = message.Body;
+                myMessage.HtmlContent = message.Body;
+                var response = await client.SendEmailAsync(myMessage);
+                System.Diagnostics.Debug.WriteLine("Message Sent");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+        }
+
+        internal static void SendEmailMessage(string Email)
+        {
+            try
+            {
+                var client = new SendGridClient("SG.WVw7JGp9SS6sE2dw4MNTNw.z9eLnTLpLBrDDKCwfvyDDfMawd6fKgUA1PPsY - 6j770");
+                var newMessage = new SendGridMessage();
+                newMessage.Subject = "Sending with SendGrid is Fun";
+                newMessage.AddTo(Email);
+                newMessage.From = new EmailAddress("aearl16@wou.edu", "Aaron Earl");
+                newMessage.Subject = "Welcome to LandingPad!";
+                newMessage.PlainTextContent = "Hi";
+                newMessage.HtmlContent = "<p>Hello</p>";
+                var response = client.SendEmailAsync(newMessage);
+                Console.WriteLine("Message Sent");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 

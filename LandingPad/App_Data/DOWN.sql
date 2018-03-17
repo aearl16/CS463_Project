@@ -3,6 +3,17 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
+	WHERE tables.name = 'WritingPseudonym'
+
+)
+BEGIN
+	DROP TABLE dbo.WritingPseudonym
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
 	WHERE tables.name = 'Pseudonym'
 
 )
@@ -14,11 +25,66 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
+	WHERE tables.name = 'WritingFormat'
+
+)
+BEGIN
+	DROP TABLE dbo.WritingFormat
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'AccessPermission'
+
+)
+BEGIN
+	DROP TABLE dbo.AccessPermission
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
 	WHERE tables.name = 'Writing'
 
 )
 BEGIN
 	DROP TABLE dbo.Writing
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'AltFormatName'
+
+)
+BEGIN
+	DROP TABLE dbo.AltFormatName
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'FormatCategory'
+
+)
+BEGIN
+	DROP TABLE dbo.FormatCategory
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'FormatTag'
+
+)
+BEGIN
+	DROP TABLE dbo.FormatTag
 END
 
 IF EXISTS
