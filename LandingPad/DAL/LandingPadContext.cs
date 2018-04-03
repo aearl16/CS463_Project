@@ -20,7 +20,10 @@ namespace LandingPad.DAL
         public virtual DbSet<Writing> Writings { get; set; }
         public virtual DbSet<WritingPseudonym> WritingPseudonyms { get; set; }
         public virtual DbSet<FormatTag> FormatTags { get; set; }
+        public virtual DbSet<AltFormatName> AltFormatNames { get; set; }
+        public virtual DbSet<FormatCategory> FormatCategories { get; set; }
         public virtual DbSet<WritingFormat> WritingFormats { get; set; }
+        public virtual DbSet<AccessPermission> AccessPermissions { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

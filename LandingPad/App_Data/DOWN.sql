@@ -36,11 +36,44 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
+	WHERE tables.name = 'AccessPermission'
+
+)
+BEGIN
+	DROP TABLE dbo.AccessPermission
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
 	WHERE tables.name = 'Writing'
 
 )
 BEGIN
 	DROP TABLE dbo.Writing
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'AltFormatName'
+
+)
+BEGIN
+	DROP TABLE dbo.AltFormatName
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'FormatCategory'
+
+)
+BEGIN
+	DROP TABLE dbo.FormatCategory
 END
 
 IF EXISTS
