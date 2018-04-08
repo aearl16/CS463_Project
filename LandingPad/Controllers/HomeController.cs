@@ -27,10 +27,5 @@ namespace LandingPad.Controllers
         {
             return View();
         }
-
-        public string Cap(string str)
-        {
-            return char.ToUpper(str[0]) + str.Substring(1);
-        }
     }
 }
