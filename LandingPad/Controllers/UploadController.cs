@@ -20,7 +20,7 @@ namespace LandingPad.Controllers
 
 
         [HttpPost]
-        public ActionResult FileUpload(HttpPostedFileBase file, [Bind(Include = "ProfileID, LikesOn," +
+        public ActionResult FileUpload(HttpPostedFileBase file, [Bind(Include = "ProfileID, Title, LikesOn," +
                 "CommentsOn, CritiqueOn, DescriptionText")] Writing doc)
         {
 
@@ -33,12 +33,13 @@ namespace LandingPad.Controllers
                     Stream str = file.InputStream;
                     //BinaryReader Br = new BinaryReader(str);
                     //Byte[] FileData = Br.ReadBytes((Int32)str.Length);
-                    //This code is the same as above but shorter ==> Still throws the same error
-                    // as the code above
+                    //This code is the same as above but shorter ==> No longer throwing
+                    //an error but is not uploading to server
                     Byte[] FileData = new byte[file.ContentLength];
                     Console.WriteLine(FileData);
 
                     Writing wr = new Writing();
+                    wr.ProfileID = doc.ProfileID;
                     wr.DocType = FileExt;
                     wr.AddDate = DateTime.Now;
                     wr.EditDate = DateTime.Now;
@@ -50,7 +51,7 @@ namespace LandingPad.Controllers
                     wr.CommentsOn = doc.CommentsOn;
                     db.Writings.Add(wr);
                     db.SaveChanges();
-                    return RedirectToAction("Home", "Index");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {

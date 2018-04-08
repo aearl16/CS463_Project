@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
@@ -54,6 +55,8 @@ namespace LandingPad.Models
 
         public virtual AccessPermission AccessPermission { get; set; }
 
+        [Required]
+        [DisplayName("Select File")]
         public HttpPostedFileBase file { get; set; }
     }
 }
