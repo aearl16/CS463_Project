@@ -433,6 +433,7 @@
     <Compile Include="Controllers\LPUsersController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PseudonymController.cs" />
+    <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Controllers\WritingController.cs" />
     <Compile Include="DAL\LandingPadContext.cs" />
     <Compile Include="Models\AccessPermission.cs" />
@@ -548,6 +549,7 @@
     <Content Include="Views\Writing\Test.cshtml" />
     <Content Include="Views\Writing\_SelectFormat.cshtml" />
     <Content Include="Views\Home\Settings.cshtml" />
+    <Content Include="Views\Upload\FileUpload.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
