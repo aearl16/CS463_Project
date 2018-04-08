@@ -20,8 +20,8 @@ namespace LandingPad.Controllers
 
 
         [HttpPost]
-        public ActionResult FileUpload(HttpPostedFileBase file, [Bind(Include = "ProfileID, Title, Title, Document, AddDate, EditDate, LikesOn," +
-                "CommentsOn, CritiqueOn, DocType, DescriptionText")] Writing doc)
+        public ActionResult FileUpload(HttpPostedFileBase file, [Bind(Include = "ProfileID, LikesOn," +
+                "CommentsOn, CritiqueOn, DescriptionText")] Writing doc)
         {
 
             String FileExt = Path.GetExtension(file.FileName).ToUpper();
@@ -30,7 +30,7 @@ namespace LandingPad.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    //Stream str = file.InputStream;
+                    Stream str = file.InputStream;
                     //BinaryReader Br = new BinaryReader(str);
                     //Byte[] FileData = Br.ReadBytes((Int32)str.Length);
                     //This code is the same as above but shorter ==> Still throws the same error
@@ -50,11 +50,11 @@ namespace LandingPad.Controllers
                     wr.CommentsOn = doc.CommentsOn;
                     db.Writings.Add(wr);
                     db.SaveChanges();
-                    return RedirectToAction("FileUpload");
+                    return RedirectToAction("Home", "Index");
                 }
                 else
                 {
-                    ViewBag.FileStatus = "Invalid file format.";
+                    ViewBag.FileStatus = "Model Invalid";
                     return View();
                 }
             }
