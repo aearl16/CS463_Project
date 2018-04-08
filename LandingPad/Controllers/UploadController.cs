@@ -28,7 +28,7 @@ namespace LandingPad.Controllers
 
             if (FileExt == ".DOCX" || FileExt == ".DOC")
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     Stream str = file.InputStream;
                     //BinaryReader Br = new BinaryReader(str);
@@ -36,19 +36,20 @@ namespace LandingPad.Controllers
                     //This code is the same as above but shorter ==> No longer throwing
                     //an error but is not uploading to server
                     Byte[] FileData = new byte[file.ContentLength];
-                    Console.WriteLine(FileData);
 
-                    Writing wr = new Writing();
-                    wr.ProfileID = doc.ProfileID;
-                    wr.DocType = FileExt;
-                    wr.AddDate = DateTime.Now;
-                    wr.EditDate = DateTime.Now;
-                    wr.Document = FileData;
-                    wr.Title = doc.Title;
-                    wr.DescriptionText = doc.DescriptionText;
-                    wr.LikesOn = doc.LikesOn;
-                    wr.CritiqueOn = doc.CritiqueOn;
-                    wr.CommentsOn = doc.CommentsOn;
+                    Writing wr = new Writing()
+                    {
+                        ProfileID = doc.ProfileID,
+                        DocType = FileExt,
+                        AddDate = DateTime.Now,
+                        EditDate = DateTime.Now,
+                        Document = FileData,
+                        Title = doc.Title,
+                        DescriptionText = doc.DescriptionText,
+                        LikesOn = doc.LikesOn,
+                        CritiqueOn = doc.CritiqueOn,
+                        CommentsOn = doc.CommentsOn
+                    };
                     db.Writings.Add(wr);
                     db.SaveChanges();
                     return RedirectToAction("Index", "Home");
