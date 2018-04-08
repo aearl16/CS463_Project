@@ -12,7 +12,7 @@ namespace LandingPad.Models
     {
         [Key]
         [Required]
-        public int AccessPermissionID { get; set; }
+        public int AcessPermissionID { get; set; }
 
         public int ProfileID { get; set; }
 

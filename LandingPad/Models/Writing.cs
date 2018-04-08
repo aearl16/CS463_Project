@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
-using System.Web;
 
 namespace LandingPad.Models
 {
@@ -53,10 +51,6 @@ namespace LandingPad.Models
 
         public virtual LPProfile LPProfile { get; set; }
 
-        //public virtual AccessPermission AccessPermission { get; set; }
-
-        [DisplayName("Select File")]
-        [NotMapped]
-        public HttpPostedFileBase file { get; set; }
+        public virtual AccessPermission AccessPermission { get; set; }
     }
 }
