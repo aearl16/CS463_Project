@@ -50,6 +50,7 @@ namespace LandingPad.Controllers
                         LikesOn = doc.LikesOn,
                         CritiqueOn = doc.CritiqueOn,
                         CommentsOn = doc.CommentsOn
+                        //AccessPermission ac = new AccessPermission() //Later Feature
                     };
                     db.Writings.Add(wr);
                     db.SaveChanges();
@@ -63,10 +64,8 @@ namespace LandingPad.Controllers
             }
             else
             {
-
                 ViewBag.FileStatus = "Invalid file format.";
                 return View();
-
             }
         }
     }

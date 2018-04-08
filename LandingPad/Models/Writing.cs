@@ -53,9 +53,8 @@ namespace LandingPad.Models
 
         public virtual LPProfile LPProfile { get; set; }
 
-        public virtual AccessPermission AccessPermission { get; set; }
+        //public virtual AccessPermission AccessPermission { get; set; }
 
-        [Required]
         [DisplayName("Select File")]
         [NotMapped]
         public HttpPostedFileBase file { get; set; }
