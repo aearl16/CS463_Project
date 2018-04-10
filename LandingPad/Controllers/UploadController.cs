@@ -31,12 +31,8 @@ namespace LandingPad.Controllers
                 if (!ModelState.IsValid)
                 {
                     Stream str = file.InputStream;
-                    //BinaryReader Br = new BinaryReader(str);
-                    //Byte[] FileData = Br.ReadBytes((Int32)str.Length);
-
-                    //This code is the same as above but shorter ==> Throwing sql
-                    //sever timeout errors
-                    Byte[] FileData = new byte[file.ContentLength];
+                    BinaryReader Br = new BinaryReader(str);
+                    Byte[] FileData = Br.ReadBytes((Int32)str.Length);
 
                     Writing wr = new Writing()
                     {
