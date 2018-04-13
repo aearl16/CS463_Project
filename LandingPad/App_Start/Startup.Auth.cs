@@ -9,6 +9,9 @@ using Owin;
 using LandingPad.Models;
 using Microsoft.Owin.Security.Twitter;
 using Owin.Security.Providers.Instagram;
+using Owin.Security.Providers.Dropbox;
+using Owin.Security.Providers.Orcid;
+using Owin.Security.Providers.DeviantArt;
 
 namespace LandingPad
 {
@@ -64,6 +67,12 @@ namespace LandingPad
             string twSecret = System.Configuration.ConfigurationManager.AppSettings["twSecret"];
             string inKey = System.Configuration.ConfigurationManager.AppSettings["inKey"];
             string inSecret = System.Configuration.ConfigurationManager.AppSettings["inSecret"];
+            string DeviantKey = System.Configuration.ConfigurationManager.AppSettings["DeviantKey"];
+            string DeviantSecret = System.Configuration.ConfigurationManager.AppSettings["DeviantSecret"];
+            string ORCIDKey = System.Configuration.ConfigurationManager.AppSettings["ORCIDKey"];
+            string ORCIDSecret = System.Configuration.ConfigurationManager.AppSettings["ORCIDSecret"];
+            string DBKey = System.Configuration.ConfigurationManager.AppSettings["DBKey"];
+            string DBSecret = System.Configuration.ConfigurationManager.AppSettings["DBSecret"];
 
 
             app.UseFacebookAuthentication(
@@ -83,6 +92,14 @@ namespace LandingPad
                consumerSecret: twSecret);
 
             app.UseInstagramInAuthentication(inKey, inSecret);
+
+            app.UseDropboxAuthentication(
+                appKey: DBKey,
+                appSecret: DBSecret);
+
+            app.UseOrcidAuthentication(ORCIDKey, ORCIDSecret);
+
+            app.UseDeviantArtAuthentication(DeviantKey, DeviantSecret);
 
         }
     }

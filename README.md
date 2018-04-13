@@ -74,7 +74,7 @@ Bootstrap 3
 
 ## Links and Resources
 
-[Rich Text Editor](https://code.tutsplus.com/tutorials/using-squire-a-lightweight-html5-rich-text-editor--cms-22934)
+[Rich Text Editor](https://github.com/quilljs/quill)
 
 Link to LandingPad on Azure [here](https://landingpad.azurewebsites.net/)
 
