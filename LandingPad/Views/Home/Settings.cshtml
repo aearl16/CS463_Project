@@ -1,11 +1,12 @@
 ﻿@{
-    ViewBag.Title = "LandingPad Settings";
+    ViewBag.Title = "Twitter Settings";
 }
+
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Facebook Login JavaScript Example</title>
+    <title>Twitter Settings</title>
     <meta charset="UTF-8">
 </head>
 <body>
@@ -19,109 +20,101 @@
             height: 32px;
             padding-bottom: 10px;
         }
-        #centerbtn{
-            text-align: left;
 
+        #centerbtn {
+            text-align: left;
         }
     </style>
-
     <h1>LandingPad Social Media Settings</h1>
-
-    <div id="fb-root"></div>
-
-    <script>
-        var fbID = @System.Configuration.ConfigurationManager.AppSettings["fbID"]
-        // initialize and setup facebook js sdk
-        window.fbAsyncInit = function () {
-            FB.init({
-                appId: fbID,
-                xfbml: true,
-                version: 'v2.12'
-            });
-            //FB.getLoginStatus(function (response) {
-            //    if (response.status === 'connected') {
-            //        var accessToken = response.authResponse.accessToken;
-            //        console.log(response.authResponse.accessToken);
-            //        document.getElementById('isconnected').innerHTML = 'We are connected.';
-            //        //document.getElementById('login').style.visibility = 'hidden';
-            //    } else if (response.status === 'not_authorized') {
-            //        document.getElementById('isconnected').innerHTML = 'We are not logged in.'
-            //    } else {
-            //        document.getElementById('isconnected').innerHTML = '1You are not logged into Facebook.';
-            //    }
-            //});
-
-            FB.getLoginStatus(function (response) {
-                if (response.status === 'connected') {
-                    document.getElementById('isconnected').innerHTML = response.first_name + ' is connected to Facebook.';
-                    var uid = response.authResponse.userID;
-                    var accessToken = response.authResponse.accessToken;
-                } else if (response.status === 'not_authorized') {
-                    document.getElementById('isconnected').innerHTML = 'You are not logged in.'
-                } else {
-                    document.getElementById('isconnected').innerHTML = 'You are not logged in.'
-                }
-            });
-        };
-        (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) { return; }
-            js = d.createElement(s); js.id = id;
-            js.src = "https://connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-
-        function getInfo() {
-
-            FB.api(
-                '/me',
-                'GET',
-                { "fields": "id,name,age_range,email,first_name,last_name,gender,cover,birthday,about,address,hometown,posts{actions}" },
-                function (response) {
-
-                    FB.getLoginStatus();
-
-                    document.getElementById('Name').innerHTML = response.first_name + " " + response.last_name;
-                    //document.getElementById('email').innerHTML = response.email;
-                    //document.getElementById('birthday').innerHTML = response.birthday;
-                    //document.getElementById('gender').innerHTML = response.gender;
-                    //document.getElementById('about').innerHTML = response.about;
-                    //document.getElementById('posts').innerHTML = response.posts;
-                }
-            );
-
-        }
-
-        function logout() {
-            FB.logout(function (response) {
-                // user is now logged out
-            });
-        }
-
-    </script>
-    <h4>Facebook Connection Status</h4>
-    <p>By logging in you give LandingPad permission to post to the platform(s) below on your behalf.</p>
+    @*<div id="fb-root"></div>*@
+    @*<script>
+            var fbID = @System.Configuration.ConfigurationManager.AppSettings["fbID"]
+            // initialize and setup facebook js sdk
+            window.fbAsyncInit = function () {
+                FB.init({
+                    appId: fbID,
+                    xfbml: true,
+                    version: 'v2.12'
+                });
+                FB.getLoginStatus(function (response) {
+                    if (response.status === 'connected') {
+                        document.getElementById('isconnected').innerHTML = response.first_name + ' is connected to Facebook.';
+                        var uid = response.authResponse.userID;
+                        var accessToken = response.authResponse.accessToken;
+                    } else if (response.status === 'not_authorized') {
+                        document.getElementById('isconnected').innerHTML = 'You are not logged in.'
+                    } else {
+                        document.getElementById('isconnected').innerHTML = 'You are not logged in.'
+                    }
+                });
+            };
+            (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) { return; }
+                js = d.createElement(s); js.id = id;
+                js.src = "https://connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+            function getInfo() {
+                FB.api(
+                    '/me',
+                    'GET',
+                    { "fields": "id,name,age_range,email,first_name,last_name,gender,cover,birthday,about,address,hometown,posts{actions}" },
+                    function (response) {
+                        FB.getLoginStatus();
+                        document.getElementById('Name').innerHTML = response.first_name + " " + response.last_name;
+                        //document.getElementById('email').innerHTML = response.email;
+                        //document.getElementById('birthday').innerHTML = response.birthday;
+                        //document.getElementById('gender').innerHTML = response.gender;
+                        //document.getElementById('about').innerHTML = response.about;
+                        //document.getElementById('posts').innerHTML = response.posts;
+                    }
+                );
+            }
+            function logout() {
+                FB.logout(function (response) {
+                    // user is now logged out
+                });
+            }
+        </script>*@
+    <h4>Twitter Connection Status</h4>
+    <p>By logging in to Twitter you give LandingPad permission to post on your behalf.</p>
     <p>LandingPad will only post information you want and nothing else.</p>
-
-    <div id="isconnected"></div>
-    <div id="Name"></div>
+    @*<div id="isconnected"></div>
+        <div id="Name"></div>*@
     @*<div id="email"></div>
-    <div id="birthday"></div>
-    <div id="gender"></div>
-    <div id="about"></div>
-    <div id="posts"></div>*@ @*Waiting for permission from Facebook*@
+        <div id="birthday"></div>
+        <div id="gender"></div>
+        <div id="about"></div>
+        <div id="posts"></div>*@ @*Waiting for permission from Facebook*@
+        @*<div id="centerbtn">
+            <div class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="true"></div>
+            <button class="fb-logout-button" onclick="logout()" id="logout"> Logout </button>
+            <button onclick="getInfo()">Finish</button>*@
+        @*This is where Twitter logins will be and where we will display their usernames*@
 
-    <div id="centerbtn">
-        <div class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="true"></div>
+        @*</div>*@
+        @*<div>
+                <h1>Welcome @TempData["Name"]</h1>
+                <br />
+                <img src="@TempData["Userpic"]" style="width:100px;height:100px;" />
+            </div>*@
 
-        <button class="fb-logout-button" onclick="logout()" id="logout"> Logout </button>
+        @using (Html.BeginForm("TwitterAuth", "Home", FormMethod.Get))
+        { <br /> <button class="btn btn-info"
+                         type="submit"
+                         id="twitter">
+        Login to Twitter
+    </button>
+        }
 
-        <button onclick="getInfo()">Finish</button>
 
+        @*@using (Html.BeginForm("TwitterAuth", "Home", FormMethod.Get))
+            {
+                <br />
+                    <button type="submit" id="twitter">Login with Twitter</button>
+            }*@
 
-        @*This is where Instagram and Twitter logins will be and where we will display their usernames*@
-
-    </div>
-</body>
+    </body>
 
 </html>
