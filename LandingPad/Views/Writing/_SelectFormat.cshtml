@@ -2,27 +2,6 @@
 
 <div class="tagSelector">
     <div class="tagSearch">
-        Search <input list="formatTagSearch" />
-        <datalist id="formatTagSearch">
-            <!--[if lte IE 9]><select data-datalist="formatTagSearch"><![endif]-->
-            @foreach (var item in Model)
-            {
-                <option value="@item.FormatName"></option>
-                foreach(var itemCategory in item.ChildFormats)
-                {
-                    <option value="@itemCategory.FormatTag.FormatName"></option>
-                    foreach(var altname in itemCategory.FormatTag.AltFormatNames)
-                    {
-                        <option value="@altname.AltName"></option>
-                    }
-                }
-                foreach (var subitem in item.AltFormatNames)
-                {
-                    <option value="@subitem.AltName"></option>
-                }
-            }
-            <!--[if lte IE 9]></select><![endif]-->
-         </datalist>
     </div>
 
     <div id="formatTagContainer">
