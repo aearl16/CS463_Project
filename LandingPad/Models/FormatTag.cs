@@ -13,7 +13,7 @@ namespace LandingPad.Models
         public FormatTag()
         {
             AltFormatNames = new HashSet<AltFormatName>();
-            SubFormats = new HashSet<FormatCategory>();
+            ChildFormats = new HashSet<FormatCategory>();
             WritingFormats = new HashSet<WritingFormat>();
         }
 
@@ -29,8 +29,9 @@ namespace LandingPad.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AltFormatName> AltFormatNames { get; set; }
 
+        [ForeignKey("ParentID")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FormatCategory> SubFormats { get; set; }
+        public virtual ICollection<FormatCategory> ChildFormats { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WritingFormat> WritingFormats { get; set; }
