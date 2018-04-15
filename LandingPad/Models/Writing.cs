@@ -57,6 +57,6 @@ namespace LandingPad.Models
 
         [DisplayName("Select File")]
         [NotMapped]
-        public HttpPostedFileBase file { get; set; }
+        public HttpPostedFileBase File { get; set; }
     }
 }

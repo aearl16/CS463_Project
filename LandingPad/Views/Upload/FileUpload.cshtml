@@ -73,10 +73,10 @@
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.file, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.File, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.file, "", new { @type = "file", @multiple = "multiple" })
-                @Html.ValidationMessageFor(model => model.file, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(model => model.File, "", new { @type = "file", @multiple = "multiple" })
+                @Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
