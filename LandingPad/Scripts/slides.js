@@ -53,5 +53,5 @@ function loadSlideAndConfirm(current, next, pseudonyms, formatTags) {
     $("#confirmText").empty();
     $("#confirmText").append($(".ql-editor").html());
 
-    $("#editorContent").val() = $(".ql-editor").html();
+    $("#editorContent").val($(".ql-editor").html().replace(/</g, "&lt;").replace(/>/g, "&gt;"));
 }
