@@ -26,7 +26,7 @@ namespace LandingPad.Controllers
 
             String FileExt = Path.GetExtension(file.FileName).ToUpper();
 
-            if (FileExt == ".DOCX" || FileExt == ".DOC")
+            if (CheckExt(FileExt))
             {
                 if (!ModelState.IsValid)
                 {
@@ -64,5 +64,21 @@ namespace LandingPad.Controllers
                 return View();
             }
         }
+
+        /// <summary>
+        /// Helper method for Upload Post
+        /// </summary>
+        public bool CheckExt(String ext)
+        {
+            if(ext == ".DOCX" || ext == ".DOC")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
+
 }
