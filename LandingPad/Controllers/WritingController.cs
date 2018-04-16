@@ -101,11 +101,24 @@ namespace LandingPad.Controllers
             return PartialView();
         }
 
+        public PartialViewResult _SelectAuthor()
+        {
+            return PartialView(db.LPProfiles.ToList());
+        }
+
         public PartialViewResult _SelectFormat()
         {
-            IEnumerable<FormatTag> initialTags = db.FormatTags.Except(db.FormatTags.Where(t => (db.FormatCategories.Select(u => u.FormatID).Contains(t.FormatID))));
+            return PartialView(db.FormatTags.ToList());
+        }
 
-            return PartialView(initialTags);
+        public PartialViewResult _SelectPermissions()
+        {
+            return PartialView(db);
+        }
+
+        public PartialViewResult _Confirmation()
+        {
+            return PartialView(db);
         }
         
         public PartialViewResult _Menu()
