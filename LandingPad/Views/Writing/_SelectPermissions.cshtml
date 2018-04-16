@@ -1,0 +1,41 @@
+﻿@model LandingPad.DAL.LandingPadContext
+
+<div class="permissionsSelector">
+    <h3 onmouseover='showExplanationNotFT("permissionsDescription", "Who can view a piece of writing (coming soon!) and how they are allowed to interact with it. All permissions options can be changed at any time. For more information on what the different options mean, hover over them.")'>Select Writing Permissions</h3>
+    <div id="permissionsContainer">
+        <!--<div id="accessContainer">
+            <span class="public" onmouseover='showExplanationNotFT("permissionsDescription", "Allowing public access means that anyone can view this piece of writing. By selecting this option, you will automatically allow friends, followers, and publishers alike to view your work.")'>
+                Allow public access? <input type="checkbox" value="PublicAccess" onchange='changeAccess("public")' name="accessPermissions" />
+            </span>
+
+            <span class="friend" onmouseover='showExplanationNotFT("permissionsDescription", "Allowing friend access means that people who are your mutual friends will be able to see this writing. If this option is not unchecked, that means it does not allow public access.")'>
+                Allow friend access? <input type="checkbox" value="FriendAccess" onchange='changeAccess("friend")' name="accessPermissions" />
+            </span>
+
+            <span class="publisher" onmouseover='showExplanationNotFT("permissionsDescription", "Allowing publisher access means that user accounts that are marked as being owned by publishers or literary agents will be able to view your writing. Just selecting publisher access is a great way to limit the number of people who can see your writing, while still allowing it to be found by potential employers. If this option is not unchecked, that means it does not allow public access.")'>
+                Allow publisher access? <input type="checkbox" value="PublisherAccess" onchange='changeAccess("publisher")' name="accessPermissions" />
+            </span>
+
+            <span class="minor" onmouseover='showExplanationNotFT("permissionsDescription", "One of the goals of Penfolio is to give you as a writer a single place to post all of your writing. This means that some of the pieces you post may not be appropriate for younger readers. By not selecting this option, you are noting that your writing is for more mature audiences and protecting minors from stumbling across material they may not be ready for yet. Examples of things that may not be appropriate for minors include graphic violence or explicit sexual content, strong language, and mature themes such as non-consensual romantic or physical interactions. Ultimately, the decision on age appropriateness of your writing is up to you, but please use your best judgement.")'>
+                Allow minor access? <input type="checkbox" value="MinorAccess" name="accessPermissions" />
+            </span>
+        </div>
+        -->
+        <div id="interactionContainer">
+            <span class="likes" onmouseover='showExplanationNotFT("permissionsDescription", "Anyone who can view this writing can leave a like to let you know they enjoyed your writing.")'>
+                Allow likes? <input type="checkbox" value="LikesOn" name="LikesOn" />
+            </span>
+
+            <span class="comments" onmouseover='showExplanationNotFT("permissionsDescription", "Anyone who can view this writing can leave a short comment letting you know what they thought of your writing.")'>
+                Allow comments? <input type="checkbox" value="CommentsOn" name="CommentsOn" />
+            </span>
+
+            <span class="critque" onmouseover='showExplanationNotFT("permissionsDescription", "Anyone who can view this writing can leave inline critque offering specific feedback and suggested edits.")'>
+                Allow critique? <input type="checkbox" value="CritiqueOn" name="CritiqueOn" />
+            </span>
+        </div>
+    </div>
+
+    <div id="permissionsDescription">
+    </div>
+</div>
