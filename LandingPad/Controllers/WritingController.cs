@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using LandingPad.Models;
+using System.Text;
 
 namespace LandingPad.Controllers
 {
@@ -141,9 +142,32 @@ namespace LandingPad.Controllers
             return PartialView(db);
         }
 
+        [HttpGet]
         public ActionResult Test()
         {
             return View(db);
+        }
+
+        [HttpPost]
+        public ActionResult Test(FormCollection form)
+        {
+            Writing wr = new Writing()
+            {
+                ProfileID = Int32.Parse(form["ProfileID"]),
+                Title = form["Title"],
+                AddDate = DateTime.Now,
+                EditDate = null,
+                LikesOn = Boolean.Parse(form["LikesOn"]),
+                CommentsOn = Boolean.Parse(form["CommentsOn"]),
+                CritiqueOn = Boolean.Parse(form["CritiqueOn"]),
+                DocType = form["DocType"],
+                DescriptionText = form["DescriptionText"],
+                Document = Encoding.UTF8.GetBytes(form["EditorContent"])
+            };
+            db.Writings.Add(wr);
+            db.SaveChanges();
+
+            return View();
         }
     }
 }
