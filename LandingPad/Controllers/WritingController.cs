@@ -40,9 +40,24 @@ namespace LandingPad.Controllers
             return View();
         }
 
+        //[HttpPost]
+        //public ActionResult Create(FormCollection form)
+        //{
+        //    DateTime AddDate = DateTime.Now;
+        //    int ProfileID = Int32.Parse(form["ProfileID"]);
+        //    string Title = form["Title"];
+        //    string DocType = ".HTML";
+        //    bool LikesOn = Boolean.Parse(form["LikesOn"]);
+        //    bool CommentsOn = Boolean.Parse(form["CommentsOn"]);
+        //    bool CritiqueOn = Boolean.Parse(form["CritiqueOn"]);
+        //    string DescriptionText = form["DescriptionText"];
+
+        //    return View();
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProfileID, Title, Title, Document, AddDate, EditDate, LikesOn," +
+        public ActionResult Create([Bind(Include = "ProfileID, Title, Document, AddDate, LikesOn," +
         "CommentsOn, CritiqueOn, DocType, DescriptionText")] Writing wr)
         {
             if (ModelState.IsValid)
@@ -101,11 +116,24 @@ namespace LandingPad.Controllers
             return PartialView();
         }
 
+        public PartialViewResult _SelectAuthor()
+        {
+            return PartialView(db.LPProfiles.ToList());
+        }
+
         public PartialViewResult _SelectFormat()
         {
-            IEnumerable<FormatTag> initialTags = db.FormatTags.Except(db.FormatTags.Where(t => (db.FormatCategories.Select(u => u.FormatID).Contains(t.FormatID))));
+            return PartialView(db.FormatTags.ToList());
+        }
 
-            return PartialView(initialTags);
+        public PartialViewResult _SelectPermissions()
+        {
+            return PartialView(db);
+        }
+
+        public PartialViewResult _Confirmation()
+        {
+            return PartialView(db);
         }
         
         public PartialViewResult _Menu()
