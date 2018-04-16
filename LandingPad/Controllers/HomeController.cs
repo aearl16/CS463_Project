@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using TweetSharp;
 
+
 namespace LandingPad.Controllers
 {
     [RequireHttps]
@@ -53,7 +54,7 @@ namespace LandingPad.Controllers
         }
         public ActionResult Index(string UserTag)
         {
-            TempData["UserTag"] = UserTag;
+           // TempData["UserTag"] = UserTag;
             return View();
         }
 
