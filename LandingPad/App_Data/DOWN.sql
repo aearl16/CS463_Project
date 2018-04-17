@@ -102,9 +102,22 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
+	WHERE tables.name = 'Twitter'
+
+)
+BEGIN
+	DROP TABLE dbo.Twitter
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
 	WHERE tables.name = 'LPUser'
 
 )
 BEGIN
 	DROP TABLE dbo.LPUser
 END
+
+
