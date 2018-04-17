@@ -72,19 +72,19 @@ namespace LPTesting
             UploadController up = new UploadController();
             Assert.IsFalse(up.CheckExt(null));
         }
-        [Test]//Testing on Twitter??
+        [Test]//Testing on Twitter
         public void Test_CheckToken_Null()
         {
             HomeController tw = new HomeController();
             Assert.IsFalse(tw.CheckToken(null));
         }
-        [Test]//Testing on Twitter??
+        [Test]//Testing on Twitter
         public void Test_CheckToken_NotNull()
         {
             HomeController tw = new HomeController();
             Assert.IsTrue(tw.CheckToken("secretkey"));
         }
-        [Test]//Testing on Twitter??
+        [Test]//Testing on Twitter
         public void TestVerifyToken_TokenAvailable()
         {
             HomeController tw = new HomeController();
