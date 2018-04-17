@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
 using System.Web;
+using System.Web.Mvc;
 
 namespace LandingPad.Models
 {
@@ -57,6 +58,6 @@ namespace LandingPad.Models
 
         [DisplayName("Select File")]
         [NotMapped]
-        public HttpPostedFileBase file { get; set; }
+        public HttpPostedFileBase File { get; set; }
     }
 }

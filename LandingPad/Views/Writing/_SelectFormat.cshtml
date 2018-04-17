@@ -1,34 +1,22 @@
 ﻿@model IEnumerable<LandingPad.Models.FormatTag>
 
 <div class="tagSelector">
-    <div class="tagSearch">
-        Search <input list="formatTagSearch" />
-        <datalist id="formatTagSearch">
-            <!--[if lte IE 9]><select data-datalist="formatTagSearch"><![endif]-->
-            @foreach (var item in Model)
-            {
-                <option value="@item.FormatName"></option>
-                foreach(var itemCategory in item.SubFormats)
-                {
-                    <option value="@itemCategory.FormatTag.FormatName"></option>
-                    foreach(var altname in itemCategory.FormatTag.AltFormatNames)
-                    {
-                        <option value="@altname.AltName"></option>
-                    }
-                }
-                foreach (var subitem in item.AltFormatNames)
-                {
-                    <option value="@subitem.AltName"></option>
-                }
-            }
-            <!--[if lte IE 9]></select><![endif]-->
-         </datalist>
-    </div>
-
+    <h3 onmouseover='showExplanation("A writing format is the type of writing your piece falls under. Formats include things like essays, poems, and novels and are not decided by the writing&apos;s genre. By selecting writing formats, you will be providing categorizations that will help organize your pieces and help others find it more easily should you choose to share it. For more information on what different formats mean, hover over the format names. Selecting higher level formats will load more formats that fall under that category.")'>Select Writing Format</h3>
     <div id="formatTagContainer">
-        @foreach(var item in Model)
+        <!--Create visible checkboxes for all of the top level formats-->
+        @foreach (var item in Model.Except(Model.Where(t => (Model.SelectMany(u => (u.ChildFormats.Select(v => v.FormatID))).Contains(t.FormatID)))))
         {
-            <span class="@item.FormatID" onmouseover='showExplanation("@item.Explanation")'><input type="checkbox" value="@item.FormatID" name="formatTags"/> @item.FormatName</span>
+            <span class="@item.FormatID" onmouseover='showExplanation("@item.Explanation")'>
+                <input type="checkbox" value="@item.FormatID" name="FormatTags" onchange='ftChildren(@item.FormatID, [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID == null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.SecondaryParentID)))])' class="@item.FormatID" /> <span class="formatName">@item.FormatName</span>
+            </span>
+        }
+
+        <!--Create checkboxes for all the formats that have a parent and collapse them for now-->
+        @foreach (var item in Model.Where(t => (Model.SelectMany(u => (u.ChildFormats.Select(v => v.FormatID))).Contains(t.FormatID))))
+        {
+            <span class="@item.FormatID collapse" onmouseover='showExplanation("@item.Explanation")'>
+                <input type="checkbox" value="@item.FormatID" name="FormatTags" onchange='ftChildren(@item.FormatID, [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID == null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.SecondaryParentID)))])' class="@item.FormatID" /> <span class="formatName">@item.FormatName</span>
+            </span>
         }
     </div>
 

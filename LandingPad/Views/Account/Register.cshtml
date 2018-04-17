@@ -1,4 +1,5 @@
-﻿@model LandingPad.Models.RegisterViewModel
+﻿@using LandingPad.Models 
+@model LandingPad.Models.RegisterViewModel
 @{
     ViewBag.Title = "Create an Account";
 }
@@ -36,6 +37,11 @@
         </div>
     </div>
 }
+</div>
+<div class="float">
+    <section id="socialLoginForm">
+        @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+    </section>
 </div>
 
 @section Scripts {

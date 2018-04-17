@@ -1,0 +1,24 @@
+﻿@model IEnumerable<LandingPad.Models.LPProfile>
+
+<div class="pseudonymSelector">
+    <h3>Select Pseudonyms for Writing</h3>
+    ProfileID <select id="profileID" name="ProfileID" onchange='loadPseudonyms([@Html.Raw(String.Join(",", Model.Select(i => i.ProfileID)))])'>
+        <option value="" selected disabled hidden>Select ProfileID</option>
+        @foreach(var item in Model)
+        {
+            <option value="@item.ProfileID">@item.ProfileID</option>
+        }
+    </select>
+
+    <div id="pseudonymContainer">
+        @foreach(var item in Model)
+        {
+            <span class="@item.ProfileID collapse">
+                @foreach(var subitem in item.Pseudonyms)
+                {
+                    <input type="checkbox" value="@subitem.PseudonymID" name="Pseudonyms" class="@subitem.PseudonymID" /> <span class="pseudonymName @subitem.PseudonymID">@subitem.Pseudonym1</span>
+                }
+            </span>
+        }
+    </div>
+</div>
