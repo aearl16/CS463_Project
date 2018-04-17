@@ -474,7 +474,6 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ConnectionStrings.config" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\formatTags.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -554,6 +553,7 @@
     <Content Include="Views\Writing\_SelectAuthor.cshtml" />
     <Content Include="Views\Writing\_Confirmation.cshtml" />
     <Content Include="Views\Writing\ViewWriting.cshtml" />
+    <Content Include="Views\Writing\Editor.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
