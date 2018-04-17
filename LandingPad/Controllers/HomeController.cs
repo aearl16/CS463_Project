@@ -63,7 +63,7 @@ namespace LandingPad.Controllers
 
                 TempData["Name"] = user.Name;
                 TempData["Userpic"] = user.ProfileImageUrl;
-                return View();
+                return RedirectToAction("Settings");
             }
             catch
             {
