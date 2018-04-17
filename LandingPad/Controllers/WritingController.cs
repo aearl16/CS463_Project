@@ -33,6 +33,16 @@ namespace LandingPad.Controllers
             {
                 return HttpNotFound();
             }
+
+            string doc = "";
+
+            if (wr.DocType == "HTML")
+            {
+                doc = HTMLByteArrayToString(wr.Document);
+            }
+
+            ViewBag.Document = doc;
+
             return View(wr);
         }
 
