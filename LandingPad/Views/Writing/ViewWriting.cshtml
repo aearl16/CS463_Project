@@ -1,0 +1,7 @@
+﻿@model LandingPad.Models.Writing
+
+<h2>@Model.Title</h2>
+<div id="byline">@ViewBag.Byline</div>
+
+<div id="content" style="white-space:pre-wrap">@Html.Raw(ViewBag.Document)</div>
+

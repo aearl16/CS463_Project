@@ -41,21 +41,6 @@ namespace LandingPad.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //public ActionResult Create(FormCollection form)
-        //{
-        //    DateTime AddDate = DateTime.Now;
-        //    int ProfileID = Int32.Parse(form["ProfileID"]);
-        //    string Title = form["Title"];
-        //    string DocType = ".HTML";
-        //    bool LikesOn = Boolean.Parse(form["LikesOn"]);
-        //    bool CommentsOn = Boolean.Parse(form["CommentsOn"]);
-        //    bool CritiqueOn = Boolean.Parse(form["CritiqueOn"]);
-        //    string DescriptionText = form["DescriptionText"];
-
-        //    return View();
-        //}
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ProfileID, Title, Document, AddDate, LikesOn," +
@@ -149,7 +134,7 @@ namespace LandingPad.Controllers
         }
 
         [HttpPost]
-        public ActionResult Test(System.Web.Mvc.FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
+        public ActionResult Test(string[] FormatTags, string[] Pseudonyms, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
                 "CommentsOn, CritiqueOn, DescriptionText")] Writing ed)
         {
             if (!ModelState.IsValid)
@@ -165,17 +150,100 @@ namespace LandingPad.Controllers
                     CritiqueOn = form["CritiqueOn"] != null ? true : false,
                     DocType = form["DocType"],
                     DescriptionText = form["DescriptionText"],
-                    Document = Encoding.UTF8.GetBytes(form["EditorContent"])
+                    Document = Encoding.Unicode.GetBytes(form["EditorContent"])
                 };
                 db.Writings.Add(wr);
                 db.SaveChanges();
-                return View(db);
+
+                int id = wr.WritingID;
+
+                foreach(var selection in FormatTags)
+                {
+                    WritingFormat wf = new WritingFormat()
+                    {
+                        WritingID = id,
+                        FormatID = Int32.Parse(selection)
+                    };
+                    db.WritingFormats.Add(wf);
+                    db.SaveChanges();
+                }
+
+                foreach(var selection in Pseudonyms)
+                {
+                    WritingPseudonym wp = new WritingPseudonym()
+                    {
+                        WritingID = id,
+                        PseudonymID = Int32.Parse(selection)
+                    };
+                    db.WritingPseudonyms.Add(wp);
+                    db.SaveChanges();
+                }
+
+                return RedirectToAction("ViewWriting", "Writing", new { @id = id });
             }
             else
             {
                 ViewBag.FileStatus = "Model Invalid";
                 return View(db);
             }
+        }
+
+        public ActionResult ViewWriting(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index", "Writing");
+            }
+            Writing wr = db.Writings.Find(id);
+            if (wr == null)
+            {
+                return HttpNotFound();
+            }
+
+            string doc = "";
+
+            if (wr.DocType == "HTML")
+            {
+                doc = HTMLByteArrayToString(wr.Document);
+            }
+
+            ViewBag.Document = doc;
+
+            string byline = "";
+
+            if(wr.WritingPseudonyms.Count > 0)
+            {
+                byline = " by " + wr.WritingPseudonyms.First().Pseudonym.Pseudonym1;
+            }
+            else if(wr.LPProfile.DisplayRealName == true)
+            {
+                byline = " by " + wr.LPProfile.LPUser.FirstName + " " + wr.LPProfile.LPUser.LastName;
+            }
+
+            string pageTitle = wr.Title + byline;
+
+            ViewBag.Title = pageTitle;
+
+            if(byline.Length > 0)
+            {
+                byline = byline.TrimStart();
+                byline = byline[0].ToString().ToUpper() + byline.Substring(1);
+            }
+
+            ViewBag.Byline = byline;
+
+            return View(wr);
+        }
+
+        public string HTMLByteArrayToString(byte[] input)
+        {
+            if (input == null)
+                return null;
+
+            string output = Encoding.Unicode.GetString(input);
+            output = output.Replace("&lt;", "<").Replace("&gt;", ">");
+
+            return output;
         }
     }
 }
