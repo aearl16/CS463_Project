@@ -21,42 +21,6 @@ namespace LandingPad.Controllers
         }
 
         [HttpGet]
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return HttpNotFound();
-            }
-            Writing wr = db.Writings.Find(id);
-            if (wr == null)
-            {
-                return HttpNotFound();
-            }
-            return View(wr);
-        }
-
-        [HttpGet]
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProfileID, Title, Document, AddDate, LikesOn," +
-        "CommentsOn, CritiqueOn, DocType, DescriptionText")] Writing wr)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Writings.Add(wr);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View("Index");
-        }
-
-        [HttpGet]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -128,13 +92,13 @@ namespace LandingPad.Controllers
         }
 
         [HttpGet]
-        public ActionResult Test()
+        public ActionResult Create()
         {
             return View(db);
         }
 
         [HttpPost]
-        public ActionResult Test(string[] FormatTags, string[] Pseudonyms, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
+        public ActionResult Create(string[] FormatTags, string[] Pseudonyms, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
                 "CommentsOn, CritiqueOn, DescriptionText")] Writing ed)
         {
             if (!ModelState.IsValid)
@@ -188,6 +152,7 @@ namespace LandingPad.Controllers
             }
         }
 
+        [HttpGet]
         public ActionResult ViewWriting(int? id)
         {
             if (id == null)
