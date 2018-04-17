@@ -553,6 +553,7 @@
     <Content Include="Views\Writing\_SelectAuthor.cshtml" />
     <Content Include="Views\Writing\_Confirmation.cshtml" />
     <Content Include="Views\Writing\ViewWriting.cshtml" />
+    <Content Include="Views\Writing\Editor.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
