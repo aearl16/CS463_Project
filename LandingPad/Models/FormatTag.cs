@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using LandingPad.DAL;
 
 namespace LandingPad.Models
 {
@@ -14,7 +15,6 @@ namespace LandingPad.Models
         {
             AltFormatNames = new HashSet<AltFormatName>();
             ChildFormats = new HashSet<FormatCategory>();
-            //SubFormats = new HashSet<FormatCategory>();
             WritingFormats = new HashSet<WritingFormat>();
         }
 
@@ -33,9 +33,6 @@ namespace LandingPad.Models
         [ForeignKey("ParentID")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FormatCategory> ChildFormats { get; set; }
-
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        //public virtual ICollection<FormatCategory> SubFormats { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WritingFormat> WritingFormats { get; set; }

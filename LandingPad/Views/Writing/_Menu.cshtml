@@ -3,7 +3,7 @@
     <div class="slideshowContainer">
         <form method="post" id="editorForm">
             <!--Title, description, and editor-->
-            <div class="slide">
+            <div class="slide1">
                 <div class="inputGroup">
                     Title <input type="text" id="title" name="Title" /><br />
                     Description <textarea id="description" name="DescriptionText"></textarea><br />
@@ -11,42 +11,55 @@
                 </div>
 
                 <div class="buttonGroup">
-                    <button class="nextPage">Next</button>
+                    <a class="nextPage" onclick='loadSlide("slide1", "slide2")'>Next</a>
+                </div>
+            </div>
+
+            <!--Author-->
+            <div class="slide2 collapse">
+                <div class="inputGroup">
+                    @Html.Partial("_SelectAuthor", Model.LPProfiles.ToList())
+                </div>
+
+                <div class="buttonGroup">
+                    <a class="prevPage" onclick='loadSlide("slide2", "slide1")'>Back</a>
+                    <a class="nextPage" onclick='loadSlide("slide2", "slide3")'>Next</a>
                 </div>
             </div>
 
             <!--Format Tags-->
-            <div class="slide">
+            <div class="slide3 collapse">
                 <div class="inputGroup">
                     @Html.Partial("_SelectFormat", Model.FormatTags.ToList())
                 </div>
 
                 <div class="buttonGroup">
-                    <button class="prevPage">Back</button>
-                    <button class="nextPage">Next</button>
+                    <a class="prevPage" onclick='loadSlide("slide3", "slide2")'>Back</a>
+                    <a class="nextPage" onclick='loadSlide("slide3", "slide4")'>Next</a>
                 </div>
             </div>
 
             <!--Permissions-->
-            <div class="slide">
+            <div class="slide4 collapse">
                 <div class="inputGroup">
-
+                    @Html.Partial("_SelectPermissions", Model)
                 </div>
 
                 <div class="buttonGroup">
-                    <button class="prevPage">Back</button>
-                    <button class="nextPage">Next</button>
+                    <a class="prevPage" onclick='loadSlide("slide4", "slide3")'>Back</a>
+                    <a class="nextPage" onclick='loadSlideAndConfirm("slide4", "slide5", [@Html.Raw(String.Join(",", Model.Pseudonyms.Select(i => i.PseudonymID)))], [@Html.Raw(String.Join(",", Model.FormatTags.Select(i => i.FormatID)))])'>Next</a>
                 </div>
             </div>
 
             <!--Confirmation-->
-            <div class="slide">
+            <div class="slide5 collapse">
                 <div class="inputGroup">
-
+                    @Html.Partial("_Confirmation", Model)
+                    <input type="hidden" name="DocType" value=".HTML" />
                 </div>
 
                 <div class="buttonGroup">
-                    <button class="prevPage">Back</button>
+                    <a class="prevPage" onclick='loadSlide("slide5", "slide1")'>No</a>
                     <input type="submit" value="Save" />
                 </div>
             </div>
