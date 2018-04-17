@@ -55,12 +55,14 @@
             <div class="slide5 collapse">
                 <div class="inputGroup">
                     @Html.Partial("_Confirmation", Model)
-                    <input type="hidden" name="DocType" value=".HTML" />
+                    <input type="hidden" name="DocType" value="HTML" />
+                    <input type="hidden" id="editorContent" name="EditorContent" />
                 </div>
 
                 <div class="buttonGroup">
+                    <div id="validationMessage"></div>
                     <a class="prevPage" onclick='loadSlide("slide5", "slide1")'>No</a>
-                    <input type="submit" value="Save" />
+                    <input type="submit" id="createWriting" value="Save" />
                 </div>
             </div>
         </form>

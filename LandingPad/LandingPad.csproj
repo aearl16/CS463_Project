@@ -530,9 +530,7 @@
     <Content Include="Views\Pseudonym\Edit.cshtml" />
     <Content Include="Views\Pseudonym\Details.cshtml" />
     <Content Include="Views\Pseudonym\Delete.cshtml" />
-    <Content Include="Views\Writing\Create.cshtml" />
     <Content Include="Views\Writing\Edit.cshtml" />
-    <Content Include="Views\Writing\Details.cshtml" />
     <Content Include="Views\Writing\Delete.cshtml" />
     <Content Include="Views\Shared\_Document.cshtml" />
     <Content Include="Views\LPProfiles\Create.cshtml" />
@@ -547,7 +545,7 @@
     <Content Include="Views\LPUsers\Index.cshtml" />
     <Content Include="Views\Shared\Info.cshtml" />
     <Content Include="Views\Writing\_Menu.cshtml" />
-    <Content Include="Views\Writing\Test.cshtml" />
+    <Content Include="Views\Writing\Create.cshtml" />
     <Content Include="Views\Writing\_SelectFormat.cshtml" />
     <Content Include="Views\Home\Settings.cshtml" />
     <Content Include="Views\Upload\FileUpload.cshtml" />
@@ -555,6 +553,7 @@
     <Content Include="Views\Writing\_SelectPermissions.cshtml" />
     <Content Include="Views\Writing\_SelectAuthor.cshtml" />
     <Content Include="Views\Writing\_Confirmation.cshtml" />
+    <Content Include="Views\Writing\ViewWriting.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -567,7 +566,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <PropertyGroup>
