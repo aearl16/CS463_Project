@@ -19,5 +19,7 @@ namespace LandingPad.Models
 
         [Required]
         public int PseudonymID { get; set; }
+
+        public virtual Pseudonym Pseudonym { get; set; }
     }
 }

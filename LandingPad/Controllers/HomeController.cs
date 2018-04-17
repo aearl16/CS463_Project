@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using TweetSharp;
 
+
 namespace LandingPad.Controllers
 {
     [RequireHttps]
@@ -21,7 +22,26 @@ namespace LandingPad.Controllers
             TwitterService service = new TwitterService(Key, Secret);
             OAuthRequestToken requestToken = service.GetRequestToken("https://localhost:44315/Home/TwitterCallback");
             Uri uri = service.GetAuthenticationUrl(requestToken);
-            return Redirect(uri.ToString());
+
+            if (CheckToken(Key))
+            {
+                if (CheckToken(Secret))
+                {
+
+                    return Redirect(uri.ToString());
+                }
+                else
+                {
+                    ViewBag.FileStatus = "Invalid Twitter Key";
+                    return View();
+                }
+            }
+            else
+            {
+                ViewBag.FileStatus = "Model Invalid";
+                return View();
+            }
+        
         }
 
         public ActionResult TwitterCallback(string oauth_token, string oauth_verifier)
@@ -43,7 +63,7 @@ namespace LandingPad.Controllers
 
                 TempData["Name"] = user.Name;
                 TempData["Userpic"] = user.ProfileImageUrl;
-                return View();
+                return RedirectToAction("Settings");
             }
             catch
             {
@@ -51,9 +71,9 @@ namespace LandingPad.Controllers
             }
 
         }
-        public ActionResult Index(string UserTag)
+        public ActionResult Index()
         {
-            TempData["UserTag"] = UserTag;
+           // TempData["UserTag"] = UserTag;
             return View();
         }
 
@@ -68,9 +88,36 @@ namespace LandingPad.Controllers
             return View();
         }
 
-        public string Cap(string str)
+        public bool CheckToken(String Token)
         {
-            return char.ToUpper(str[0]) + str.Substring(1);
+            if (Token != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool VerifyToken()
+        {
+            string Key = System.Configuration.ConfigurationManager.AppSettings["twKey"];
+            string Secret = System.Configuration.ConfigurationManager.AppSettings["twSecret"];
+            if(String.IsNullOrEmpty(Key))
+            {
+                if (String.IsNullOrEmpty(Secret))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

@@ -84,7 +84,7 @@
                     <ul class="dropdown-menu">
                         <li>@Html.ActionLink("Home", "About", "Home")</li>
                         <li><a href="#">Search</a></li>
-                        <li><a href="#">Make a Post</a></li>
+                        <li>@Html.ActionLink("Post New Writing", "Create", "Writing")</li>
                         <li><a href="#">Following</a></li>
                     </ul>
                 </li>
@@ -141,6 +141,7 @@
                         ],
                     },
                     placeholder: 'Write your own destiny...',
+                    name: 'EditorContent',
                     theme: 'snow'
                 });
 
@@ -162,6 +163,7 @@
             }
         })();
     </script>
+    @RenderSection("editScripts", required: false)
     <script src="~/Scripts/slides.js" type="text/javascript"></script>
     <script src="~/Scripts/formatTags.js" type="text/javascript"></script>
     <script src="~/Scripts/permissions.js" type="text/javascript"></script>
