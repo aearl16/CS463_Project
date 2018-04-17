@@ -2,7 +2,13 @@
 
 <div class="pseudonymSelector">
     <h3>Select Pseudonyms for Writing</h3>
-    ProfileID <input type="number" min="1" max="@Model.Last().ProfileID" step="1" id="profileID" name="ProfileID" onchange='loadPseudonyms([@Html.Raw(String.Join(",", Model.Select(i => i.ProfileID)))])' />
+    ProfileID <select id="profileID" name="ProfileID" onchange='loadPseudonyms([@Html.Raw(String.Join(",", Model.Select(i => i.ProfileID)))])'>
+        <option value="" selected disabled hidden>Select ProfileID</option>
+        @foreach(var item in Model)
+        {
+            <option value="@item.ProfileID">@item.ProfileID</option>
+        }
+    </select>
 
     <div id="pseudonymContainer">
         @foreach(var item in Model)

@@ -52,4 +52,20 @@ function loadSlideAndConfirm(current, next, pseudonyms, formatTags) {
 
     $("#confirmText").empty();
     $("#confirmText").append($(".ql-editor").html());
+
+    $("#editorContent").val($(".ql-editor").html().replace(/</g, "&lt;").replace(/>/g, "&gt;"));
+
+    $("#validationMessage").empty();
+
+    if (isEmpty($("#confirmTitle")) || isEmpty($("#confirmProfileID")) || isEmpty($("#confirmText"))) {
+        $("#validationMessage").append("Writing cannot be saved without a title, author, and body of text.");
+        $("#createWriting").prop("disabled", true);
+    }
+    else {
+        $("#createWriting").prop("disabled", false);
+    }
+}
+
+function isEmpty(el) {
+    return !$.trim(el.html());
 }
