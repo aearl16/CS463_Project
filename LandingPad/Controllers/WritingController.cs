@@ -176,6 +176,23 @@ namespace LandingPad.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            ICollection<WritingFormat> wfToDelete = db.WritingFormats.Where(w => w.WritingID == id).ToList();
+            ICollection<WritingPseudonym> wpToDelete = db.WritingPseudonyms.Where(w => w.WritingID == id).ToList();
+
+            foreach(var item in wfToDelete)
+            {
+                WritingFormat wf = db.WritingFormats.Where(w => w.WritingID == id).First();
+                db.WritingFormats.Remove(wf);
+                db.SaveChanges();
+            }
+
+            foreach (var item in wpToDelete)
+            {
+                WritingPseudonym wp = db.WritingPseudonyms.Where(w => w.WritingID == id).First();
+                db.WritingPseudonyms.Remove(wp);
+                db.SaveChanges();
+            }
+
             Writing wr = db.Writings.Find(id);
             db.Writings.Remove(wr);
             db.SaveChanges();
