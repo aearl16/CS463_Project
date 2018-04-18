@@ -44,30 +44,9 @@ namespace LandingPad.Controllers
 
             ViewBag.Document = doc;
 
-            StringBuilder ft = new StringBuilder("[");
-            foreach(var item in db.FormatTags)
-            {
-                ft.Append("[" + item.FormatID + ",'" + item.FormatName + "','" + item.Explanation + "',[" + String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID == null).Select(i => i.FormatID)) + "],[" + (String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.FormatID))) + "],[" + (String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.SecondaryParentID))) + "]]");
+            ViewBag.ID = id;
 
-                if (item != db.FormatTags.OrderByDescending(i => i.FormatID).FirstOrDefault())
-                    ft.Append(",");
-            }
-            ft.Append("]");
-
-            ViewBag.FormatTag = ft.ToString();
-
-            IEnumerable<int> ct = db.FormatTags
-                .Except(db.FormatTags.Where(t => (db.FormatTags.SelectMany(u => u.ChildFormats.Select(v => v.FormatID)))
-                .Contains(t.FormatID)))
-                .Select(i => i.FormatID)
-                .ToList();
-
-            Array cArray = ct.ToArray();
-            string cTag = cArray.ToString();
-
-            ViewBag.InitialTags = cTag;
-
-            return View(wr);
+            return View(db);
         }
 
         [HttpGet]
