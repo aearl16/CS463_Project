@@ -29,6 +29,9 @@
             var selectedTags = [@Html.Raw(String.Join(",", Model.WritingFormats.Where(i => i.WritingID == id).Select(i => i.FormatID)))];
             var sftCount = @Model.WritingFormats.Where(i => i.WritingID == id).Select(i => i.FormatID).Count();
 
+            //mark the writing id for easy access from controller on save
+            $("#writingID").val(@id);
+
             //populate title, description, and editor
             $("#title").val('@Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().Title');
             $("#description").val('@Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().DescriptionText');
