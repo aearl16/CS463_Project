@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LandingPad</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <!-- Include Quill stylesheet -->
+    <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("~/Images/Penfolio/penfoliobackground.png");
+            background-repeat: repeat;
+        }
+
+        .leftSideBar {
+            background-image: url("~/Images/Penfolio/leftdivbackground.png");
+            background-repeat: repeat-y;
+            position: absolute fixed;
+            width: 100px;
+            left: 100px;
+        }
+
+        .rightSideBar {
+            background-image: url("~/Images/Penfolio/rightdivbackround.png");
+            background-repeat: repeat-y;
+            position: absolute fixed;
+            width: 100px;
+            right: 100px;
+        }
+        .w3-button {
+            background-color: green;
+            padding: 15px 15px;
+            text-align: center;
+            border: none;
+            padding-top: 20px;
+            /* Set default font-family */
+        }
+
+        #editorContainer .ql-container {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            height: 375px;
+        }
+
+        .ql-editor .ql-font-times {
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .ql-editor .ql-font-courier {
+            font-family: Courier New, Courier, monospace;
+        }
+
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label[data-value='arial']:not([data-label])::before,
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-item[data-value='arial']::before,
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label::before {
+            content: 'Arial';
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label[data-value='times']:not([data-label])::before,
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-item[data-value='times']::before,
+        #editorContainer .ql-font-times .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label::before {
+            content: 'Times';
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label[data-value='courier']:not([data-label])::before,
+        #editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-item[data-value='courier']::before,
+        #editorContainer .ql-font-courier .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label::before {
+            content: 'Courier New';
+            font-family: Courier New, Courier, monospace;
+        }
+
+        .ql-snow .ql-picker.ql-font {
+            width: 125px;
+        }
+
+        .ql-font-times {
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .ql-font-courier {
+            font-family: Courier New, Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    @Html.Partial("_NavBar")
+    <div class="leftSideBar"></div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p><img src="~/Content/SquareOneLogo.png" height="25" hspace="5"> SquareOne&trade; @DateTime.Now.Year</p>
+        </footer>
+    </div>
+    <div class="rightSideBar"></div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" type="text/javascript"></script>
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
+    <!-- Initialize Quill editor -->
+    <script>
+        (function () {
+            $(document).ready(function () {
+                var fonts = ['arial', 'times', 'courier'];
+                var Font = Quill.import('formats/font');
+                Font.whitelist = fonts;
+                Quill.register(Font, true);
+
+                var editor = new Quill('#editorContainer .editor', {
+                    bounds: '#editorContainer .editor',
+                    modules: {
+                        'formula': true,
+                        'syntax': true,
+                        'toolbar': [
+                            [{ 'font': fonts }, { 'size': [] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'color': [] }, { 'background': [] }],
+                            [{ 'script': 'super' }, { 'script': 'sub' }],
+                            [{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block'],
+                            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+                            [{ 'align': [] }],
+                            ['link', 'image', 'formula'],
+                            ['clean']
+                        ],
+                    },
+                    placeholder: 'Write your own destiny...',
+                    name: 'EditorContent',
+                    theme: 'snow'
+                });
+
+                loadFonts();
+            });
+
+            function loadFonts() {
+                window.WebFontConfig = {
+                    google: { families: ['Inconsolata::latin', 'Ubuntu+Mono::latin', 'Slabo+27px::latin', 'Roboto+Slab::latin'] }
+                };
+                (function () {
+                    var wf = document.createElement('script');
+                    wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+                    wf.type = 'text/javascript';
+                    wf.async = 'true';
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(wf, s);
+                })();
+            }
+        })();
+    </script>
+    @RenderSection("editScripts", required: false)
+    <script src="~/Scripts/slides.js" type="text/javascript"></script>
+    <script src="~/Scripts/formatTags.js" type="text/javascript"></script>
+    <script src="~/Scripts/permissions.js" type="text/javascript"></script>
+</body>
+</html>
+
