@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Mammoth;
+using System.Text;
 
 namespace LandingPad.Controllers
 {
@@ -63,6 +65,51 @@ namespace LandingPad.Controllers
                 ViewBag.FileStatus = "Invalid file format.";
                 return View();
             }
+        }
+
+        /*
+        public ActionResult ViewDoc(int? id)
+        {
+            return View();
+        }*/
+
+        public FileResult ViewDOC(int? id)
+        {
+            Writing wr = db.Writings.Find(id);
+
+            var DocByte = wr.Document;
+
+            return File(DocByte, "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        }
+
+        public ActionResult Download(int? id)
+        {
+            Writing wr = db.Writings.Find(id);
+            if (wr == null)
+            {
+                return HttpNotFound();
+            }
+            UTF8Encoding encoding = new UTF8Encoding();
+            byte[] contentAsBytes = wr.Document;
+
+            if(wr.DocType == "HTML")
+            {
+                this.HttpContext.Response.ContentType = "application/force-download";
+                this.HttpContext.Response.AddHeader("Content-Disposition", "filename=" + "yourdocument.html");
+            }
+            else
+            {
+                this.HttpContext.Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + "yourdocument.docx");
+            }
+            
+            this.HttpContext.Response.Buffer = true;
+            this.HttpContext.Response.Clear();
+            this.HttpContext.Response.OutputStream.Write(contentAsBytes, 0, contentAsBytes.Length);
+            this.HttpContext.Response.OutputStream.Flush();
+            this.HttpContext.Response.End();
+
+            return View();
         }
 
         /// <summary>
