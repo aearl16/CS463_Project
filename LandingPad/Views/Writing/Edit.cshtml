@@ -1,79 +1,14 @@
-﻿@model LandingPad.Models.Writing
+﻿@model LandingPad.DAL.LandingPadContext
 
 @{
     ViewBag.Title = "Edit";
+    int id = ViewBag.ID;
+    int pId = Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().ProfileID;
 }
 
 <h2>Edit</h2>
-<div class="editorMenu">
-    <div class="slideshowContainer">
-        <form method="post" id="editorForm">
-            <!--Title, description, and editor-->
-            <div class="slide1">
-                <div class="inputGroup">
-                    Title <input type="text" id="title" name="Title" value="@Model.Title" /><br />
-                    Description <textarea id="description" name="DescriptionText">@Model.DescriptionText</textarea><br />
-                    @Html.Partial("Editor")
-                </div>
 
-                <div class="buttonGroup">
-                    <a class="nextPage" onclick='loadSlide("slide1", "slide2")'>Next</a>
-                </div>
-            </div>
-
-            <!--Author-->
-            <div class="slide2 collapse">
-                <div class="inputGroup">
-
-                </div>
-
-                <div class="buttonGroup">
-                    <a class="prevPage" onclick='loadSlide("slide2", "slide1")'>Back</a>
-                    <a class="nextPage" onclick='loadSlide("slide2", "slide3")'>Next</a>
-                </div>
-            </div>
-
-            <!--Format Tags-->
-            <div class="slide3 collapse">
-                <div class="inputGroup">
-
-                </div>
-
-                <div class="buttonGroup">
-                    <a class="prevPage" onclick='loadSlide("slide3", "slide2")'>Back</a>
-                    <a class="nextPage" onclick='loadSlide("slide3", "slide4")'>Next</a>
-                </div>
-            </div>
-
-            <!--Permissions-->
-            <div class="slide4 collapse">
-                <div class="inputGroup">
-
-                </div>
-
-                <div class="buttonGroup">
-                    <a class="prevPage" onclick='loadSlide("slide4", "slide3")'>Back</a>
-                    <a class="nextPage" onclick='loadSlideAndConfirm("slide4", "slide5", [@Html.Raw(String.Join(",", Model.LPProfile.Pseudonyms.Select(i => i.PseudonymID)))], [])'>Next</a>
-                </div>
-            </div>
-
-            <!--Confirmation-->
-            <div class="slide5 collapse">
-                <div class="inputGroup">
-
-                    <input type="hidden" name="DocType" value="HTML" />
-                    <input type="hidden" id="editorContent" name="EditorContent" />
-                </div>
-
-                <div class="buttonGroup">
-                    <div id="validationMessage"></div>
-                    <a class="prevPage" onclick='loadSlide("slide5", "slide1")'>No</a>
-                    <input type="submit" id="createWriting" value="Save" />
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+@Html.Partial("_Menu", Model)
 
 <div>
     @Html.ActionLink("Back to List", "Index")
@@ -84,9 +19,59 @@
 }
 
 @section editScripts {
-    <script>
+<script>
         $(document).ready(function () {
+            var True = true, False = false;
+            var pseudonyms = [@Html.Raw(String.Join(",", Model.Pseudonyms.Where(i => i.ProfileID == pId).Select(j => j.PseudonymID)))];
+            var formatTags = [@Html.Raw(String.Join(",", Model.FormatTags.Select(i => i.FormatID)))];
+            var selectedPseudonyms = [@Html.Raw(String.Join(",", Model.WritingPseudonyms.Where(i => i.WritingID == id).Select(i => i.PseudonymID)))];
+            var spCount = @Model.WritingPseudonyms.Where(i => i.WritingID == id).Select(i => i.PseudonymID).Count();
+            var selectedTags = [@Html.Raw(String.Join(",", Model.WritingFormats.Where(i => i.WritingID == id).Select(i => i.FormatID)))];
+            var sftCount = @Model.WritingFormats.Where(i => i.WritingID == id).Select(i => i.FormatID).Count();
+
+            //mark the writing id for easy access from controller on save
+            $("#writingID").val(@id);
+
+            //populate title, description, and editor
+            $("#title").val('@Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().Title');
+            $("#description").val('@Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().DescriptionText');
             $('.ql-editor').html('@Html.Raw(ViewBag.Document)');
+
+            //get rid of all options for the select
+            $("#profileID option").removeProp("selected");
+            $("#profileID option").prop("hidden", true);
+            $("#profileID option").prop("disabled", true);
+
+            //then add back in the correct option for the select and select it
+            $("#profileID option." + @pId).removeProp("hidden");
+            $("#profileID option." + @pId).removeProp("disabled");
+            $("#profileID option." + @pId).prop("selected", true);
+
+            //load the pseudonyms for the profileID
+            $("#pseudonymContainer > span." + @pId).removeClass("collapse");
+
+            //and check the ones that are currently connected to the writing
+            for (var i = 0; i < @Model.Pseudonyms.Where(i => i.ProfileID == pId).Count(); i++) {
+                for (var j = 0; j < spCount; j++) {
+                    if (selectedPseudonyms[j] === pseudonyms[i])
+                        $("#pseudonymContainer input." + pseudonyms[i]).prop("checked", true);
+                }
+            }
+
+            //check the format tags that are currently connected to the writing
+            for (var i = 0; i < @Model.FormatTags.Count(); i++) {
+                for (var j = 0; j < sftCount; j++) {
+                    if (selectedTags[j] === formatTags[i]) {
+                        $("#formatTagContainer input." + formatTags[i]).prop("checked", true);
+                        $("#formatTagContainer input." + formatTags[i]).trigger("change");
+                    }
+                }
+            }
+
+            //check the current permissions settings
+            $("#likesOn").prop("checked", @Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().LikesOn);
+            $("#commentsOn").prop("checked", @Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().CommentsOn);
+            $("#critiqueOn").prop("checked", @Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().CritiqueOn);
         });
-    </script>
+</script>
 }

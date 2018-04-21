@@ -6,7 +6,7 @@
         <option value="" selected disabled hidden>Select ProfileID</option>
         @foreach(var item in Model)
         {
-            <option value="@item.ProfileID">@item.ProfileID</option>
+            <option value="@item.ProfileID" class="@item.ProfileID">@item.ProfileID</option>
         }
     </select>
 
