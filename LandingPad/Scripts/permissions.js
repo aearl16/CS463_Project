@@ -19,8 +19,8 @@ function loadPseudonyms(profiles) {
     $("#pseudonymContainer input").prop('checked', false);
 
     for (var i = 0; i < profiles.length; i++) {
-        if ($("#pseudonymContainer span." + profiles[i]).hasClass("collapse") !== true)
-            $("#pseudonymContainer span." + profiles[i]).addClass("collapse");
+        if ($("#pseudonymContainer > span." + profiles[i]).hasClass("collapse") !== true)
+            $("#pseudonymContainer > span." + profiles[i]).addClass("collapse");
     }
 
     $("#pseudonymContainer span." + id).removeClass("collapse");

@@ -5,9 +5,15 @@
             <!--Title, description, and editor-->
             <div class="slide1">
                 <div class="inputGroup">
-                    Title <input type="text" id="title" name="Title" /><br />
-                    Description <textarea id="description" name="DescriptionText"></textarea><br />
-                    @Html.Partial("Editor")
+                    <div class="formItem">
+                        Title <input type="text" id="title" name="Title" /><br />
+                    </div>
+                    <div class="formItem">
+                        Description <textarea id="description" name="DescriptionText"></textarea><br />
+                    </div>
+                    <div class="formItem">
+                        @Html.Partial("Editor")
+                    </div>
                 </div>
 
                 <div class="buttonGroup">

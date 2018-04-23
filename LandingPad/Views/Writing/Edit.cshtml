@@ -1,12 +1,13 @@
 ﻿@model LandingPad.DAL.LandingPadContext
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Writing";
+    Layout = "~/Views/Shared/_PenfolioLayout.cshtml";
     int id = ViewBag.ID;
     int pId = Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().ProfileID;
 }
 
-<h2>Edit</h2>
+<h2>Edit Writing</h2>
 
 @Html.Partial("_Menu", Model)
 
