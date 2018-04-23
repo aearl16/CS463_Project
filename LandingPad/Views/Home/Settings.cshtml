@@ -1,4 +1,6 @@
-﻿@{
+﻿@model LandingPad.Models.Twitter
+
+@{
     ViewBag.Title = "Twitter Settings";
 }
 
@@ -107,6 +109,9 @@
         Login to Twitter
     </button>
         }
+
+    @*<input type="button" value="Logout of Twitter"
+           onclick="window.open('https://twitter.com/login?lang=en')">*@
 
     <input type="button" value="Logout of Twitter"
            onclick="window.open('https://twitter.com/logout')">

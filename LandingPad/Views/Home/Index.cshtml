@@ -1,5 +1,9 @@
-﻿@{
+﻿@model IEnumerable<LandingPad.Models.Writing>
+@*@model IEnumerable<LandingPad.Models.Writing>*@
+
+@{
     ViewBag.Title = "Home Page";
+
 }
 <body>
 
@@ -57,6 +61,7 @@
             }
         </script>
 
+
         @*<h2>Likes</h2>
 
             <a class="twitter-timeline" data-width="700" data-height="400" data-theme="dark" data-link-color="#19CF86" href="https://twitter.com/SquareOne2018/likes?ref_src=twsrc%5Etfw">Tweets Liked by SquareOne2018</a>
@@ -83,4 +88,75 @@
     </script>
 
 </body>
+
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.WritingID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.Document)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.AddDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EditDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DocType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DescriptionText)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.ProfileID)
+        </th>*@
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.WritingID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.Document)
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.AddDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EditDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DocType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DescriptionText)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.ProfileID)
+            </td>*@
+            <td>
+                @*<input type="button"
+                @Url.Action("ViewWriting", new { id = item.WritingID, controller = "Writing" })
+                />*@
+
+                <input type="button" value="View" onclick="location.href='@Url.Action("ViewWriting", "Writing", new { id = item.WritingID, controller = "Writing" })'" />
+
+                       </td>
+        </tr>
+    }
+</table>
 
