@@ -21,7 +21,7 @@ namespace LandingPad.Models
         [Key]
         public int ProfileID { get; set; }
 
-        public int AccessPermissionID { get; set; }
+        public int? AccessPermissionID { get; set; }
 
         public int UserID { get; set; }
 

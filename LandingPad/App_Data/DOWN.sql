@@ -58,17 +58,6 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
-	WHERE tables.name = 'AccessPermission'
-
-)
-BEGIN
-	DROP TABLE dbo.AccessPermission
-END
-
-IF EXISTS
-(
-	SELECT *
-	FROM sys.tables
 	WHERE tables.name = 'AltFormatName'
 
 )
@@ -153,4 +142,13 @@ BEGIN
 	DROP TABLE dbo.LPUser
 END
 
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'AccessPermission'
 
+)
+BEGIN
+	DROP TABLE dbo.AccessPermission
+END

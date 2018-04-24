@@ -100,7 +100,7 @@
     {
         foreach (var wItem in Model.Writings)
         {
-            if (item.LPUser.Birthdate != null || wItem.AccessPermission.MinorAccess == true)
+            if ((item.LPUser.Birthdate != null || wItem.AccessPermission.MinorAccess == true) && wItem.ProfileID != item.ProfileID)
             {
                 if (wItem.AccessPermission.MinorAccess == true ||
                 (DateTime.Today.Year - item.LPUser.Birthdate.Value.Year > 17) ||
@@ -147,6 +147,8 @@
                 if ($("tr." + profiles[i]).hasClass("collapse") !== true)
                     $("tr." + profiles[i]).addClass("collapse");
             }
+
+            $("tr." + id).removeClass("collapse");
         }
     </script>
 }

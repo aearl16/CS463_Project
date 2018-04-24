@@ -28,7 +28,7 @@ CREATE TABLE dbo.AccessPermission
 CREATE TABLE dbo.LPProfile
 (
 	ProfileID INT IDENTITY(1,1) NOT NULL,
-	AccessPermissionID INT NOT NULL,
+	AccessPermissionID INT,
 	UserID INT NOT NULL,
 	LPDescription VarChar(120), 
 	ProfilePhoto VARBINARY(MAX),
@@ -38,9 +38,13 @@ CREATE TABLE dbo.LPProfile
 	Writers INT,
 	CONSTRAINT [PK_dbo.LPProfile] PRIMARY KEY (ProfileID),
 	CONSTRAINT [FK_dbo.AccessPermissionForProfile] FOREIGN KEY (AccessPermissionID)
-	REFERENCES dbo.AccessPermission (AccessPermissionID),
+	REFERENCES dbo.AccessPermission (AccessPermissionID)
+	ON DELETE SET NULL
+	ON UPDATE CASCADE,
 	CONSTRAINT [FK_dbo.LPUser] FOREIGN KEY (UserID)
 	REFERENCES dbo.LPUser (UserID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
 );
 
 -- LPRole Table
@@ -61,9 +65,13 @@ CREATE TABLE dbo.ProfileRole
 	UseSecondaryRoleName BIT NOT NULL DEFAULT 0, --Default no
 	CONSTRAINT [PK_dbo.ProfileRole] PRIMARY KEY (ProfileRoleID),
 	CONSTRAINT [FK_dbo.ProfileIDForProfileRole] FOREIGN KEY (ProfileID)
-	REFERENCES dbo.LPProfile (ProfileID),
+	REFERENCES dbo.LPProfile (ProfileID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
 	CONSTRAINT [FK_dbo.RoleIDForProfileRole] FOREIGN KEY (RoleID)
 	REFERENCES dbo.LPRole (RoleID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
 );
 
 -- Writing Table
@@ -85,9 +93,13 @@ CREATE TABLE dbo.Writing
 	WritingFileName VARCHAR(MAX) NOT NULL,
 	CONSTRAINT [PK_dbo.Writing] PRIMARY KEY (WritingID),
 	CONSTRAINT [FK_dbo.ProfileID] FOREIGN KEY (ProfileID)
-	REFERENCES dbo.LPProfile (ProfileID),
+	REFERENCES dbo.LPProfile (ProfileID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
 	CONSTRAINT [FK_dbo.AccessPermissionForWriting] FOREIGN KEY (AccessPermissionID)
-	REFERENCES dbo.AccessPermission (AccessPermissionID)
+	REFERENCES dbo.AccessPermission (AccessPermissionID) 
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION
 	--CONSTRAINT [FK_dbo.FolderID] FOREIGN KEY (FolderID) --key added but left out until folder table is added
 	--REFERENCES dbo.Folder (FolderID)
 );
@@ -100,7 +112,9 @@ CREATE TABLE dbo.Pseudonym
 	Pseudonym VARCHAR(MAX) NOT NULL
 	CONSTRAINT [PK_dbo.Pseudonym] PRIMARY KEY (PseudonymID),
 	CONSTRAINT [FK_dbo.LPProfile] FOREIGN KEY (ProfileID)
-	REFERENCES dbo.LPProfile (ProfileID),
+	REFERENCES dbo.LPProfile (ProfileID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
 );
 
 -- WritingPseudonym Table
@@ -111,9 +125,13 @@ CREATE TABLE dbo.WritingPseudonym
 	PseudonymID INT NOT NULL,
 	CONSTRAINT [PK_dbo.WritingPseudonym] PRIMARY KEY (WritingPseudonymID),
 	CONSTRAINT [FK_dbo.WritingIDforWP] FOREIGN KEY (WritingID)
-	REFERENCES dbo.Writing (WritingID),
+	REFERENCES dbo.Writing (WritingID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
 	CONSTRAINT [FK_dbo.Pseudonym] FOREIGN KEY (PseudonymID)
 	REFERENCES dbo.Pseudonym (PseudonymID)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION
 );
 
 --FormatTag Table
@@ -134,6 +152,8 @@ CREATE TABLE dbo.AltFormatName
 	CONSTRAINT [PK_dbo.AltFormatName] PRIMARY KEY (AltFormatNameID),
 	CONSTRAINT [FK_dbo.FormatTagID] FOREIGN KEY (FormatID)
 	REFERENCES dbo.FormatTag (FormatID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
 );
 
 --FormatCategory Table
@@ -145,11 +165,17 @@ CREATE TABLE dbo.FormatCategory
 	SecondaryParentID INT,
 	CONSTRAINT [PK_dbo.FormatCategory] PRIMARY KEY (FormatCategoryID),
 	CONSTRAINT [FK_dbo.FormatIDforCategory] FOREIGN KEY (FormatID)
-	REFERENCES dbo.FormatTag (FormatID),
-	CONSTRAINT [FK_dbo.ParentID] FOREIGN KEY (ParentID)
-	REFERENCES dbo.FormatTag (FormatID),
-	CONSTRAINT [FK_dbo.SecondaryParentID] FOREIGN KEY (SecondaryParentID)
 	REFERENCES dbo.FormatTag (FormatID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	CONSTRAINT [FK_dbo.ParentID] FOREIGN KEY (ParentID)
+	REFERENCES dbo.FormatTag (FormatID)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION,
+	CONSTRAINT [FK_dbo.SecondaryParentID] FOREIGN KEY (SecondaryParentID)
+	REFERENCES dbo.FormatTag (FormatID) 
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION
 );
 
 --WritingFormat Table
@@ -160,9 +186,13 @@ CREATE TABLE dbo.WritingFormat
 	FormatID INT NOT NULL,
 	CONSTRAINT [PK_dbo.WritingFormat] PRIMARY KEY (WritingFormatID),
 	CONSTRAINT [FK_dbo.WritingIDforWF] FOREIGN KEY (WritingID)
-	REFERENCES dbo.Writing (WritingID),
+	REFERENCES dbo.Writing (WritingID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
 	CONSTRAINT [FK_dbo.FormatTag] FOREIGN KEY (FormatID)
 	REFERENCES dbo.FormatTag (FormatID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
 );
 
 INSERT INTO dbo.LPUser ( Email, Birthdate, FirstName, LastName, PhoneNumber, Username) VALUES
