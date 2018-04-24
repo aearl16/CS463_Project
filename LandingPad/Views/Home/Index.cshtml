@@ -9,7 +9,6 @@
 
     <style>
         #fixedbutton {
-            
         }
 
         div.lower_menu {
@@ -34,7 +33,7 @@
 
         @*?ref_src=twsrc%5Etfw*@
 
-        <a class="twitter-timeline" data-width="900" data-height="600" data-theme="dark" data-link-color="#19CF86" href="https://twitter.com/SquareOne2018">Tweets by SquareOne2018</a>
+        <a class="twitter-timeline" data-width="600" data-height="300" data-theme="dark" data-link-color="#19CF86" href="https://twitter.com/SquareOne2018">Tweets by SquareOne2018</a>
 
         @*<h2>Make a Post</h2>*@
 
@@ -89,10 +88,6 @@
 
 </body>
 
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
@@ -102,8 +97,8 @@
             @Html.DisplayNameFor(model => model.Title)
         </th>
         @*<th>
-            @Html.DisplayNameFor(model => model.Document)
-        </th>*@
+                @Html.DisplayNameFor(model => model.Document)
+            </th>*@
         <th>
             @Html.DisplayNameFor(model => model.AddDate)
         </th>
@@ -117,8 +112,8 @@
             @Html.DisplayNameFor(model => model.DescriptionText)
         </th>
         @*<th>
-            @Html.DisplayNameFor(model => model.ProfileID)
-        </th>*@
+                @Html.DisplayNameFor(model => model.ProfileID)
+            </th>*@
         <th></th>
     </tr>
     @foreach (var item in Model)
@@ -131,8 +126,8 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             @*<td>
-                @Html.DisplayFor(modelItem => item.Document)
-            </td>*@
+                    @Html.DisplayFor(modelItem => item.Document)
+                </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.AddDate)
             </td>
@@ -146,17 +141,22 @@
                 @Html.DisplayFor(modelItem => item.DescriptionText)
             </td>
             @*<td>
-                @Html.DisplayFor(modelItem => item.ProfileID)
-            </td>*@
+                    @Html.DisplayFor(modelItem => item.ProfileID)
+                </td>*@
             <td>
                 @*<input type="button"
-                @Url.Action("ViewWriting", new { id = item.WritingID, controller = "Writing" })
-                />*@
+                    @Url.Action("ViewWriting", new { id = item.WritingID, controller = "Writing" })
+                    />*@
 
                 <input type="button" value="View" onclick="location.href='@Url.Action("ViewWriting", "Writing", new { id = item.WritingID, controller = "Writing" })'" />
 
-                       </td>
+            </td>
         </tr>
     }
+
 </table>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <link href="@Url.Content("~/Content/login.css")" rel="stylesheet" type="text/css" />
+}
 
