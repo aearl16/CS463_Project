@@ -107,7 +107,8 @@
                 (DateTime.Today.Year - item.LPUser.Birthdate.Value.Year == 17 && DateTime.Today.Month - item.LPUser.Birthdate.Value.Month > 0) ||
                 (DateTime.Today.Year - item.LPUser.Birthdate.Value.Year == 17 && DateTime.Today.Month - item.LPUser.Birthdate.Value.Month == 0 && DateTime.Today.Day - item.LPUser.Birthdate.Value.Day >= 0))
                 {
-                    if (wItem.AccessPermission.PublicAccess == true)
+                    if (wItem.AccessPermission.PublicAccess == true ||
+                        (wItem.AccessPermission.PublisherAccess == true && item.ProfileRoles.Select(i => i.RoleID).ToList().Contains(2)))
                     {
                         <tr class="@item.ProfileID collapse">
                             <td>
