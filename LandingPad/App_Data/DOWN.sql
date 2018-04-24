@@ -102,6 +102,28 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
+	WHERE tables.name = 'ProfileRole'
+
+)
+BEGIN
+	DROP TABLE dbo.ProfileRole
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'LPRole'
+
+)
+BEGIN
+	DROP TABLE dbo.LPRole
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
 	WHERE tables.name = 'LPProfile'
 
 )

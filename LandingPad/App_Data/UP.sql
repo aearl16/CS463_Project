@@ -11,23 +11,7 @@ CREATE TABLE dbo.LPUser
 	CONSTRAINT [PK_dbo.Users] PRIMARY KEY (UserID)
 );
 
--- Profile Table
-CREATE TABLE dbo.LPProfile
-(
-	ProfileID INT IDENTITY(1,1) NOT NULL,
-	UserID INT NOT NULL,
-	LPDescription VarChar(120), 
-	ProfilePhoto VARBINARY(MAX),
-	DisplayRealName BIT NOT NULL DEFAULT 0, --Default off
-	Friends INT,
-	Followers INT,
-	Writers INT,
-	CONSTRAINT [PK_dbo.LPProfile] PRIMARY KEY (ProfileID),
-	CONSTRAINT [FK_dbo.LPUser] FOREIGN KEY (UserID)
-	REFERENCES dbo.LPUser (UserID)
-);
-
---AccessPermission Table
+-- AccessPermission Table
 CREATE TABLE dbo.AccessPermission
 (
 	AccessPermissionID INT IDENTITY(1,1) NOT NULL,
@@ -38,6 +22,48 @@ CREATE TABLE dbo.AccessPermission
 	PublisherAccess BIT NOT NULL,
 	MinorAccess BIT NOT NULL,
 	CONSTRAINT [PK_dbo.AccessPermission] PRIMARY KEY (AccessPermissionID)
+);
+
+-- Profile Table
+CREATE TABLE dbo.LPProfile
+(
+	ProfileID INT IDENTITY(1,1) NOT NULL,
+	AccessPermissionID INT NOT NULL,
+	UserID INT NOT NULL,
+	LPDescription VarChar(120), 
+	ProfilePhoto VARBINARY(MAX),
+	DisplayRealName BIT NOT NULL DEFAULT 0, --Default off
+	Friends INT,
+	Followers INT,
+	Writers INT,
+	CONSTRAINT [PK_dbo.LPProfile] PRIMARY KEY (ProfileID),
+	CONSTRAINT [FK_dbo.AccessPermissionForProfile] FOREIGN KEY (AccessPermissionID)
+	REFERENCES dbo.AccessPermission (AccessPermissionID),
+	CONSTRAINT [FK_dbo.LPUser] FOREIGN KEY (UserID)
+	REFERENCES dbo.LPUser (UserID)
+);
+
+-- LPRole Table
+CREATE TABLE dbo.LPRole
+(
+	RoleID INT IDENTITY(1,1) NOT NULL,
+	RoleName VARCHAR(MAX) NOT NULL,
+	SecondaryRoleName VARCHAR(MAX),
+	CONSTRAINT [PK_dbo.LPRole] PRIMARY KEY (RoleID)
+);
+
+-- ProfileRole Table
+CREATE TABLE dbo.ProfileRole
+(
+	ProfileRoleID INT IDENTITY(1,1) NOT NULL,
+	ProfileID INT NOT NULL,
+	RoleID INT NOT NULL,
+	UseSecondaryRoleName BIT NOT NULL DEFAULT 0, --Default no
+	CONSTRAINT [PK_dbo.ProfileRole] PRIMARY KEY (ProfileRoleID),
+	CONSTRAINT [FK_dbo.ProfileIDForProfileRole] FOREIGN KEY (ProfileID)
+	REFERENCES dbo.LPProfile (ProfileID),
+	CONSTRAINT [FK_dbo.RoleIDForProfileRole] FOREIGN KEY (RoleID)
+	REFERENCES dbo.LPRole (RoleID)
 );
 
 -- Writing Table
@@ -142,37 +168,42 @@ CREATE TABLE dbo.WritingFormat
 INSERT INTO dbo.LPUser ( Email, Birthdate, FirstName, LastName, PhoneNumber, Username) VALUES
 ('dude@dude.com', '2010-04-12 12:00', 'Dude', 'Crush', '555-555-5555', 'RandomDude01'), --1
 ( 'saltshaker@oldnsalty.net', '1999-09-09 12:00','Phil', 'Forrest', '555-555-5555', '100%Salt'), --2
-( 'thestanza@gc.org','1978-06-09 12:00', 'George', 'Castanzna', '', 'TheBubbleBoy'); --3
-
-INSERT INTO dbo.LPProfile(UserID,LPDescription, ProfilePhoto, DisplayRealName, Friends, Followers, Writers) VALUES
-(1,'I like to ride bikes', NULL, 0, 1, 1, 1), --dude@dude.com 1
-(2,'I dont like to ride bikes', NULL, 0, 1, 1, 1), --saltshaker@oldnsalty.net 2
-(3,'', NULL, 0, 1, 1, 1); --thestanza@gc.org 3
+( 'thestanza@gc.org','1978-06-09 12:00', 'George', 'Castanzna', '', 'TheBubbleBoy'), --3
+('jsmith@penguin.com', '1966-03-14 12:00', 'Joe', 'Smith', '555-555-5555', 'PublisherJoeSmith'), --4
+('agent@literary.com', '2000-02-21 12:00', 'Lilah', 'Agent', '', 'LiteraryAgentLilahAgent'); --5
 
 INSERT INTO dbo.AccessPermission (WritingID, ProfileID, PublicAccess, FriendAccess, PublisherAccess, MinorAccess) VALUES
 (NULL, 1, 0, 1, 1, 1), --dude@dude.com 1 
 (NULL, 2, 0, 0, 1, 0), --saltshaker@oldnsalty.net 2
 (NULL, 3, 1, 1, 1, 1), --thestanza@gc.org 3
-(NULL, NULL, 0, 0, 1, 1), --Lord of the Things 4
-(NULL, NULL, 1, 1, 1, 1), --Ballad of the Trees 5
-(NULL, NULL, 0, 1, 1, 0); --Hokey Folk Tales 6
+(1, NULL, 0, 0, 1, 1), --Lord of the Things 4
+(2, NULL, 1, 1, 1, 1), --Ballad of the Trees 5
+(3, NULL, 0, 1, 1, 0), --Hokey Folk Tales 6
+(NULL, 4, 1, 1, 1, 1), --jsmith@penguin.com 7
+(NULL, 5, 1, 1, 1, 0); --literary@agent.com 8
+
+INSERT INTO dbo.LPProfile(UserID, AccessPermissionID, LPDescription, ProfilePhoto, DisplayRealName) VALUES
+(1, 1, 'I like to ride bikes', NULL, 0), --dude@dude.com 1
+(2, 2, 'I dont like to ride bikes', NULL, 0), --saltshaker@oldnsalty.net 2
+(3, 3, '', NULL, 1), --thestanza@gc.org 3
+(4, 7, 'I am a publisher at Penguin Books.', NULL, 1), --jsmith@penguin.com 4
+(5, 8, 'My name is Lilah Agent and I''m a literary agent.', NULL, 1); --literary@agent.com 5
+
+INSERT INTO dbo.LPRole(RoleName, SecondaryRoleName) VALUES
+('Writer', ''), --Writer 1
+('Publisher', 'Literary Agent'); --Publisher or Literary Agent 2
+
+INSERT INTO dbo.ProfileRole(ProfileID, RoleID, UseSecondaryRoleName) VALUES
+(1, 1, 0), --dude@dude.com Writer 1
+(2, 1, 0), --saltshaker@oldnsalty.net Writer 2
+(3, 1, 0), --thestanza@gc.org Writer 3
+(4, 2, 0), --jmsmith@penguin.com Publisher 4
+(5, 2, 1); --agent@literary.com Literary Agent 5
 
 INSERT INTO dbo.Writing (ProfileID, AccessPermissionID, Title, Document, AddDate, EditDate, LikesOn, CommentsOn, CritiqueOn, DocType, DescriptionText, WritingFileName) VALUES
-(1, 4, 'Lord of the Things', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 0, 0, 'DOCX', 'A humorous play on lord of the rings', 'Lord_of_the_Things'), --dude@dude.com 1
-(2, 5, 'Ballad of The Trees', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 1, 1, 'RTF', 'Ballad About Trees', 'balladofthetrees'), --saltshaker@oldnsalty.net 2
-(3, 6, 'Hokey Folk Tales', CONVERT(VARBINARY(MAX), 'ABCD'), '1991-04-10', GETDATE(), 1, 1, 1, 'ODT', 'A collection of old forgotten tales: second edition', 'forgottentales'); --thestanza@gc.org 3
-
-UPDATE dbo.AccessPermission
-SET WritingID = 1
-WHERE AccessPermissionID = 4
-
-UPDATE dbo.AccessPermission
-SET WritingID = 2
-WHERE AccessPermissionID = 5
-
-UPDATE dbo.AccessPermission
-SET WritingID = 3
-WHERE AccessPermissionID = 6
+(1, 4, 'Lord of the Things', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 0, 0, '.DOCX', 'A humorous play on lord of the rings', 'Lord_of_the_Things'), --dude@dude.com 1
+(2, 5, 'Ballad of The Trees', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 1, 1, '.RTF', 'Ballad About Trees', 'balladofthetrees'), --saltshaker@oldnsalty.net 2
+(3, 6, 'Hokey Folk Tales', CONVERT(VARBINARY(MAX), 'ABCD'), '1991-04-10', GETDATE(), 1, 1, 1, '.ODT', 'A collection of old forgotten tales: second edition', 'forgottentales'); --thestanza@gc.org 3
 
 INSERT INTO dbo.Pseudonym (ProfileID, Pseudonym) VALUES
 (1, 'ComedyClubbed'), --dude@dude.com 1
