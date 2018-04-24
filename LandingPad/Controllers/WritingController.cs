@@ -137,17 +137,6 @@ namespace LandingPad.Controllers
                     }
                 }
 
-                //previouslySelectedPseudonyms = previouslySelectedPseudonyms.Distinct().ToList();
-                //foreach(var item in previouslySelectedPseudonyms)
-                //{
-                //    if(db.WritingPseudonyms.Where(w => w.WritingID == id).Select(w => w.PseudonymID).ToList().Contains(item))
-                //    {
-                //        WritingPseudonym wp = db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == item).First();
-                //        db.WritingPseudonyms.Remove(wp);
-                //        db.SaveChanges();
-                //    }
-                //}
-
                 return RedirectToAction("ViewWriting", "Writing", new { @id = id });
             }
             else
@@ -252,7 +241,8 @@ namespace LandingPad.Controllers
                     CritiqueOn = form["CritiqueOn"] != null ? true : false,
                     DocType = form["DocType"],
                     DescriptionText = form["DescriptionText"],
-                    Document = Encoding.Unicode.GetBytes(form["EditorContent"])
+                    Document = Encoding.Unicode.GetBytes(form["EditorContent"]),
+                    WritingFileName = form["WritingFileName"]
                 };
                 db.Writings.Add(wr);
                 db.SaveChanges();
@@ -322,16 +312,17 @@ namespace LandingPad.Controllers
             {
                 byline = " by " + wr.LPProfile.LPUser.FirstName + " " + wr.LPProfile.LPUser.LastName;
             }
+            else
+            {
+                byline = " by " + wr.LPProfile.LPUser.Username;
+            }
 
             string pageTitle = wr.Title + byline;
 
             ViewBag.Title = pageTitle;
 
-            if(byline.Length > 0)
-            {
-                byline = byline.TrimStart();
-                byline = byline[0].ToString().ToUpper() + byline.Substring(1);
-            }
+            byline = byline.TrimStart();
+            byline = byline[0].ToString().ToUpper() + byline.Substring(1);
 
             ViewBag.Byline = byline;
 

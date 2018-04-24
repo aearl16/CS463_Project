@@ -7,23 +7,9 @@ CREATE TABLE dbo.LPUser
 	FirstName VARCHAR(MAX) NOT NULL,
 	LastName VARCHAR(MAX) NOT NULL,
 	PhoneNumber VARCHAR(MAX),
-	Username VARCHAR(MAX),
+	Username VARCHAR(MAX) NOT NULL,
 	CONSTRAINT [PK_dbo.Users] PRIMARY KEY (UserID)
 );
-
---CREATE TABLE dbo.Twitter --Same Twitter data to access through project and use creds to provide information
---(
---	UserID Int Identity not Null,
---	TwitterID INT,
---	TwName VARCHAR(60),
---	TwTag VARCHAR(60),
---	TwOauth Varchar(MAX),
---	TwVOauth Varchar(MAX)
-
---	Constraint [PK_dbo.Twitter] Primary Key (TwitterID),
---	constraint [FK_dbo.LPUser] Foreign key (UserID)
---	References dbo.LPUser (UserID)
---);
 
 -- Profile Table
 CREATE TABLE dbo.LPProfile
@@ -55,7 +41,8 @@ CREATE TABLE dbo.Writing
 	CommentsOn BIT NOT NULL,
 	CritiqueOn BIT NOT NULL,
 	DocType VARCHAR(MAX) NOT NULL,
-	DescriptionText VARCHAR(MAX) NOT NULL
+	DescriptionText VARCHAR(MAX) NOT NULL,
+	WritingFileName VARCHAR(MAX) NOT NULL,
 	CONSTRAINT [PK_dbo.Writing] PRIMARY KEY (WritingID),
 	CONSTRAINT [FK_dbo.ProfileID] FOREIGN KEY (ProfileID)
 	REFERENCES dbo.LPProfile (ProfileID),
@@ -143,26 +130,6 @@ CREATE TABLE dbo.FormatCategory
 	REFERENCES dbo.FormatTag (FormatID)
 );
 
---GenreTag Table
---CREATE TABLE dbo.GenreTag
---(
---	GenreID INT IDENTITY(1,1) NOT NULL,
---	GenreName VARCHAR(MAX) NOT NULL,
---	GenreType VARCHAR(MAX) NOT NULL,
---	Explanation VARCHAR(MAX),
---	CONSTRAINT [PK_dbo.GenreTag] PRIMARY KEY (GenreID)
---);
-
---ThemeTag Table
---CREATE TABLE dbo.ThemeTag
---(
---	ThemeID INT IDENTITY(1,1) NOT NULL,
---	ThemeName VARCHAR(MAX) NOT NULL,
---	ThemeType VARCHAR(MAX) NOT NULL,
---	Explanation VARCHAR(MAX),
---	CONSTRAINT [PK_dbo.ThemeTag] PRIMARY KEY (ThemeID)
---);
-
 --WritingFormat Table
 CREATE TABLE dbo.WritingFormat 
 (
@@ -176,35 +143,9 @@ CREATE TABLE dbo.WritingFormat
 	REFERENCES dbo.FormatTag (FormatID)
 );
 
---WritingGenre Table
---CREATE TABLE dbo.WritingGenre
---(
---	WritingGenreID INT IDENTITY(1,1) NOT NULL,
---	WritingID INT NOT NULL,
---	GenreID INT NOT NULL,
---	CONSTRAINT [PK_dbo.WritingGenre] PRIMARY KEY (WritingGenreID),
---	CONSTRAINT [FK_dbo.Writing] FOREIGN KEY (WritingID)
---	REFERENCES dbo.Writing (WritingID),
---	CONSTRAINT [FK_dbo.GenreTag] FOREIGN KEY (GenreID)
---	REFERENCES dbo.GenreTag (GenreID)
---);
-
---WritingTheme Table
---CREATE TABLE dbo.WritingTheme
---(
---	WritingThemeID INT IDENTITY(1,1) NOT NULL,
---	WritingID INT NOT NULL,
---	ThemeID INT NOT NULL,
---	CONSTRAINT [PK_dbo.WritingTheme] PRIMARY KEY (WritingThemeID),
---	CONSTRAINT [FK_dbo.Writing] FOREIGN KEY (WritingID)
---	REFERENCES dbo.Writing (WritingID),
---	CONSTRAINT [FK_dbo.ThemeTag] FOREIGN KEY (ThemeID)
---	REFERENCES dbo.ThemeTag (ThemeID)
---);
-
 INSERT INTO dbo.LPUser ( Email, Birthdate, FirstName, LastName, PhoneNumber, Username) VALUES
 ('dude@dude.com', '2010-04-12 12:00', 'Dude', 'Crush', '555-555-5555', 'RandomDude01'), --1
-( 'saltshaker@oldnsalty.net', '1999-09-09 12:00','Phil', 'Forrest', '555-555-5555', ''), --2
+( 'saltshaker@oldnsalty.net', '1999-09-09 12:00','Phil', 'Forrest', '555-555-5555', '100%Salt'), --2
 ( 'thestanza@gc.org','1978-06-09 12:00', 'George', 'Castanzna', '', 'TheBubbleBoy'); --3
 
 INSERT INTO dbo.LPProfile(UserID,LPDescription, ProfilePhoto, DisplayRealName, Friends, Followers, Writers) VALUES
@@ -212,10 +153,10 @@ INSERT INTO dbo.LPProfile(UserID,LPDescription, ProfilePhoto, DisplayRealName, F
 (2,'I dont like to ride bikes', NULL, 0, 1, 1, 1), --saltshaker@oldnsalty.net 2
 (3,'', NULL, 0, 1, 1, 1); --thestanza@gc.org 3
 
-INSERT INTO dbo.Writing (ProfileID, Title, Document, AddDate, EditDate, LikesOn, CommentsOn, CritiqueOn, DocType, DescriptionText) VALUES
-(1, 'Lord of the Things', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 0, 0, 'DOCX', 'A humorous play on lord of the rings'), --dude@dude.com 1
-(2, 'Ballad of The Trees', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 1, 1, 'RTF', 'Ballad About Trees'), --saltshaker@oldnsalty.net 2
-(3, 'Hokey Folk Tales', CONVERT(VARBINARY(MAX), 'ABCD'), '1991-04-10', GETDATE(), 1, 1, 1, 'ODT', 'A collection of old forgotten tales: second edition'); --thestanza@gc.org 3
+INSERT INTO dbo.Writing (ProfileID, Title, Document, AddDate, EditDate, LikesOn, CommentsOn, CritiqueOn, DocType, DescriptionText, WritingFileName) VALUES
+(1, 'Lord of the Things', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 0, 0, 'DOCX', 'A humorous play on lord of the rings', 'Lord_of_the_Things'), --dude@dude.com 1
+(2, 'Ballad of The Trees', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 1, 1, 'RTF', 'Ballad About Trees', 'balladofthetrees'), --saltshaker@oldnsalty.net 2
+(3, 'Hokey Folk Tales', CONVERT(VARBINARY(MAX), 'ABCD'), '1991-04-10', GETDATE(), 1, 1, 1, 'ODT', 'A collection of old forgotten tales: second edition', 'forgottentales'); --thestanza@gc.org 3
 
 INSERT INTO dbo.Pseudonym (ProfileID, Pseudonym) VALUES
 (1, 'ComedyClubbed'), --dude@dude.com 1

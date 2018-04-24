@@ -46,6 +46,9 @@ namespace LandingPad.Models
         [Required]
         public string DescriptionText { get; set; }
 
+        [Required]
+        public string WritingFileName { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WritingPseudonym> WritingPseudonyms { get; set; }
 

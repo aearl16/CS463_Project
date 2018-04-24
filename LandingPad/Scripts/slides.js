@@ -55,6 +55,8 @@ function loadSlideAndConfirm(current, next, pseudonyms, formatTags) {
 
     $("#editorContent").val($(".ql-editor").html().replace(/</g, "&lt;").replace(/>/g, "&gt;"));
 
+    $("#fileName").val($("#title").val().replace(/\s/g, "_").replace(/[\~\#\%\&\*\{\}\\\:\<\>\?\/\+\|!=.]/g, ""));
+
     $("#validationMessage").empty();
 
     if (isEmpty($("#confirmTitle")) || isEmpty($("#confirmProfileID")) || isEmpty($("#confirmText"))) {
