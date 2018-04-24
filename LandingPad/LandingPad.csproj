@@ -433,6 +433,7 @@
     <Compile Include="Controllers\LPUsersController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PseudonymController.cs" />
+    <Compile Include="Controllers\TwittersController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Controllers\WritingController.cs" />
     <Compile Include="DAL\LandingPadContext.cs" />
@@ -444,6 +445,7 @@
     <Compile Include="Models\LPUser.cs" />
     <Compile Include="Models\ProfileUser.cs" />
     <Compile Include="Models\Pseudonym.cs" />
+    <Compile Include="Models\Twitter.cs" />
     <Compile Include="Models\Writing.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -554,6 +556,11 @@
     <Content Include="Views\Writing\_Confirmation.cshtml" />
     <Content Include="Views\Writing\ViewWriting.cshtml" />
     <Content Include="Views\Writing\Editor.cshtml" />
+    <Content Include="Views\Twitters\Create.cshtml" />
+    <Content Include="Views\Twitters\Delete.cshtml" />
+    <Content Include="Views\Twitters\Details.cshtml" />
+    <Content Include="Views\Twitters\Edit.cshtml" />
+    <Content Include="Views\Twitters\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

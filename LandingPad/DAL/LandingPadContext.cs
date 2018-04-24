@@ -22,8 +22,10 @@ namespace LandingPad.DAL
         public virtual DbSet<FormatTag> FormatTags { get; set; }
         public virtual DbSet<AltFormatName> AltFormatNames { get; set; }
         public virtual DbSet<FormatCategory> FormatCategories { get; set; }
+        public virtual DbSet<Twitter> Twitters { get; set; }
         public virtual DbSet<WritingFormat> WritingFormats { get; set; }
         public virtual DbSet<AccessPermission> AccessPermissions { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -59,6 +61,22 @@ namespace LandingPad.DAL
 
             modelBuilder.Entity<Pseudonym>()
                 .Property(e => e.Pseudonym1)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Twitter>()
+            .Property(e => e.TwName)
+            .IsUnicode(false);
+
+            modelBuilder.Entity<Twitter>()
+                .Property(e => e.TwTag)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Twitter>()
+                .Property(e => e.TwOauth)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Twitter>()
+                .Property(e => e.TwVOauth)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Writing>()
