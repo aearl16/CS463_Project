@@ -16,6 +16,7 @@ namespace LandingPad.Models
             Pseudonyms = new HashSet<Pseudonym>();
             Writings = new HashSet<Writing>();
             ProfileRoles = new HashSet<ProfileRole>();
+            Friends = new HashSet<Friendship>();
         }
 
         [Key]
@@ -31,8 +32,6 @@ namespace LandingPad.Models
 
         public bool DisplayRealName { get; set; }
 
-        public int? Friends { get; set; }
-
         public int? Followers { get; set; }
 
         public int? Writers { get; set; }
@@ -45,6 +44,10 @@ namespace LandingPad.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProfileRole> ProfileRoles { get; set; }
+
+        [ForeignKey("FirstFriendID")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Friendship> Friends { get; set; }
 
         public virtual LPUser LPUser { get; set; }
 

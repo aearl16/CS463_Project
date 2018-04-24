@@ -24,7 +24,7 @@
             <!--Author-->
             <div class="slide2 collapse">
                 <div class="inputGroup">
-                    @Html.Partial("_SelectAuthor", Model.LPProfiles.ToList())
+                    @Html.Partial("_SelectAuthor", Model.LPProfiles.Where(i => i.ProfileRoles.Select(j => j.RoleID).ToList().Contains(1)).ToList())
                 </div>
 
                 <div class="buttonGroup">

@@ -33,7 +33,6 @@ CREATE TABLE dbo.LPProfile
 	LPDescription VarChar(120), 
 	ProfilePhoto VARBINARY(MAX),
 	DisplayRealName BIT NOT NULL DEFAULT 0, --Default off
-	Friends INT,
 	Followers INT,
 	Writers INT,
 	CONSTRAINT [PK_dbo.LPProfile] PRIMARY KEY (ProfileID),
@@ -72,6 +71,23 @@ CREATE TABLE dbo.ProfileRole
 	REFERENCES dbo.LPRole (RoleID)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE
+);
+
+-- Friendship Table
+CREATE TABLE dbo.Friendship
+(
+	FriendshipID INT IDENTITY(1,1) NOT NULL,
+	FirstFriendID INT NOT NULL,
+	SecondFriendID INT NOT NULL,
+	CONSTRAINT [PK_dbo.Friendship] PRIMARY KEY (FriendshipID),
+	CONSTRAINT [FK_dbo.FirstProfileIDForFriendship] FOREIGN KEY (FirstFriendID)
+	REFERENCES dbo.LPProfile (ProfileID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	CONSTRAINT [FK_dbo.SecondProfileIDForFriendship] FOREIGN KEY (SecondFriendID)
+	REFERENCES dbo.LPProfile (ProfileID)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION
 );
 
 -- Writing Table
@@ -210,7 +226,8 @@ INSERT INTO dbo.AccessPermission (WritingID, ProfileID, PublicAccess, FriendAcce
 (2, NULL, 1, 1, 1, 1), --Ballad of the Trees 5
 (3, NULL, 0, 1, 1, 0), --Hokey Folk Tales 6
 (NULL, 4, 1, 1, 1, 1), --jsmith@penguin.com 7
-(NULL, 5, 1, 1, 1, 0); --literary@agent.com 8
+(NULL, 5, 1, 1, 1, 0), --literary@agent.com 8
+(4, NULL, 0, 1, 0, 1); --The Test Song 9
 
 INSERT INTO dbo.LPProfile(UserID, AccessPermissionID, LPDescription, ProfilePhoto, DisplayRealName) VALUES
 (1, 1, 'I like to ride bikes', NULL, 0), --dude@dude.com 1
@@ -230,10 +247,21 @@ INSERT INTO dbo.ProfileRole(ProfileID, RoleID, UseSecondaryRoleName) VALUES
 (4, 2, 0), --jmsmith@penguin.com Publisher 4
 (5, 2, 1); --agent@literary.com Literary Agent 5
 
+INSERT INTO dbo.Friendship(FirstFriendID, SecondFriendID) VALUES
+(1, 3), --dude@dude.com thestanza@gc.org 1
+(3, 1), --thestanza@gc.org dude@dude.com 2
+(1, 4), --dude@dude.com jsmith@penguin.com 3
+(4, 1), --jsmith@penguin.com dude@dude.com 4
+(2, 4), --saltshaker@oldnsalty.net jsmith@penguin.com 5
+(4, 2), --jsmith@penguin.com saltshaker@oldnsalty.net 6
+(2, 5), --saltshaker@oldnsalty.net agent@literary.com 7
+(5, 2); --agent@literary.com saltshaker@oldnsalty.net 8
+
 INSERT INTO dbo.Writing (ProfileID, AccessPermissionID, Title, Document, AddDate, EditDate, LikesOn, CommentsOn, CritiqueOn, DocType, DescriptionText, WritingFileName) VALUES
 (1, 4, 'Lord of the Things', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 0, 0, '.DOCX', 'A humorous play on lord of the rings', 'Lord_of_the_Things'), --dude@dude.com 1
 (2, 5, 'Ballad of The Trees', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 1, 1, '.RTF', 'Ballad About Trees', 'balladofthetrees'), --saltshaker@oldnsalty.net 2
-(3, 6, 'Hokey Folk Tales', CONVERT(VARBINARY(MAX), 'ABCD'), '1991-04-10', GETDATE(), 1, 1, 1, '.ODT', 'A collection of old forgotten tales: second edition', 'forgottentales'); --thestanza@gc.org 3
+(3, 6, 'Hokey Folk Tales', CONVERT(VARBINARY(MAX), 'ABCD'), '1991-04-10', GETDATE(), 1, 1, 1, '.ODT', 'A collection of old forgotten tales: second edition', 'forgottentales'), --thestanza@gc.org 3
+(1, 9, 'The Test Song', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 1, 0, 0, '.HTML', 'I love tests; I love every kind of test.', 'everydayimtesting'); --dude@dude.com 4
 
 INSERT INTO dbo.Pseudonym (ProfileID, Pseudonym) VALUES
 (1, 'ComedyClubbed'), --dude@dude.com 1
