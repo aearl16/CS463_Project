@@ -36,17 +36,6 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
-	WHERE tables.name = 'WritingAccess'
-
-)
-BEGIN
-	DROP TABLE dbo.WritingAccess
-END
-
-IF EXISTS
-(
-	SELECT *
-	FROM sys.tables
 	WHERE tables.name = 'Writing'
 
 )
@@ -118,6 +107,17 @@ IF EXISTS
 )
 BEGIN
 	DROP TABLE dbo.Friendship
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'IndividualAccessGrant'
+
+)
+BEGIN
+	DROP TABLE dbo.IndividualAccessGrant
 END
 
 IF EXISTS

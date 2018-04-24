@@ -441,6 +441,7 @@
     <Compile Include="Models\FormatCategory.cs" />
     <Compile Include="Models\FormatTag.cs" />
     <Compile Include="Models\Friendship.cs" />
+    <Compile Include="Models\IndividualAccessGrant.cs" />
     <Compile Include="Models\LPProfile.cs" />
     <Compile Include="Models\LPRole.cs" />
     <Compile Include="Models\LPUser.cs" />

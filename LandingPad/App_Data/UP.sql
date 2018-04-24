@@ -46,6 +46,23 @@ CREATE TABLE dbo.LPProfile
 	ON UPDATE CASCADE
 );
 
+--IndividualAccessGrant Table
+CREATE TABLE dbo.IndividualAccessGrant
+(
+	IndividualAccessGrantID INT IDENTITY(1,1) NOT NULL,
+	AccessPermissionID INT NOT NULL,
+	GranteeID INT NOT NULL,
+	CONSTRAINT [PK_dbo.IndividualAccessGrant] PRIMARY KEY (IndividualAccessGrantID),
+	CONSTRAINT [FK_dbo.AccessPermissionForAccessGrant] FOREIGN KEY (AccessPermissionID)
+	REFERENCES dbo.AccessPermission (AccessPermissionID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	CONSTRAINT [FK_dbo.ProfileIDForIndividualAccessGrant] FOREIGN KEY (GranteeID)
+	REFERENCES dbo.LPProfile (ProfileID)
+	ON DELETE CASCADE
+	ON UPDATE NO ACTION
+);
+
 -- LPRole Table
 CREATE TABLE dbo.LPRole
 (
@@ -96,7 +113,7 @@ CREATE TABLE dbo.Writing
 	WritingID INT IDENTITY(1,1) NOT NULL,
 	--FolderID INT,
 	ProfileID INT NOT NULL,
-	AccessPermissionID INT NOT NULL,
+	AccessPermissionID INT,
 	Title VARCHAR(MAX) NOT NULL,
 	Document VARBINARY(MAX) NOT NULL, --Either varbvinary or xml. Not sure which would work better
 	AddDate DATETIME NOT NULL,
@@ -235,6 +252,9 @@ INSERT INTO dbo.LPProfile(UserID, AccessPermissionID, LPDescription, ProfilePhot
 (3, 3, '', NULL, 1), --thestanza@gc.org 3
 (4, 7, 'I am a publisher at Penguin Books.', NULL, 1), --jsmith@penguin.com 4
 (5, 8, 'My name is Lilah Agent and I''m a literary agent.', NULL, 1); --literary@agent.com 5
+
+INSERT INTO dbo.IndividualAccessGrant (AccessPermissionID, GranteeID) VALUES
+(4, 2); --Lord of the Things saltshaker@oldnsalty.net 1
 
 INSERT INTO dbo.LPRole(RoleName, SecondaryRoleName) VALUES
 ('Writer', ''), --Writer 1

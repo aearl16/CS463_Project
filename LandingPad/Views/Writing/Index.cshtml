@@ -109,7 +109,8 @@
                 {
                     if (wItem.AccessPermission.PublicAccess == true ||
                         (wItem.AccessPermission.PublisherAccess == true && item.ProfileRoles.Select(i => i.RoleID).ToList().Contains(2)) ||
-                        (wItem.AccessPermission.FriendAccess == true && wItem.LPProfile.Friends.Select(i => i.SecondFriendID).ToList().Contains(item.ProfileID)))
+                        (wItem.AccessPermission.FriendAccess == true && wItem.LPProfile.Friends.Select(i => i.SecondFriendID).ToList().Contains(item.ProfileID)) ||
+                        wItem.AccessPermission.IndividualAccessGrants.Select(i => i.GranteeID).ToList().Contains(item.ProfileID))
                     {
                         <tr class="@item.ProfileID collapse">
                             <td>

@@ -10,6 +10,12 @@ namespace LandingPad.Models
     [Table("AccessPermission")]
     public partial class AccessPermission
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public AccessPermission()
+        {
+            IndividualAccessGrants = new HashSet<IndividualAccessGrant>();
+        }
+
         [Key]
         [Required]
         public int AccessPermissionID { get; set; }
@@ -29,5 +35,8 @@ namespace LandingPad.Models
 
         [Required]
         public bool MinorAccess { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<IndividualAccessGrant> IndividualAccessGrants { get; set; }
     }
 }
