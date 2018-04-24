@@ -14,9 +14,9 @@ namespace LandingPad.Models
         [Required]
         public int AccessPermissionID { get; set; }
 
-        public int? ProfileID { get; set; }
-
         public int? WritingID { get; set; }
+
+        public int? ProfileID { get; set; }
 
         [Required]
         public bool PublicAccess { get; set; }

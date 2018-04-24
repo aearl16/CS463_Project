@@ -65,9 +65,17 @@
                     if (selectedTags[j] === formatTags[i]) {
                         $("#formatTagContainer input." + formatTags[i]).prop("checked", true);
                         $("#formatTagContainer input." + formatTags[i]).trigger("change");
+                        if ($("#formatTagContainer span." + formatTags[i]).hasClass("collapse"))
+                            $("#formatTagContainer span." + formatTags[i]).removeClass("collapse");
                     }
                 }
             }
+
+            //check the current access settings
+            $("#publicAccess").prop("checked", @Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().AccessPermission.PublicAccess);
+            $("#friendAccess").prop("checked", @Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().AccessPermission.FriendAccess);
+            $("#publisherAccess").prop("checked", @Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().AccessPermission.PublisherAccess);
+            $("#minorAccess").prop("checked", @Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().AccessPermission.MinorAccess);
 
             //check the current permissions settings
             $("#likesOn").prop("checked", @Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().LikesOn);

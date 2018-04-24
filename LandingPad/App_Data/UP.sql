@@ -27,12 +27,26 @@ CREATE TABLE dbo.LPProfile
 	REFERENCES dbo.LPUser (UserID)
 );
 
+--AccessPermission Table
+CREATE TABLE dbo.AccessPermission
+(
+	AccessPermissionID INT IDENTITY(1,1) NOT NULL,
+	WritingID INT,
+	ProfileID INT,
+	PublicAccess BIT NOT NULL,
+	FriendAccess BIT NOT NULL,
+	PublisherAccess BIT NOT NULL,
+	MinorAccess BIT NOT NULL,
+	CONSTRAINT [PK_dbo.AccessPermission] PRIMARY KEY (AccessPermissionID)
+);
+
 -- Writing Table
 CREATE TABLE dbo.Writing
 (
 	WritingID INT IDENTITY(1,1) NOT NULL,
 	--FolderID INT,
 	ProfileID INT NOT NULL,
+	AccessPermissionID INT NOT NULL,
 	Title VARCHAR(MAX) NOT NULL,
 	Document VARBINARY(MAX) NOT NULL, --Either varbvinary or xml. Not sure which would work better
 	AddDate DATETIME NOT NULL,
@@ -46,6 +60,8 @@ CREATE TABLE dbo.Writing
 	CONSTRAINT [PK_dbo.Writing] PRIMARY KEY (WritingID),
 	CONSTRAINT [FK_dbo.ProfileID] FOREIGN KEY (ProfileID)
 	REFERENCES dbo.LPProfile (ProfileID),
+	CONSTRAINT [FK_dbo.AccessPermissionForWriting] FOREIGN KEY (AccessPermissionID)
+	REFERENCES dbo.AccessPermission (AccessPermissionID)
 	--CONSTRAINT [FK_dbo.FolderID] FOREIGN KEY (FolderID) --key added but left out until folder table is added
 	--REFERENCES dbo.Folder (FolderID)
 );
@@ -72,26 +88,6 @@ CREATE TABLE dbo.WritingPseudonym
 	REFERENCES dbo.Writing (WritingID),
 	CONSTRAINT [FK_dbo.Pseudonym] FOREIGN KEY (PseudonymID)
 	REFERENCES dbo.Pseudonym (PseudonymID)
-);
-
---AccessPermission Table
-CREATE TABLE dbo.AccessPermission
-(
-	AccessPermissionID INT IDENTITY(1,1) NOT NULL,
-	ProfileID INT,
-	--FolderID INT,
-	WritingID INT,
-	PublicAccess BIT NOT NULL,
-	FriendAccess BIT NOT NULL,
-	PublisherAccess BIT NOT NULL,
-	MinorAccess BIT NOT NULL,
-	CONSTRAINT [PK_dbo.AccessPermission] PRIMARY KEY (AccessPermissionID),
-	CONSTRAINT [FK_dbo.ProfileAccess] FOREIGN KEY (ProfileID)
-	REFERENCES dbo.LPProfile (ProfileID),
-	--CONSTRAINT [FK_dbo.FolderAccess] FOREIGN KEY (FolderID)
-	--REFERENCES dbo.Folder (FolderID),
-	CONSTRAINT [FK_dbo.WritingAccess] FOREIGN KEY (WritingID)
-	REFERENCES dbo.Writing (WritingID)
 );
 
 --FormatTag Table
@@ -153,10 +149,30 @@ INSERT INTO dbo.LPProfile(UserID,LPDescription, ProfilePhoto, DisplayRealName, F
 (2,'I dont like to ride bikes', NULL, 0, 1, 1, 1), --saltshaker@oldnsalty.net 2
 (3,'', NULL, 0, 1, 1, 1); --thestanza@gc.org 3
 
-INSERT INTO dbo.Writing (ProfileID, Title, Document, AddDate, EditDate, LikesOn, CommentsOn, CritiqueOn, DocType, DescriptionText, WritingFileName) VALUES
-(1, 'Lord of the Things', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 0, 0, 'DOCX', 'A humorous play on lord of the rings', 'Lord_of_the_Things'), --dude@dude.com 1
-(2, 'Ballad of The Trees', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 1, 1, 'RTF', 'Ballad About Trees', 'balladofthetrees'), --saltshaker@oldnsalty.net 2
-(3, 'Hokey Folk Tales', CONVERT(VARBINARY(MAX), 'ABCD'), '1991-04-10', GETDATE(), 1, 1, 1, 'ODT', 'A collection of old forgotten tales: second edition', 'forgottentales'); --thestanza@gc.org 3
+INSERT INTO dbo.AccessPermission (WritingID, ProfileID, PublicAccess, FriendAccess, PublisherAccess, MinorAccess) VALUES
+(NULL, 1, 0, 1, 1, 1), --dude@dude.com 1 
+(NULL, 2, 0, 0, 1, 0), --saltshaker@oldnsalty.net 2
+(NULL, 3, 1, 1, 1, 1), --thestanza@gc.org 3
+(NULL, NULL, 0, 0, 1, 1), --Lord of the Things 4
+(NULL, NULL, 1, 1, 1, 1), --Ballad of the Trees 5
+(NULL, NULL, 0, 1, 1, 0); --Hokey Folk Tales 6
+
+INSERT INTO dbo.Writing (ProfileID, AccessPermissionID, Title, Document, AddDate, EditDate, LikesOn, CommentsOn, CritiqueOn, DocType, DescriptionText, WritingFileName) VALUES
+(1, 4, 'Lord of the Things', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 0, 0, 'DOCX', 'A humorous play on lord of the rings', 'Lord_of_the_Things'), --dude@dude.com 1
+(2, 5, 'Ballad of The Trees', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 1, 1, 'RTF', 'Ballad About Trees', 'balladofthetrees'), --saltshaker@oldnsalty.net 2
+(3, 6, 'Hokey Folk Tales', CONVERT(VARBINARY(MAX), 'ABCD'), '1991-04-10', GETDATE(), 1, 1, 1, 'ODT', 'A collection of old forgotten tales: second edition', 'forgottentales'); --thestanza@gc.org 3
+
+UPDATE dbo.AccessPermission
+SET WritingID = 1
+WHERE AccessPermissionID = 4
+
+UPDATE dbo.AccessPermission
+SET WritingID = 2
+WHERE AccessPermissionID = 5
+
+UPDATE dbo.AccessPermission
+SET WritingID = 3
+WHERE AccessPermissionID = 6
 
 INSERT INTO dbo.Pseudonym (ProfileID, Pseudonym) VALUES
 (1, 'ComedyClubbed'), --dude@dude.com 1
@@ -175,14 +191,6 @@ INSERT INTO dbo.WritingPseudonym (WritingID, PseudonymID) VALUES
 (2, 5), --Ballad of the Trees, RustyRed 3
 (3, 6), --Hokey Folk Tales, Treed 4
 (3, 7); --Hokey Folk Tales, JustGeorge 5
-
-INSERT INTO dbo.AccessPermission (ProfileID, WritingID, PublicAccess, FriendAccess, PublisherAccess, MinorAccess) VALUES
-(1, NULL, 0, 1, 1, 1), --dude@dude.com 1 
-(2, NULL, 0, 0, 1, 0), --saltshaker@oldnsalty.net 2
-(3, NULL, 1, 1, 1, 1), --thestanza@gc.org 3
-(NULL, 1, 0, 0, 1, 1), --Lord of the Things 4
-(NULL, 2, 1, 1, 1, 1), --Ballad of the Trees 5
-(NULL, 3, 0, 1, 1, 0); --Hokey Folk Tales 6
 
 INSERT INTO dbo.FormatTag (FormatName, Explanation) VALUES
 --Top category

@@ -24,6 +24,8 @@ namespace LandingPad.Models
 
         public int ProfileID { get; set; }
 
+        public int AccessPermissionID { get; set; }
+
         [Required]
         public string Title { get; set; }
 
@@ -56,8 +58,8 @@ namespace LandingPad.Models
         public virtual ICollection<WritingFormat> WritingFormats { get; set; }
 
         public virtual LPProfile LPProfile { get; set; }
-
-        //public virtual AccessPermission AccessPermission { get; set; }
+        
+        public virtual AccessPermission AccessPermission { get; set; }
 
         [DisplayName("Select File")]
         [NotMapped]

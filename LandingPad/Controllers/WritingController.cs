@@ -69,6 +69,14 @@ namespace LandingPad.Controllers
                 db.Entry(wr).State = EntityState.Modified;
                 db.SaveChanges();
 
+                AccessPermission ap = db.AccessPermissions.Find(wr.AccessPermissionID);
+                ap.PublicAccess = form["PublicAccess"] != null ? true : false;
+                ap.FriendAccess = form["FriendAccess"] != null ? true : false;
+                ap.PublisherAccess = form["PublisherAccess"] != null ? true : false;
+                ap.MinorAccess = form["MinorAccess"] != null ? true : false;
+                db.Entry(ap).State = EntityState.Modified;
+                db.SaveChanges();
+
                 ICollection<FormatTag> allFT = db.FormatTags.ToList();
                 foreach (var item in allFT)
                 {
@@ -88,18 +96,21 @@ namespace LandingPad.Controllers
                 }
 
                 //add any format tags that don't already exist
-                foreach (var selection in FormatTags)
+                if(FormatTags != null)
                 {
-                    int selected = Int32.Parse(selection);
-                    if(db.WritingFormats.Where(w => w.WritingID == id).Where(w => w.FormatID == selected).ToList().Count == 0)
+                    foreach (var selection in FormatTags)
                     {
-                        WritingFormat wf = new WritingFormat()
+                        int selected = Int32.Parse(selection);
+                        if (db.WritingFormats.Where(w => w.WritingID == id).Where(w => w.FormatID == selected).ToList().Count == 0)
                         {
-                            WritingID = id,
-                            FormatID = selected
-                        };
-                        db.WritingFormats.Add(wf);
-                        db.SaveChanges();
+                            WritingFormat wf = new WritingFormat()
+                            {
+                                WritingID = id,
+                                FormatID = selected
+                            };
+                            db.WritingFormats.Add(wf);
+                            db.SaveChanges();
+                        }
                     }
                 }
 
@@ -107,10 +118,13 @@ namespace LandingPad.Controllers
                 foreach (var item in allPseudonyms)
                 {
                     bool isSelected = false;
-                    for (int i = 0; i < Pseudonyms.Length; i++)
+                    if(Pseudonyms != null)
                     {
-                        if (item.PseudonymID == Int32.Parse(Pseudonyms[i]))
-                            isSelected = true;
+                        for (int i = 0; i < Pseudonyms.Length; i++)
+                        {
+                            if (item.PseudonymID == Int32.Parse(Pseudonyms[i]))
+                                isSelected = true;
+                        }
                     }
 
                     if (db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == item.PseudonymID).ToList().Count > 0 && isSelected == false)
@@ -122,20 +136,24 @@ namespace LandingPad.Controllers
                 }
 
                 //add any pseudonyms that don't already exist
-                foreach (var selection in Pseudonyms)
+                if(Pseudonyms != null)
                 {
-                    int selected = Int32.Parse(selection);
-                    if (db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == selected).ToList().Count == 0)
+                    foreach (var selection in Pseudonyms)
                     {
-                        WritingPseudonym wp = new WritingPseudonym()
+                        int selected = Int32.Parse(selection);
+                        if (db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == selected).ToList().Count == 0)
                         {
-                            WritingID = id,
-                            PseudonymID = selected
-                        };
-                        db.WritingPseudonyms.Add(wp);
-                        db.SaveChanges();
+                            WritingPseudonym wp = new WritingPseudonym()
+                            {
+                                WritingID = id,
+                                PseudonymID = selected
+                            };
+                            db.WritingPseudonyms.Add(wp);
+                            db.SaveChanges();
+                        }
                     }
                 }
+                
 
                 return RedirectToAction("ViewWriting", "Writing", new { @id = id });
             }
@@ -230,9 +248,20 @@ namespace LandingPad.Controllers
         {
             if (!ModelState.IsValid)
             {
+                AccessPermission ap = new AccessPermission()
+                {
+                    PublicAccess = form["PublicAccess"] != null ? true : false,
+                    FriendAccess = form["FriendAccess"] != null ? true : false,
+                    PublisherAccess = form["PublisherAccess"] != null ? true : false,
+                    MinorAccess = form["MinorAccess"] != null ? true : false
+                };
+                db.AccessPermissions.Add(ap);
+                db.SaveChanges();
+
                 Writing wr = new Writing()
                 {
                     ProfileID = Int32.Parse(form["ProfileID"]),
+                    AccessPermissionID = ap.AccessPermissionID,
                     Title = form["Title"],
                     AddDate = DateTime.Now,
                     EditDate = null,
@@ -249,26 +278,37 @@ namespace LandingPad.Controllers
 
                 int id = wr.WritingID;
 
-                foreach(var selection in FormatTags)
+                ap = db.AccessPermissions.Find(ap.AccessPermissionID);
+                ap.WritingID = id;
+                db.Entry(ap).State = EntityState.Modified;
+                db.SaveChanges();
+
+                if(FormatTags != null)
                 {
-                    WritingFormat wf = new WritingFormat()
+                    foreach (var selection in FormatTags)
                     {
-                        WritingID = id,
-                        FormatID = Int32.Parse(selection)
-                    };
-                    db.WritingFormats.Add(wf);
-                    db.SaveChanges();
+                        WritingFormat wf = new WritingFormat()
+                        {
+                            WritingID = id,
+                            FormatID = Int32.Parse(selection)
+                        };
+                        db.WritingFormats.Add(wf);
+                        db.SaveChanges();
+                    }
                 }
 
-                foreach(var selection in Pseudonyms)
+                if(Pseudonyms != null)
                 {
-                    WritingPseudonym wp = new WritingPseudonym()
+                    foreach (var selection in Pseudonyms)
                     {
-                        WritingID = id,
-                        PseudonymID = Int32.Parse(selection)
-                    };
-                    db.WritingPseudonyms.Add(wp);
-                    db.SaveChanges();
+                        WritingPseudonym wp = new WritingPseudonym()
+                        {
+                            WritingID = id,
+                            PseudonymID = Int32.Parse(selection)
+                        };
+                        db.WritingPseudonyms.Add(wp);
+                        db.SaveChanges();
+                    }
                 }
 
                 return RedirectToAction("ViewWriting", "Writing", new { @id = id });

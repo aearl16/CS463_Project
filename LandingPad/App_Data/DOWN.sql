@@ -36,11 +36,11 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
-	WHERE tables.name = 'AccessPermission'
+	WHERE tables.name = 'WritingAccess'
 
 )
 BEGIN
-	DROP TABLE dbo.AccessPermission
+	DROP TABLE dbo.WritingAccess
 END
 
 IF EXISTS
@@ -52,6 +52,17 @@ IF EXISTS
 )
 BEGIN
 	DROP TABLE dbo.Writing
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'AccessPermission'
+
+)
+BEGIN
+	DROP TABLE dbo.AccessPermission
 END
 
 IF EXISTS
