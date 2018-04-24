@@ -19,7 +19,7 @@ namespace LandingPad.Controllers
         // GET: Pseudonym
         public ActionResult Index()
         {
-            return View(db.Writings.ToList());
+            return View(db);
         }
 
         [HttpGet]
