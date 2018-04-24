@@ -11,19 +11,19 @@ CREATE TABLE dbo.LPUser
 	CONSTRAINT [PK_dbo.Users] PRIMARY KEY (UserID)
 );
 
---CREATE TABLE dbo.Twitter --Same Twitter data to access through project and use creds to provide information
---(
---	UserID Int Identity not Null,
---	TwitterID INT,
---	TwName VARCHAR(60),
---	TwTag VARCHAR(60),
---	TwOauth Varchar(MAX),
---	TwVOauth Varchar(MAX)
-
---	Constraint [PK_dbo.Twitter] Primary Key (TwitterID),
---	constraint [FK_dbo.LPUser] Foreign key (UserID)
---	References dbo.LPUser (UserID)
---);
+--Twitter Table
+CREATE TABLE dbo.Twitter --Same Twitter data to access through project and use creds to provide information
+(
+	TwitterID INT Identity(1,1) NOT NULL,
+	UserID Int NOT Null,	
+	TwName VARCHAR(60),
+	TwTag VARCHAR(60),
+	TwOauth Varchar(MAX),
+	TwVOauth Varchar(MAX)
+	Constraint [PK_dbo.Twitter] Primary Key (TwitterID),
+	constraint [FK_dbo.LPUserTwiter] Foreign key (UserID)
+	References dbo.LPUser (UserID)
+);
 
 -- Profile Table
 CREATE TABLE dbo.LPProfile
@@ -37,7 +37,7 @@ CREATE TABLE dbo.LPProfile
 	Followers INT,
 	Writers INT,
 	CONSTRAINT [PK_dbo.LPProfile] PRIMARY KEY (ProfileID),
-	CONSTRAINT [FK_dbo.LPUser] FOREIGN KEY (UserID)
+	CONSTRAINT [FK_dbo.LPUserProfile] FOREIGN KEY (UserID)
 	REFERENCES dbo.LPUser (UserID)
 );
 

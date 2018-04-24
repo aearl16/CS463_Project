@@ -1,0 +1,58 @@
+﻿@model LandingPad.Models.Twitter
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Twitter</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.LPUser.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LPUser.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TwName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TwName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TwTag)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TwTag)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TwOauth)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TwOauth)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TwVOauth)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TwVOauth)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TwitterID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

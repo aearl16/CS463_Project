@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Net;
 using System.IO;
 using System.Text;
 using TweetSharp;
+using LandingPad.DAL;
+using LandingPad.Models;
 
 
 namespace LandingPad.Controllers
@@ -13,6 +18,8 @@ namespace LandingPad.Controllers
     [RequireHttps]
     public class HomeController : Controller
     {
+        private LandingPadContext db = new LandingPadContext();
+
         //[Authorize]
         [HttpGet]
         public ActionResult TwitterAuth()
@@ -44,7 +51,7 @@ namespace LandingPad.Controllers
         
         }
 
-        public ActionResult TwitterCallback(string oauth_token, string oauth_verifier)
+        public ActionResult TwitterCallback(string oauth_token, string oauth_verifier, int? id)
         {
             var requestToken = new OAuthRequestToken { Token = oauth_token };
             string Key = System.Configuration.ConfigurationManager.AppSettings["twKey"];
@@ -60,21 +67,65 @@ namespace LandingPad.Controllers
                 TempData["Token"] = oauth_token;
                 TempData["VToken"] = oauth_verifier;
                 TempData["UserTag"] = user.ScreenName;
-
                 TempData["Name"] = user.Name;
                 TempData["Userpic"] = user.ProfileImageUrl;
+
+                int? TwID = id;
+                var Token = oauth_token;
+                var VToken = oauth_verifier;
+                String TwName = user.ScreenName;
+                String TagName = user.Name;
+
+
+                
+
+
+
+
                 return RedirectToAction("Settings");
             }
             catch
             {
                 throw;
             }
-
         }
-        public ActionResult Index()
+
+        // GET: Twitters/Edit/5
+        public ActionResult Edit(int? id)
         {
-           // TempData["UserTag"] = UserTag;
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Twitter twitter = db.Twitters.Find(id);
+            if (twitter == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", twitter.UserID);
+            return View(twitter);
+        }
+
+        // POST: Twitters/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "TwitterID,UserID,TwName,TwTag,TwOauth,TwVOauth")] Twitter twitter)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(twitter).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", twitter.UserID);
+            return View(twitter);
+        }
+
+        public ActionResult Index()
+        {      
+            return View(db.Writings.ToList());
         }
 
         public ActionResult About()

@@ -1,11 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.Spatial;
-
 namespace LandingPad.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
 
     [Table("LPProfile")]
     public partial class LPProfile
@@ -13,6 +12,7 @@ namespace LandingPad.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public LPProfile()
         {
+            AccessPermissions = new HashSet<AccessPermission>();
             Pseudonyms = new HashSet<Pseudonym>();
             Writings = new HashSet<Writing>();
         }
@@ -22,6 +22,7 @@ namespace LandingPad.Models
 
         public int UserID { get; set; }
 
+        [StringLength(120)]
         public string LPDescription { get; set; }
 
         public byte[] ProfilePhoto { get; set; }
@@ -35,13 +36,14 @@ namespace LandingPad.Models
         public int? Writers { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Pseudonym> Pseudonyms { get; set; }
+        public virtual ICollection<AccessPermission> AccessPermissions { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Writing> Writings { get; set; }
+        public virtual ICollection<Pseudonym> Pseudonyms { get; set; }
 
         public virtual LPUser LPUser { get; set; }
 
-        //public virtual AccessPermission AccessPermission { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Writing> Writings { get; set; }
     }
 }
