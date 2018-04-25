@@ -565,6 +565,7 @@
     <Content Include="Views\Shared\_PenfolioLayout.cshtml" />
     <Content Include="Views\Shared\View.cshtml" />
     <Content Include="Views\Shared\_NavBar.cshtml" />
+    <Content Include="Views\Writing\AllWriting.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

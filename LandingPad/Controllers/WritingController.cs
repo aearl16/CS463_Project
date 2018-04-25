@@ -22,6 +22,22 @@ namespace LandingPad.Controllers
             return View(db);
         }
 
+        public ActionResult AllWriting(int? id)
+        {
+            if(id == null)
+            {
+                return HttpNotFound();
+            }
+
+            LPProfile p = db.LPProfiles.Find(id);
+            if(p == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(GetAllWritingAvailable(id.GetValueOrDefault()));
+        }
+
         [HttpGet]
         public ActionResult Edit(int? id)
         {
@@ -378,6 +394,75 @@ namespace LandingPad.Controllers
             output = output.Replace("&lt;", "<").Replace("&gt;", ">");
 
             return output;
+        }
+
+        public List<Writing> GetAllWritingAvailable(int id)
+        {
+            LPProfile lpProfile = db.LPProfiles.Find(id);
+            ICollection<Writing> w = db.Writings.ToList();
+            ICollection<Writing> toRemove;
+            bool isMinor = IsUserMinor(lpProfile);
+
+            toRemove = w.Where(i => i.ProfileID == id).ToList();
+
+            foreach(var item in toRemove)
+            {
+                w.Remove(item);
+            }
+
+            if(isMinor)
+            {
+                toRemove = w.Where(i => i.AccessPermission.MinorAccess == false).ToList();
+                foreach(var item in toRemove)
+                {
+                    w.Remove(item);
+                }
+            }
+
+            toRemove = w.Where(i => i.AccessPermission.IndividualAccessRevokes.Select(j => j.RevokeeID).ToList().Contains(id)).ToList();
+            foreach(var item in toRemove)
+            {
+                w.Remove(item);
+            }
+
+            //get all writings from w where individual access has not been granted to the user
+            toRemove = w.Except(w.Where(i => i.AccessPermission.IndividualAccessGrants.Select(j => j.GranteeID).ToList().Contains(id))).ToList();
+
+            //remove the writings that are set to public access
+            toRemove = toRemove.Except(toRemove.Where(i => i.AccessPermission.PublicAccess == true)).ToList();
+
+            //if the user has the publisher role, remove all writings with publisher access
+            if(lpProfile.ProfileRoles.Select(i => i.RoleID).ToList().Contains(2))
+            {
+                toRemove = toRemove.Except(toRemove.Where(i => i.AccessPermission.PublisherAccess == true)).ToList();
+            }
+
+            //remove the writings that have friend access and are by friends of the user
+            toRemove = toRemove.Except(toRemove.Where(i => i.AccessPermission.FriendAccess == true).ToList().Where(i => i.LPProfile.Friends.Select(j => j.SecondFriendID).ToList().Contains(id))).ToList();
+
+            foreach(var item in toRemove)
+            {
+                w.Remove(item);
+            }
+
+            return w.ToList();
+        }
+
+        public bool IsUserMinor(LPProfile p)
+        {
+            DateTime now = DateTime.Today;
+
+            if(p.LPUser.Birthdate != null)
+            {
+                DateTime bDay = p.LPUser.Birthdate.Value;
+                if(now.Year - bDay.Year > 17 ||
+                    (now.Year - bDay.Year == 17 && (now.Month > bDay.Month || (now.Month == bDay.Month && now.Date >= bDay.Date))))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
