@@ -14,6 +14,7 @@ namespace LandingPad.Models
         public AccessPermission()
         {
             IndividualAccessGrants = new HashSet<IndividualAccessGrant>();
+            IndividualAccessRevokes = new HashSet<IndividualAccessRevoke>();
         }
 
         [Key]
@@ -38,5 +39,8 @@ namespace LandingPad.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<IndividualAccessGrant> IndividualAccessGrants { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<IndividualAccessRevoke> IndividualAccessRevokes { get; set; }
     }
 }

@@ -63,6 +63,23 @@ CREATE TABLE dbo.IndividualAccessGrant
 	ON UPDATE NO ACTION
 );
 
+--IndividualAccessRevoke Table
+CREATE TABLE dbo.IndividualAccessRevoke
+(
+	IndividualAccessRevokeID INT IDENTITY(1,1) NOT NULL,
+	AccessPermissionID INT NOT NULL,
+	RevokeeID INT NOT NULL,
+	CONSTRAINT [PK_dbo.IndividualAccessRevoke] PRIMARY KEY (IndividualAccessRevokeID),
+	CONSTRAINT [FK_dbo.AccessPermissionForAccessRevoke] FOREIGN KEY (AccessPermissionID)
+	REFERENCES dbo.AccessPermission (AccessPermissionID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	CONSTRAINT [FK_dbo.ProfileIDForIndividualAccessRevoke] FOREIGN KEY (RevokeeID)
+	REFERENCES dbo.LPProfile (ProfileID)
+	ON DELETE CASCADE
+	ON UPDATE NO ACTION
+);
+
 -- LPRole Table
 CREATE TABLE dbo.LPRole
 (
@@ -113,7 +130,7 @@ CREATE TABLE dbo.Writing
 	WritingID INT IDENTITY(1,1) NOT NULL,
 	--FolderID INT,
 	ProfileID INT NOT NULL,
-	AccessPermissionID INT,
+	AccessPermissionID INT NOT NULL,
 	Title VARCHAR(MAX) NOT NULL,
 	Document VARBINARY(MAX) NOT NULL, --Either varbvinary or xml. Not sure which would work better
 	AddDate DATETIME NOT NULL,
@@ -255,6 +272,10 @@ INSERT INTO dbo.LPProfile(UserID, AccessPermissionID, LPDescription, ProfilePhot
 
 INSERT INTO dbo.IndividualAccessGrant (AccessPermissionID, GranteeID) VALUES
 (4, 2); --Lord of the Things saltshaker@oldnsalty.net 1
+
+INSERT INTO dbo.IndividualAccessRevoke (AccessPermissionID, RevokeeID) VALUES
+(4, 4), --Lord of the Things jsmith@penguin.com 1
+(5, 1); --Ballad of the Trees dude@dude.com 2
 
 INSERT INTO dbo.LPRole(RoleName, SecondaryRoleName) VALUES
 ('Writer', ''), --Writer 1

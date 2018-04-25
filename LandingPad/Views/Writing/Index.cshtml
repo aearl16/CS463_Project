@@ -100,40 +100,43 @@
     {
         foreach (var wItem in Model.Writings)
         {
-            if ((item.LPUser.Birthdate != null || wItem.AccessPermission.MinorAccess == true) && wItem.ProfileID != item.ProfileID)
+            if (wItem.AccessPermission.IndividualAccessRevokes.Select(i => i.RevokeeID).ToList().Contains(item.ProfileID) == false)
             {
-                if (wItem.AccessPermission.MinorAccess == true ||
-                (DateTime.Today.Year - item.LPUser.Birthdate.Value.Year > 17) ||
-                (DateTime.Today.Year - item.LPUser.Birthdate.Value.Year == 17 && DateTime.Today.Month - item.LPUser.Birthdate.Value.Month > 0) ||
-                (DateTime.Today.Year - item.LPUser.Birthdate.Value.Year == 17 && DateTime.Today.Month - item.LPUser.Birthdate.Value.Month == 0 && DateTime.Today.Day - item.LPUser.Birthdate.Value.Day >= 0))
+                if ((item.LPUser.Birthdate != null || wItem.AccessPermission.MinorAccess == true) && wItem.ProfileID != item.ProfileID)
                 {
-                    if (wItem.AccessPermission.PublicAccess == true ||
-                        (wItem.AccessPermission.PublisherAccess == true && item.ProfileRoles.Select(i => i.RoleID).ToList().Contains(2)) ||
-                        (wItem.AccessPermission.FriendAccess == true && wItem.LPProfile.Friends.Select(i => i.SecondFriendID).ToList().Contains(item.ProfileID)) ||
-                        wItem.AccessPermission.IndividualAccessGrants.Select(i => i.GranteeID).ToList().Contains(item.ProfileID))
+                    if (wItem.AccessPermission.MinorAccess == true ||
+                    (DateTime.Today.Year - item.LPUser.Birthdate.Value.Year > 17) ||
+                    (DateTime.Today.Year - item.LPUser.Birthdate.Value.Year == 17 && DateTime.Today.Month - item.LPUser.Birthdate.Value.Month > 0) ||
+                    (DateTime.Today.Year - item.LPUser.Birthdate.Value.Year == 17 && DateTime.Today.Month - item.LPUser.Birthdate.Value.Month == 0 && DateTime.Today.Day - item.LPUser.Birthdate.Value.Day >= 0))
                     {
-                        <tr class="@item.ProfileID collapse">
-                            <td>
-                                @wItem.WritingID
-                            </td>
-                            <td>
-                                @wItem.Title
-                            </td>
-                            <td>
-                                @wItem.DescriptionText
-                            </td>
-                            <td>
-                                @wItem.AddDate
-                            </td>
-                            <td>
-                                @wItem.EditDate
-                            </td>
-                            <td>
-                                @Html.ActionLink("View", "ViewWriting", new { id = wItem.WritingID })
-                            </td>
-                        </tr>
-                    }
+                        if (wItem.AccessPermission.PublicAccess == true ||
+                            (wItem.AccessPermission.PublisherAccess == true && item.ProfileRoles.Select(i => i.RoleID).ToList().Contains(2)) ||
+                            (wItem.AccessPermission.FriendAccess == true && wItem.LPProfile.Friends.Select(i => i.SecondFriendID).ToList().Contains(item.ProfileID)) ||
+                            wItem.AccessPermission.IndividualAccessGrants.Select(i => i.GranteeID).ToList().Contains(item.ProfileID))
+                        {
+                            <tr class="@item.ProfileID collapse">
+                                <td>
+                                    @wItem.WritingID
+                                </td>
+                                <td>
+                                    @wItem.Title
+                                </td>
+                                <td>
+                                    @wItem.DescriptionText
+                                </td>
+                                <td>
+                                    @wItem.AddDate
+                                </td>
+                                <td>
+                                    @wItem.EditDate
+                                </td>
+                                <td>
+                                    @Html.ActionLink("View", "ViewWriting", new { id = wItem.WritingID })
+                                </td>
+                            </tr>
+                        }
 
+                    }
                 }
             }
         }

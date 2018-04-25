@@ -113,6 +113,17 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
+	WHERE tables.name = 'IndividualAccessRevoke'
+
+)
+BEGIN
+	DROP TABLE dbo.IndividualAccessRevoke
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
 	WHERE tables.name = 'IndividualAccessGrant'
 
 )
