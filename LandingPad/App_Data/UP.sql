@@ -4,8 +4,8 @@ CREATE TABLE dbo.LPUser
 	UserID INT Identity(1,1), -- TO CONNECT TO ASP.NET IDENTITY
 	Email VARCHAR(MAX) NOT NULL,
 	Birthdate DATETIME,
-	FirstName VARCHAR(MAX) NOT NULL,
-	LastName VARCHAR(MAX) NOT NULL,
+	GivenName VARCHAR(MAX),
+	Surname VARCHAR(MAX),
 	PhoneNumber VARCHAR(MAX),
 	Username VARCHAR(MAX) NOT NULL,
 	CONSTRAINT [PK_dbo.Users] PRIMARY KEY (UserID)
@@ -31,6 +31,7 @@ CREATE TABLE dbo.AccessPermission
 	AccessPermissionID INT IDENTITY(1,1) NOT NULL,
 	WritingID INT,
 	ProfileID INT,
+	PseudonymID INT,
 	PublicAccess BIT NOT NULL,
 	FriendAccess BIT NOT NULL,
 	PublisherAccess BIT NOT NULL,
@@ -42,7 +43,7 @@ CREATE TABLE dbo.AccessPermission
 CREATE TABLE dbo.LPProfile
 (
 	ProfileID INT IDENTITY(1,1) NOT NULL,
-	AccessPermissionID INT,
+	AccessPermissionID INT NOT NULL,
 	UserID INT NOT NULL,
 	LPDescription VarChar(120), 
 	ProfilePhoto VARBINARY(MAX),
@@ -52,7 +53,7 @@ CREATE TABLE dbo.LPProfile
 	CONSTRAINT [PK_dbo.LPProfile] PRIMARY KEY (ProfileID),
 	CONSTRAINT [FK_dbo.AccessPermissionForProfile] FOREIGN KEY (AccessPermissionID)
 	REFERENCES dbo.AccessPermission (AccessPermissionID)
-	ON DELETE SET NULL
+	ON DELETE NO ACTION
 	ON UPDATE CASCADE,
 	CONSTRAINT [FK_dbo.LPUser] FOREIGN KEY (UserID)
 	REFERENCES dbo.LPUser (UserID)
@@ -121,12 +122,32 @@ CREATE TABLE dbo.ProfileRole
 	ON UPDATE CASCADE
 );
 
+-- Pseudonym Table
+CREATE TABLE dbo.Pseudonym
+(
+	PseudonymID INT IDENTITY(1,1) NOT NULL,
+	ProfileID INT NOT NULL,
+	AccessPermissionID INT NOT NULL,
+	Pseudonym VARCHAR(MAX) NOT NULL
+	CONSTRAINT [PK_dbo.Pseudonym] PRIMARY KEY (PseudonymID),
+	CONSTRAINT [FK_dbo.LPProfile] FOREIGN KEY (ProfileID)
+	REFERENCES dbo.LPProfile (ProfileID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	CONSTRAINT [FK_dbo.AccessPermissionForPseudonym] FOREIGN KEY (AccessPermissionID)
+	REFERENCES dbo.AccessPermission (AccessPermissionID)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION
+);
+
 -- Friendship Table
 CREATE TABLE dbo.Friendship
 (
 	FriendshipID INT IDENTITY(1,1) NOT NULL,
 	FirstFriendID INT NOT NULL,
 	SecondFriendID INT NOT NULL,
+	FirstPseudonymID INT,
+	SecondPseudonymID INT,
 	CONSTRAINT [PK_dbo.Friendship] PRIMARY KEY (FriendshipID),
 	CONSTRAINT [FK_dbo.FirstProfileIDForFriendship] FOREIGN KEY (FirstFriendID)
 	REFERENCES dbo.LPProfile (ProfileID)
@@ -134,6 +155,14 @@ CREATE TABLE dbo.Friendship
 	ON UPDATE CASCADE,
 	CONSTRAINT [FK_dbo.SecondProfileIDForFriendship] FOREIGN KEY (SecondFriendID)
 	REFERENCES dbo.LPProfile (ProfileID)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION,
+	CONSTRAINT [PK_dbo.FirstPseudonymIDForFriendship] FOREIGN KEY (FirstPseudonymID)
+	REFERENCES dbo.Pseudonym (PseudonymID)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION,
+	CONSTRAINT [PK_dbo.SecondPseudonymIDForFriendship] FOREIGN KEY (SecondPseudonymID)
+	REFERENCES dbo.Pseudonym (PseudonymID)
 	ON DELETE NO ACTION
 	ON UPDATE NO ACTION
 );
@@ -166,19 +195,6 @@ CREATE TABLE dbo.Writing
 	ON UPDATE NO ACTION
 	--CONSTRAINT [FK_dbo.FolderID] FOREIGN KEY (FolderID) --key added but left out until folder table is added
 	--REFERENCES dbo.Folder (FolderID)
-);
-
--- Pseudonym Table
-CREATE TABLE dbo.Pseudonym
-(
-	PseudonymID INT IDENTITY(1,1) NOT NULL,
-	ProfileID INT NOT NULL,
-	Pseudonym VARCHAR(MAX) NOT NULL
-	CONSTRAINT [PK_dbo.Pseudonym] PRIMARY KEY (PseudonymID),
-	CONSTRAINT [FK_dbo.LPProfile] FOREIGN KEY (ProfileID)
-	REFERENCES dbo.LPProfile (ProfileID)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE
 );
 
 -- WritingPseudonym Table
@@ -259,23 +275,32 @@ CREATE TABLE dbo.WritingFormat
 	ON UPDATE CASCADE
 );
 
-INSERT INTO dbo.LPUser ( Email, Birthdate, FirstName, LastName, PhoneNumber, Username) VALUES
+INSERT INTO dbo.LPUser ( Email, Birthdate, GivenName, Surname, PhoneNumber, Username) VALUES
 ('dude@dude.com', '2010-04-12 12:00', 'Dude', 'Crush', '555-555-5555', 'RandomDude01'), --1
 ( 'saltshaker@oldnsalty.net', '1999-09-09 12:00','Phil', 'Forrest', '555-555-5555', '100%Salt'), --2
 ( 'thestanza@gc.org','1978-06-09 12:00', 'George', 'Castanzna', '', 'TheBubbleBoy'), --3
 ('jsmith@penguin.com', '1966-03-14 12:00', 'Joe', 'Smith', '555-555-5555', 'PublisherJoeSmith'), --4
 ('agent@literary.com', '2000-02-21 12:00', 'Lilah', 'Agent', '', 'LiteraryAgentLilahAgent'); --5
 
-INSERT INTO dbo.AccessPermission (WritingID, ProfileID, PublicAccess, FriendAccess, PublisherAccess, MinorAccess) VALUES
-(NULL, 1, 0, 1, 1, 1), --dude@dude.com 1 
-(NULL, 2, 0, 0, 1, 0), --saltshaker@oldnsalty.net 2
-(NULL, 3, 1, 1, 1, 1), --thestanza@gc.org 3
-(1, NULL, 0, 0, 1, 1), --Lord of the Things 4
-(2, NULL, 1, 1, 1, 1), --Ballad of the Trees 5
-(3, NULL, 0, 1, 1, 0), --Hokey Folk Tales 6
-(NULL, 4, 1, 1, 1, 1), --jsmith@penguin.com 7
-(NULL, 5, 1, 1, 1, 0), --literary@agent.com 8
-(4, NULL, 0, 1, 0, 1); --The Test Song 9
+INSERT INTO dbo.AccessPermission (WritingID, ProfileID, PseudonymID, PublicAccess, FriendAccess, PublisherAccess, MinorAccess) VALUES
+(NULL, 1, NULL, 0, 1, 1, 1), --dude@dude.com 1 
+(NULL, 2, NULL, 0, 0, 1, 0), --saltshaker@oldnsalty.net 2
+(NULL, 3, NULL, 1, 1, 1, 1), --thestanza@gc.org 3
+(1, NULL, NULL, 0, 0, 1, 1), --Lord of the Things 4
+(2, NULL, NULL, 1, 1, 1, 1), --Ballad of the Trees 5
+(3, NULL, NULL, 0, 1, 1, 0), --Hokey Folk Tales 6
+(NULL, 4, NULL, 1, 1, 1, 1), --jsmith@penguin.com 7
+(NULL, 5, NULL, 1, 1, 1, 0), --literary@agent.com 8
+(4, NULL, NULL, 0, 1, 0, 1), --The Test Song 9
+(NULL, NULL, 1, 1, 1, 1, 1), --ComedyClubbed 10
+(NULL, NULL, 2, 1, 1, 1, 1), --FunnyMan 11
+(NULL, NULL, 3, 1, 1, 1, 1), --DoomsDayDumb 12
+(NULL, NULL, 4, 1, 1, 1, 1), --CrustyCrab 13
+(NULL, NULL, 5, 1, 1, 1, 1), --RustyRed 14
+(NULL, NULL, 6, 1, 1, 1, 1), --Treed 15
+(NULL, NULL, 7, 1, 1, 1, 1), --JustGeorge 16
+(NULL, NULL, 8, 1, 1, 1, 1), --NoPirates 17
+(NULL, NULL, 9, 1, 1, 1, 1); --FestivusFreak 18
 
 INSERT INTO dbo.LPProfile(UserID, AccessPermissionID, LPDescription, ProfilePhoto, DisplayRealName) VALUES
 (1, 1, 'I like to ride bikes', NULL, 0), --dude@dude.com 1
@@ -302,15 +327,15 @@ INSERT INTO dbo.ProfileRole(ProfileID, RoleID, UseSecondaryRoleName) VALUES
 (4, 2, 0), --jmsmith@penguin.com Publisher 4
 (5, 2, 1); --agent@literary.com Literary Agent 5
 
-INSERT INTO dbo.Friendship(FirstFriendID, SecondFriendID) VALUES
-(1, 3), --dude@dude.com thestanza@gc.org 1
-(3, 1), --thestanza@gc.org dude@dude.com 2
-(1, 4), --dude@dude.com jsmith@penguin.com 3
-(4, 1), --jsmith@penguin.com dude@dude.com 4
-(2, 4), --saltshaker@oldnsalty.net jsmith@penguin.com 5
-(4, 2), --jsmith@penguin.com saltshaker@oldnsalty.net 6
-(2, 5), --saltshaker@oldnsalty.net agent@literary.com 7
-(5, 2); --agent@literary.com saltshaker@oldnsalty.net 8
+INSERT INTO dbo.Friendship(FirstFriendID, SecondFriendID, FirstPseudonymID, SecondPseudonymID) VALUES
+(1, 3, NULL, NULL), --dude@dude.com thestanza@gc.org 1
+(3, 1, NULL, NULL), --thestanza@gc.org dude@dude.com 2
+(1, 4, NULL, NULL), --dude@dude.com jsmith@penguin.com 3
+(4, 1, NULL, NULL), --jsmith@penguin.com dude@dude.com 4
+(2, 4, NULL, NULL), --saltshaker@oldnsalty.net jsmith@penguin.com 5
+(4, 2, NULL, NULL), --jsmith@penguin.com saltshaker@oldnsalty.net 6
+(2, 5, NULL, NULL), --saltshaker@oldnsalty.net agent@literary.com 7
+(5, 2, NULL, NULL); --agent@literary.com saltshaker@oldnsalty.net 8
 
 INSERT INTO dbo.Writing (ProfileID, AccessPermissionID, Title, Document, AddDate, EditDate, LikesOn, CommentsOn, CritiqueOn, DocType, DescriptionText, WritingFileName) VALUES
 (1, 4, 'Lord of the Things', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 0, 0, '.DOCX', 'A humorous play on lord of the rings', 'Lord_of_the_Things'), --dude@dude.com 1
@@ -318,16 +343,16 @@ INSERT INTO dbo.Writing (ProfileID, AccessPermissionID, Title, Document, AddDate
 (3, 6, 'Hokey Folk Tales', CONVERT(VARBINARY(MAX), 'ABCD'), '1991-04-10', GETDATE(), 1, 1, 1, '.ODT', 'A collection of old forgotten tales: second edition', 'forgottentales'), --thestanza@gc.org 3
 (1, 9, 'The Test Song', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 1, 0, 0, '.HTML', 'I love tests; I love every kind of test.', 'everydayimtesting'); --dude@dude.com 4
 
-INSERT INTO dbo.Pseudonym (ProfileID, Pseudonym) VALUES
-(1, 'ComedyClubbed'), --dude@dude.com 1
-(1, 'FunnyMan'), --dude@dude.com 2
-(1, 'DoomsDayDumb'), --dude@dude.com 3
-(2, 'CrustyCrab'), --saltshaker@oldnsalty.net 4
-(2, 'RustyRed'), --saltshaker@oldnsalty.net 5
-(3, 'Treed'), --thestanza@gc.org 6
-(3, 'JustGeorge'), --thestanza@gc.org 7
-(3, 'NoPirates'), --thestanza@gc.org 8
-(3, 'FestivusFreak'); --thestanza@gc.org 9
+INSERT INTO dbo.Pseudonym (ProfileID, AccessPermissionID, Pseudonym) VALUES
+(1, 10, 'ComedyClubbed'), --dude@dude.com 1
+(1, 11, 'FunnyMan'), --dude@dude.com 2
+(1, 12, 'DoomsDayDumb'), --dude@dude.com 3
+(2, 13, 'CrustyCrab'), --saltshaker@oldnsalty.net 4
+(2, 14, 'RustyRed'), --saltshaker@oldnsalty.net 5
+(3, 15, 'Treed'), --thestanza@gc.org 6
+(3, 16, 'JustGeorge'), --thestanza@gc.org 7
+(3, 17, 'NoPirates'), --thestanza@gc.org 8
+(3, 18, 'FestivusFreak'); --thestanza@gc.org 9
 
 INSERT INTO dbo.WritingPseudonym (WritingID, PseudonymID) VALUES
 (1, 1), --Lord of the Things, ComedyClubbed 1
@@ -505,70 +530,70 @@ INSERT INTO dbo.FormatCategory(FormatID, ParentID, SecondaryParentID) VALUES
 (32, 7, NULL), --Canzone, Rhyming poetry 36
 (33, 8, NULL), --Cinquain, Unrhymed poetry 37
 (34, 7, NULL), --Free verse, Rhyming poetry 38
-(34, 8, NULL), --Free verse, Unrhymed poetry 38
-(35, 8, NULL), --Found poetry, Unrhymed poetry 39
-(36, 7, NULL), --Limerick, Rhyming poetry 40
-(37, 7, NULL), --List poetry, Rhyming poetry 41
-(37, 8, NULL), --List poetry, Unrhymed poetry 42
-(38, 7, NULL), --Rondeau, Rhyming poetry 43
-(39, 8, NULL), --Sestina, Unrhymed poetry 44
-(40, 7, NULL), --Sound poetry, Rhyming poetry 45
-(40, 8, NULL), --Sound poetry, Unrhymed poetry 46
-(41, 7, NULL), --Terza Rima, Rhyming poetry 47
-(42, 7, NULL), --Villanelle, Rhyming poetry 48
-(43, 9, NULL), --Chapter, Fiction prose 49
-(44, 9, NULL), --Short story, Fiction prose 50
-(45, 9, NULL), --Novelette, Fiction prose 51
-(46, 9, NULL), --Novella, Fiction prose 52
-(47, 9, NULL), --Novel, Fiction prose 53
-(48, 7, NULL), --Ballad, Rhyming poetry 54
-(48, 23, NULL), --Ballad, Quatrain 55
-(49, 8, NULL), --Blank verse, Unrhymed poetry 56
-(49, 19, NULL), --Blank verse, Iambic pentameter 57
-(50, 7, NULL), --Ghazal, Rhyming poetry 58
-(50, 18, NULL), --Ghazal, Couplet 59
-(51, 7, NULL), --Memoriam stanza, Rhyming poetry 60
-(51, 23, NULL), --Memoriam stanza, Quatrain 61
-(52, 7, NULL), --Petrachan, Rhyming poetry 62
-(52, 22, NULL), --Petrachan, Sonnet 63
-(53, 7, NULL), --Rhyme royal, Rhyming poetry 64
-(53, 19, NULL), --Rhyme royal, Iambic pentameter 65
-(53, 21, NULL), --Rhyme royal, Ode 66
-(54, 10, NULL), --Research paper, Nonfiction prose 67
-(54, 24, NULL), --Research paer, Article 68
-(54, 26, NULL), --Research paper, Essay 69
-(55, 10, NULL), --Review, Nonfiction prose 70
-(55, 24, NULL), --Review, Article 71
-(55, 27, NULL), --Review, Personal journal 72
-(56, 20, NULL), --Haiku, Japanese poetry 73
-(57, 21, NULL), --Horatian ode, Ode 74
-(58, 21, NULL), --Irregular ode, Ode 75
-(59, 22, NULL), --Italian sonnet, Sonnet 76
-(60, 21, NULL), --Pindaric ode, Ode 77
-(61, 20, NULL), --Senryu, Japanese poetry 78
-(62, 19, NULL), --Shakespearean sonnet, Iambic pentameter 79
-(62, 22, NULL), --Shakespearean sonnet, Sonnet 80
-(63, 17, NULL), --Shape poetry, Concrete poetry 81
-(64, 20, NULL), --Tanka, Japanese poetry 82
-(65, 17, NULL), --Visual poetry, Concrete poetry 83
-(66, 24, NULL), --Blog post, Article 84
-(66, 27, NULL), --Blog post, Personal journal 85
-(67, 26, NULL), --Descriptive essay, Essay 86
-(68, 28, NULL), --Documentation, Technical writing 87
-(69, 26, NULL), --Expository essay, Essay 88
-(70, 26, NULL), --Literary analysis, Essay 89
-(71, 26, NULL), --Narrative essay, Essay 90
-(72, 24, NULL), --News article, Article 91
-(72, 26, NULL), --News article, Essay 92
-(73, 24, NULL), --Opinion piece, Article 93
-(73, 27, NULL), --Opinion piece, Personal journal 94
-(74, 26, NULL), --Persuasive essay, Essay 95
-(75, 24, NULL), --Self-help, Article 96
-(75, 25, NULL), --Self-help, Creative nonfiction 97
-(76, 28, NULL), --Textbook, Technical writing 98
-(77, 24, NULL), --Travelogue, Article 99
-(77, 25, NULL), --Travelogue, Creative nonfiction 100
-(77, 27, NULL); --Travelogue, Personal journal 101
+(34, 8, NULL), --Free verse, Unrhymed poetry 39
+(35, 8, NULL), --Found poetry, Unrhymed poetry 40
+(36, 7, NULL), --Limerick, Rhyming poetry 41
+(37, 7, NULL), --List poetry, Rhyming poetry 42
+(37, 8, NULL), --List poetry, Unrhymed poetry 43
+(38, 7, NULL), --Rondeau, Rhyming poetry 44
+(39, 8, NULL), --Sestina, Unrhymed poetry 45
+(40, 7, NULL), --Sound poetry, Rhyming poetry 46
+(40, 8, NULL), --Sound poetry, Unrhymed poetry 47
+(41, 7, NULL), --Terza Rima, Rhyming poetry 48
+(42, 7, NULL), --Villanelle, Rhyming poetry 49
+(43, 9, NULL), --Chapter, Fiction prose 50
+(44, 9, NULL), --Short story, Fiction prose 51
+(45, 9, NULL), --Novelette, Fiction prose 52
+(46, 9, NULL), --Novella, Fiction prose 53
+(47, 9, NULL), --Novel, Fiction prose 54
+(48, 7, NULL), --Ballad, Rhyming poetry 55
+(48, 23, NULL), --Ballad, Quatrain 56
+(49, 8, NULL), --Blank verse, Unrhymed poetry 57
+(49, 19, NULL), --Blank verse, Iambic pentameter 58
+(50, 7, NULL), --Ghazal, Rhyming poetry 59
+(50, 18, NULL), --Ghazal, Couplet 60
+(51, 7, NULL), --Memoriam stanza, Rhyming poetry 61
+(51, 23, NULL), --Memoriam stanza, Quatrain 62
+(52, 7, NULL), --Petrachan, Rhyming poetry 63
+(52, 22, NULL), --Petrachan, Sonnet 64
+(53, 7, NULL), --Rhyme royal, Rhyming poetry 65
+(53, 19, NULL), --Rhyme royal, Iambic pentameter 66
+(53, 21, NULL), --Rhyme royal, Ode 67
+(54, 10, NULL), --Research paper, Nonfiction prose 68
+(54, 24, NULL), --Research paer, Article 69
+(54, 26, NULL), --Research paper, Essay 70
+(55, 10, NULL), --Review, Nonfiction prose 71
+(55, 24, NULL), --Review, Article 72
+(55, 27, NULL), --Review, Personal journal 73
+(56, 20, NULL), --Haiku, Japanese poetry 74
+(57, 21, NULL), --Horatian ode, Ode 75
+(58, 21, NULL), --Irregular ode, Ode 76
+(59, 22, NULL), --Italian sonnet, Sonnet 77
+(60, 21, NULL), --Pindaric ode, Ode 78
+(61, 20, NULL), --Senryu, Japanese poetry 79
+(62, 19, NULL), --Shakespearean sonnet, Iambic pentameter 80
+(62, 22, NULL), --Shakespearean sonnet, Sonnet 81
+(63, 17, NULL), --Shape poetry, Concrete poetry 82
+(64, 20, NULL), --Tanka, Japanese poetry 83
+(65, 17, NULL), --Visual poetry, Concrete poetry 84
+(66, 24, NULL), --Blog post, Article 85
+(66, 27, NULL), --Blog post, Personal journal 86
+(67, 26, NULL), --Descriptive essay, Essay 87
+(68, 28, NULL), --Documentation, Technical writing 88
+(69, 26, NULL), --Expository essay, Essay 89
+(70, 26, NULL), --Literary analysis, Essay 90
+(71, 26, NULL), --Narrative essay, Essay 91
+(72, 24, NULL), --News article, Article 92
+(72, 26, NULL), --News article, Essay 93
+(73, 24, NULL), --Opinion piece, Article 94
+(73, 27, NULL), --Opinion piece, Personal journal 95
+(74, 26, NULL), --Persuasive essay, Essay 96
+(75, 24, NULL), --Self-help, Article 97
+(75, 25, NULL), --Self-help, Creative nonfiction 98
+(76, 28, NULL), --Textbook, Technical writing 99
+(77, 24, NULL), --Travelogue, Article 100
+(77, 25, NULL), --Travelogue, Creative nonfiction 101
+(77, 27, NULL); --Travelogue, Personal journal 102
 
 INSERT INTO dbo.WritingFormat (WritingID, FormatID) VALUES
 (1, 2), --Lord of the Things, Prose

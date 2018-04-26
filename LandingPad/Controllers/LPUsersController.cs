@@ -48,7 +48,7 @@ namespace LandingPad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserID,Email,Birthdate,FirstName,LastName,PhoneNumber,Username")] LPUser lPUser)
+        public ActionResult Create([Bind(Include = "UserID,Email,Birthdate,GivenName,Surname,PhoneNumber,Username")] LPUser lPUser)
         {
             if (ModelState.IsValid)
             {
@@ -80,7 +80,7 @@ namespace LandingPad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserID,Email,Birthdate,FirstName,LastName,PhoneNumber,Username")] LPUser lPUser)
+        public ActionResult Edit([Bind(Include = "UserID,Email,Birthdate,GivenName,Surname,PhoneNumber,Username")] LPUser lPUser)
         {
             if (ModelState.IsValid)
             {

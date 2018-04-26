@@ -25,6 +25,8 @@ namespace LandingPad.Models
 
         public int? ProfileID { get; set; }
 
+        public int? PseudonymID { get; set; }
+
         [Required]
         public bool PublicAccess { get; set; }
 

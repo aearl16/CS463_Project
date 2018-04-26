@@ -377,9 +377,9 @@ namespace LandingPad.Controllers
             {
                 byline = " by " + wr.WritingPseudonyms.First().Pseudonym.Pseudonym1;
             }
-            else if(wr.LPProfile.DisplayRealName == true)
+            else if(wr.LPProfile.DisplayRealName == true && wr.LPProfile.LPUser.GivenName != null && wr.LPProfile.LPUser.Surname != null)
             {
-                byline = " by " + wr.LPProfile.LPUser.FirstName + " " + wr.LPProfile.LPUser.LastName;
+                byline = " by " + wr.LPProfile.LPUser.GivenName + " " + wr.LPProfile.LPUser.Surname;
             }
             else
             {

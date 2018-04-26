@@ -6,9 +6,9 @@
     {
         author = Model.WritingPseudonyms.FirstOrDefault().Pseudonym.Pseudonym1;
     }
-    else if(Model.LPProfile.DisplayRealName)
+    else if(Model.LPProfile.DisplayRealName && Model.LPProfile.LPUser.GivenName != null && Model.LPProfile.LPUser.Surname != null)
     {
-        author = Model.LPProfile.LPUser.FirstName + " " + Model.LPProfile.LPUser.LastName;
+        author = Model.LPProfile.LPUser.GivenName + " " + Model.LPProfile.LPUser.Surname;
     }
     else
     {
