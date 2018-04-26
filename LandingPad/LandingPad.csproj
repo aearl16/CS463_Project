@@ -441,8 +441,13 @@
     <Compile Include="Models\AltFormatName.cs" />
     <Compile Include="Models\FormatCategory.cs" />
     <Compile Include="Models\FormatTag.cs" />
+    <Compile Include="Models\Friendship.cs" />
+    <Compile Include="Models\IndividualAccessGrant.cs" />
+    <Compile Include="Models\IndividualAccessRevoke.cs" />
     <Compile Include="Models\LPProfile.cs" />
+    <Compile Include="Models\LPRole.cs" />
     <Compile Include="Models\LPUser.cs" />
+    <Compile Include="Models\ProfileRole.cs" />
     <Compile Include="Models\ProfileUser.cs" />
     <Compile Include="Models\Pseudonym.cs" />
     <Compile Include="Models\Twitter.cs" />
@@ -466,11 +471,16 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\login.css" />
+    <Content Include="Content\penfolio.css" />
     <Content Include="Content\SquareOneLogo.png" />
+    <Content Include="Content\writingPreviewMin.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\Images\Penfolio\leftdivbackground.png" />
+    <Content Include="Content\Images\Penfolio\penfoliobackground.png" />
+    <Content Include="Content\Images\Penfolio\rightdivbackround.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -490,6 +500,7 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\slides.js" />
+    <Content Include="Scripts\writingPreviewScript.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -533,7 +544,6 @@
     <Content Include="Views\Pseudonym\Delete.cshtml" />
     <Content Include="Views\Writing\Edit.cshtml" />
     <Content Include="Views\Writing\Delete.cshtml" />
-    <Content Include="Views\Shared\_Document.cshtml" />
     <Content Include="Views\LPProfiles\Create.cshtml" />
     <Content Include="Views\LPProfiles\Delete.cshtml" />
     <Content Include="Views\LPProfiles\Details.cshtml" />
@@ -561,6 +571,12 @@
     <Content Include="Views\Twitters\Details.cshtml" />
     <Content Include="Views\Twitters\Edit.cshtml" />
     <Content Include="Views\Twitters\Index.cshtml" />
+    <Content Include="Views\Shared\_PenfolioLayout.cshtml" />
+    <Content Include="Views\Shared\View.cshtml" />
+    <Content Include="Views\Shared\_NavBar.cshtml" />
+    <Content Include="Views\Writing\AllWriting.cshtml" />
+    <Content Include="Views\Writing\_WritingPreview.cshtml" />
+    <Content Include="Views\Writing\SearchByFormatTag.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
+using System.Globalization;
 using System.Web;
 using System.Web.Mvc;
 
@@ -24,14 +25,18 @@ namespace LandingPad.Models
 
         public int ProfileID { get; set; }
 
+        public int AccessPermissionID { get; set; }
+
         [Required]
         public string Title { get; set; }
 
         [Required]
         public byte[] Document { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:MMMM d, yyyy h:mm tt}")]
         public DateTime AddDate { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:MMMM d, yyyy h:mm tt")]
         public DateTime? EditDate { get; set; }
 
         public bool LikesOn { get; set; }
@@ -46,6 +51,9 @@ namespace LandingPad.Models
         [Required]
         public string DescriptionText { get; set; }
 
+        [Required]
+        public string WritingFileName { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WritingPseudonym> WritingPseudonyms { get; set; }
 
@@ -53,8 +61,8 @@ namespace LandingPad.Models
         public virtual ICollection<WritingFormat> WritingFormats { get; set; }
 
         public virtual LPProfile LPProfile { get; set; }
-
-        //public virtual AccessPermission AccessPermission { get; set; }
+        
+        public virtual AccessPermission AccessPermission { get; set; }
 
         [DisplayName("Select File")]
         [NotMapped]
