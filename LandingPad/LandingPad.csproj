@@ -471,6 +471,7 @@
     <Content Include="Content\login.css" />
     <Content Include="Content\penfolio.css" />
     <Content Include="Content\SquareOneLogo.png" />
+    <Content Include="Content\writingPreviewMin.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -497,6 +498,7 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\slides.js" />
+    <Content Include="Scripts\writingPreviewScript.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

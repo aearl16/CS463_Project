@@ -142,7 +142,6 @@ input, textarea {
     border-radius: 10px;
     box-shadow: 1px 1px 5px #d48383, -1px -1px 5px #d48383;
     text-align: center;
-    min-width: 200px;
     overflow: auto;
 }
 
@@ -159,8 +158,8 @@ input, textarea {
 }
 
 .descriptionText {
-    overflow: hidden;
     align-self: center;
+    overflow: hidden;
     display: inline-block;
 }
 
@@ -175,7 +174,6 @@ input, textarea {
 
 .scrollArrow {
     background-color: #d48383;
-    height: 100%;
     border: none;
     display: block;
     padding: 0;
@@ -192,11 +190,6 @@ input, textarea {
     float: right;
     padding-left: 2px;
 }
-
-/*.disabledArrow {
-    opacity: 0.6;
-    cursor: not-allowed;
-}*/
 
 .tagScrollbar {
     padding: 3px;
