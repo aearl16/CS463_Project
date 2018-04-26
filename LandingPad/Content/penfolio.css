@@ -140,7 +140,7 @@ input, textarea {
     margin-bottom: 2em;
     padding: 10px;
     border-radius: 10px;
-    box-shadow: 1px 1px 5px #cf909b, -1px -1px 5px #cf909b;
+    box-shadow: 1px 1px 5px #d48383, -1px -1px 5px #d48383;
     text-align: center;
     min-width: 200px;
     overflow: auto;
@@ -174,27 +174,32 @@ input, textarea {
 }
 
 .scrollArrow {
-    display: inline-block;
-    width: 26px;
+    background-color: #d48383;
+    height: 100%;
+    border: none;
+    display: block;
+    padding: 0;
+    font-size: 18.3333px;
+    color: #efb0ad;
 }
 
 #scrollLeft {
     float: left;
+    padding-right: 2px;
 }
 
 #scrollRight {
     float: right;
+    padding-left: 2px;
 }
 
 .tagScrollbar {
-    height: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
     padding: 3px;
-    padding-bottom: 20px;
-    margin-right: 26px;
-    margin-left: 26px;
-    margin-bottom: -33px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    margin-right: 18px;
+    margin-left: 18px;
+    margin-bottom: -17px;
     white-space: pre;
 }
 
@@ -203,5 +208,5 @@ input, textarea {
     padding: 3px 4px 3px 4px;
     box-shadow: 0 0 2px #cf909b;
     border-radius: 3px;
-    margin: 10px 5px 10px 5px;
+    margin: 0 5px 0 5px;
 }

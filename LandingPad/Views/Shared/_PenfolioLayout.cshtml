@@ -93,13 +93,16 @@
 
             var scrollHandle = 0,
                 scrollStep = 5,
-                parent = $(".tagScrollbar");
+                parent;
 
             //Start the scrolling process
             $(".scrollArrow").on("mousedown", function () {
                 var data = $(this).data('scrollModifier'),
-                    direction = parseInt(data, 10);
+                    direction = parseInt(data, 10),
+                    wData = $(this).data('parent'),
+                    wId = parseInt(wData);
 
+                parent = $(".tagScroller." + wId + " .tagScrollbar");
                 $(this).addClass('active');
 
                 startScrolling(direction, scrollStep);
@@ -127,7 +130,7 @@
                 scrollHandle = 0;
             }
 
-        }());
+        })();
     </script>
     @RenderSection("editorScripts", required: false)
     @RenderSection("editScripts", required: false)
