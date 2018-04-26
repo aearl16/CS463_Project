@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
+using System.Globalization;
 using System.Web;
 using System.Web.Mvc;
 
@@ -32,8 +33,10 @@ namespace LandingPad.Models
         [Required]
         public byte[] Document { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:MMMM d, yyyy h:mm tt}")]
         public DateTime AddDate { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:MMMM d, yyyy h:mm tt")]
         public DateTime? EditDate { get; set; }
 
         public bool LikesOn { get; set; }

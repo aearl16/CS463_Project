@@ -8,6 +8,7 @@ using LandingPad.Models;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System.Text.RegularExpressions;
 
 namespace LandingPad.Controllers
 {
@@ -36,6 +37,11 @@ namespace LandingPad.Controllers
             }
 
             return View(GetAllWritingAvailable(id.GetValueOrDefault()));
+        }
+
+        public ActionResult SearchByFormatTag(int id)
+        {
+            return View(db.Writings.Where(i => i.WritingFormats.Select(j => j.FormatTag.FormatID).ToList().Contains(id)).ToList());
         }
 
         [HttpGet]
@@ -220,6 +226,13 @@ namespace LandingPad.Controllers
             db.Writings.Remove(wr);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public PartialViewResult _WritingPreview(int id)
+        {
+            Writing wr = db.Writings.Find(id);
+
+            return PartialView(wr);
         }
 
         public PartialViewResult Editor()

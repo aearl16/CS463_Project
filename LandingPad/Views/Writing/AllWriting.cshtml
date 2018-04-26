@@ -7,6 +7,11 @@
 
 <h2>Browse Writing</h2>
 
+@foreach(var item in Model)
+{
+    @Html.Partial("_WritingPreview", item)
+}
+
 <table class="table">
     <tr>
         <th>

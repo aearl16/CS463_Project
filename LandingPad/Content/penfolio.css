@@ -49,9 +49,18 @@ h3 {
     margin-top: 0;
 }
 
-.formItem {
-    min-width: 300px;
-    overflow: auto;
+h4 {
+    font-family: 'La Belle Aurore', cursive;
+}
+
+a {
+    color: #6080c2;
+}
+
+a:hover {
+    color: #2c519d;
+    text-decoration: none;
+    text-shadow: 0 0 1px #6080c2;
 }
 
 /* Overwrite stuff from the snow stylesheet that messes up the display of the editor */
@@ -116,8 +125,83 @@ input, textarea {
 
 .formItem {
     margin-bottom: 5px;
+    min-width: 300px;
+    overflow: auto;
 }
 
 .checkItem {
     margin-right: 15px;
+}
+
+/* Styling for the writingPreview */
+.writingPreview {
+    background-color: #fff;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px #cf909b, -1px -1px 5px #cf909b;
+    text-align: center;
+    min-width: 200px;
+    overflow: auto;
+}
+
+.addDateTime {
+    text-align: right;
+}
+
+.writingDescription {
+    background-image: url("Images/Penfolio/penfoliobackground.png");
+    box-shadow: 0 0 2px #cf909b;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0 10% 1em 10%;
+}
+
+.descriptionText {
+    overflow: hidden;
+    align-self: center;
+    display: inline-block;
+}
+
+.descriptionText p {
+    text-align: justify;
+}
+
+.tagScroller {
+    background-color: #cdcdcf;
+    overflow: hidden;
+}
+
+.scrollArrow {
+    display: inline-block;
+    width: 26px;
+}
+
+#scrollLeft {
+    float: left;
+}
+
+#scrollRight {
+    float: right;
+}
+
+.tagScrollbar {
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 3px;
+    padding-bottom: 20px;
+    margin-right: 26px;
+    margin-left: 26px;
+    margin-bottom: -33px;
+    white-space: pre;
+}
+
+.scrollbarTag {
+    background-color: #fcfcfc;
+    padding: 3px 4px 3px 4px;
+    box-shadow: 0 0 2px #cf909b;
+    border-radius: 3px;
+    margin: 10px 5px 10px 5px;
 }
