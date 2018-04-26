@@ -1,0 +1,37 @@
+﻿@model LandingPad.Models.Writing
+@{ 
+    string author;
+
+    if(Model.WritingPseudonyms.Count > 0)
+    {
+        author = Model.WritingPseudonyms.FirstOrDefault().Pseudonym.Pseudonym1;
+    }
+    else if(Model.LPProfile.DisplayRealName)
+    {
+        author = Model.LPProfile.LPUser.FirstName + " " + Model.LPProfile.LPUser.LastName;
+    }
+    else
+    {
+        author = Model.LPProfile.LPUser.Username;
+    }
+
+    string tagCollapse = "";
+
+    if(Model.WritingFormats.Count() <= 0)
+    {
+        tagCollapse = " collapse";
+    }
+}
+
+<div class="writingPreview">
+    <div class="addDateTime">Posted @Html.DisplayFor(model => model.AddDate)</div>
+    <h3>@Model.Title</h3>
+    <h4>By @author</h4>
+    <div class="writingDescription">
+        <div class="descriptionText">
+            <p>@Html.DisplayFor(model => model.DescriptionText)</p>
+            <span class="viewMore">@Html.ActionLink("Read More", "ViewWriting", new { id = Model.WritingID })</span>
+        </div>
+    </div>
+    <div class="tagScroller @Model.WritingID@tagCollapse"><button class="scrollLeft scrollArrow" data-scroll-modifier='-1' data-parent="@Model.WritingID">&#9666;</button><button class="scrollRight scrollArrow" data-scroll-modifier="1" data-parent="@Model.WritingID">&#9656;</button><div class="tagScrollbar" data-parent="@Model.WritingID">@foreach (var item in Model.WritingFormats){<span class="scrollbarTag"><a href="~/Writing/SearchByFormatTag/@item.FormatID">#@item.FormatTag.FormatName</a></span>foreach (var subitem in item.FormatTag.AltFormatNames){<span class="scrollbarTag"><a href="~/Writing/SearchByFormatTag/@item.FormatID">#@subitem.AltName</a></span>}}</div></div>
+</div>
