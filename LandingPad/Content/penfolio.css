@@ -169,7 +169,7 @@ input, textarea {
 }
 
 .tagScroller {
-    background-color: #cdcdcf;
+    background-color: #efdedd;
     overflow: hidden;
 }
 
@@ -183,15 +183,20 @@ input, textarea {
     color: #efb0ad;
 }
 
-#scrollLeft {
+.scrollLeft {
     float: left;
     padding-right: 2px;
 }
 
-#scrollRight {
+.scrollRight {
     float: right;
     padding-left: 2px;
 }
+
+/*.disabledArrow {
+    opacity: 0.6;
+    cursor: not-allowed;
+}*/
 
 .tagScrollbar {
     padding: 3px;

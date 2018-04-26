@@ -20,128 +20,22 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Writings.FirstOrDefault().WritingID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Writings.FirstOrDefault().Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Writings.FirstOrDefault().DescriptionText)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Writings.FirstOrDefault().AddDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Writings.FirstOrDefault().EditDate)
-        </th>
-        <th>
-
-        </th>
-    </tr>
-
-    @foreach (var item in Model.LPProfiles)
-    {
-        foreach (var subitem in Model.Writings.Where(i => i.ProfileID == item.ProfileID))
+@foreach (var item in Model.LPProfiles)
+{
+    <div class="@item.ProfileID collapse">
+        @foreach (var wItem in item.Writings)
         {
-            <tr class="@item.ProfileID collapse">
-                <td>
-                    @subitem.WritingID
-                </td>
-                <td>
-                    @subitem.Title
-                </td>
-                <td>
-                    @subitem.DescriptionText
-                </td>
-                <td>
-                    @subitem.AddDate
-                </td>
-                <td>
-                    @subitem.EditDate
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = subitem.WritingID }) |
-                    @Html.ActionLink("View", "ViewWriting", new { id = subitem.WritingID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = subitem.WritingID })
-                </td>
-            </tr>
+            @Html.Partial("_WritingPreview", wItem)
         }
-    }
-
-</table>
+    </div>
+}
 
 <h2>Other People's Writing</h2>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Writings.FirstOrDefault().WritingID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Writings.FirstOrDefault().Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Writings.FirstOrDefault().DescriptionText)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Writings.FirstOrDefault().AddDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Writings.FirstOrDefault().EditDate)
-        </th>
-        <th>
-
-        </th>
-    </tr>
-    @foreach (var item in Model.LPProfiles)
-    {
-        foreach (var wItem in Model.Writings)
-        {
-            if (wItem.AccessPermission.IndividualAccessRevokes.Select(i => i.RevokeeID).ToList().Contains(item.ProfileID) == false)
-            {
-                if ((item.LPUser.Birthdate != null || wItem.AccessPermission.MinorAccess == true) && wItem.ProfileID != item.ProfileID)
-                {
-                    if (wItem.AccessPermission.MinorAccess == true ||
-                    (DateTime.Today.Year - item.LPUser.Birthdate.Value.Year > 17) ||
-                    (DateTime.Today.Year - item.LPUser.Birthdate.Value.Year == 17 && DateTime.Today.Month - item.LPUser.Birthdate.Value.Month > 0) ||
-                    (DateTime.Today.Year - item.LPUser.Birthdate.Value.Year == 17 && DateTime.Today.Month - item.LPUser.Birthdate.Value.Month == 0 && DateTime.Today.Day - item.LPUser.Birthdate.Value.Day >= 0))
-                    {
-                        if (wItem.AccessPermission.PublicAccess == true ||
-                            (wItem.AccessPermission.PublisherAccess == true && item.ProfileRoles.Select(i => i.RoleID).ToList().Contains(2)) ||
-                            (wItem.AccessPermission.FriendAccess == true && wItem.LPProfile.Friends.Select(i => i.SecondFriendID).ToList().Contains(item.ProfileID)) ||
-                            wItem.AccessPermission.IndividualAccessGrants.Select(i => i.GranteeID).ToList().Contains(item.ProfileID))
-                        {
-                            <tr class="@item.ProfileID collapse">
-                                <td>
-                                    @wItem.WritingID
-                                </td>
-                                <td>
-                                    @wItem.Title
-                                </td>
-                                <td>
-                                    @wItem.DescriptionText
-                                </td>
-                                <td>
-                                    @wItem.AddDate
-                                </td>
-                                <td>
-                                    @wItem.EditDate
-                                </td>
-                                <td>
-                                    @Html.ActionLink("View", "ViewWriting", new { id = wItem.WritingID })
-                                </td>
-                            </tr>
-                        }
-
-                    }
-                }
-            }
-        }
-    }
-</table>
+@foreach (var item in Model.LPProfiles)
+{
+    <div class="@item.ProfileID collapse"><a href="~/Writing/AllWriting/@item.ProfileID">View All Writings</a></div>
+}
 
 @section scripts {
     <script>
@@ -149,11 +43,11 @@
             var id = $("#profileID").val();
 
             for (var i = 0; i < profiles.length; i++) {
-                if ($("tr." + profiles[i]).hasClass("collapse") !== true)
-                    $("tr." + profiles[i]).addClass("collapse");
+                if ($("div." + profiles[i]).hasClass("collapse") !== true)
+                    $("div." + profiles[i]).addClass("collapse");
             }
 
-            $("tr." + id).removeClass("collapse");
+            $("div." + id).removeClass("collapse");
         }
     </script>
 }

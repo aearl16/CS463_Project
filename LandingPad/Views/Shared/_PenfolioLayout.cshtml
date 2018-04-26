@@ -93,14 +93,16 @@
 
             var scrollHandle = 0,
                 scrollStep = 5,
-                parent;
+                parent,
+                wId;
 
             //Start the scrolling process
             $(".scrollArrow").on("mousedown", function () {
                 var data = $(this).data('scrollModifier'),
                     direction = parseInt(data, 10),
-                    wData = $(this).data('parent'),
-                    wId = parseInt(wData);
+                    wData = $(this).data('parent');
+
+                wId = parseInt(wData);
 
                 parent = $(".tagScroller." + wId + " .tagScrollbar");
                 $(this).addClass('active');
@@ -119,7 +121,17 @@
                 if (scrollHandle === 0) {
                     scrollHandle = setInterval(function () {
                         var newOffset = parent.scrollLeft() + (scrollStep * modifier);
+                        //    visibleWidth = parent.width,
+                        //    fullWidth = parent.scrollWidth;
+                        
 
+                        //if (newOffset === 0 || (fullWidth - visibleWidth) >= newOffset) {
+                        //    if ($(".active").hasClass("disabledArrow") != true)
+                        //        $(".active").addClass("disabledArrow");
+                        //}
+                        //else if ($(".active").hasClass("disabledArrow")) {
+                        //    $(".active").removeClass("disabledArrow");
+                        //}
                         parent.scrollLeft(newOffset);
                     }, 10);
                 }
@@ -129,6 +141,45 @@
                 clearInterval(scrollHandle);
                 scrollHandle = 0;
             }
+
+            //$(".scrollRight").on("load", function () {
+            //    var wData = $(this).data('parent');
+
+            //    wId = parseInt(wData);
+
+            //    parent = $(".tagScroller." + wId + " .tagScrollbar");
+
+            //    var visibleWidth = parent.width,
+            //        fullWidth = parent.scrollWidth;
+
+            //    if (visibleWidth <= fullWidth) {
+            //        $(this).addClass("disabledArrow");
+            //    }
+            //});
+
+            //$(".tagScrollbar").on("resize", function () {
+            //    var wData = $(this).data('parent');
+            //        wId = parseInt(wData),
+            //        visibleWidth = $(this).width,
+            //        fullWidth = $(this).scrollWidth,
+            //            lParent = $(".tagScroller." + wId + " .scrollLeft"),
+            //            rParent = $(".tagScroller." + wId + " .scrollRight");
+
+            //    if (visibleWidth <= fullWidth) {
+            //        if (lParent.hasClass("disabledArrow") != true)
+            //            lParent.addClass("disabledArrow");
+
+            //        if (rParent.hasClass("disabledArrow") != true)
+            //            rParent.addClass("disabledArrow");
+            //    }
+            //    else {
+            //        if (lParent.hasClass("disabledArrow"))
+            //            lParent.removeClass("disabledArrow");
+
+            //        if (rParent.hasClass("disabledArrow"))
+            //            rParent.removeClass("disabledArrow");
+            //    }
+            //});
 
         })();
     </script>
