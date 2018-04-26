@@ -577,6 +577,7 @@
     <Content Include="Views\Writing\AllWriting.cshtml" />
     <Content Include="Views\Writing\_WritingPreview.cshtml" />
     <Content Include="Views\Writing\SearchByFormatTag.cshtml" />
+    <Content Include="Views\Writing\_GetPermissionWritings.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

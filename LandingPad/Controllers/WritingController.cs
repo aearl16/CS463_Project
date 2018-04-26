@@ -20,7 +20,8 @@ namespace LandingPad.Controllers
         // GET: Pseudonym
         public ActionResult Index()
         {
-            return View(db);
+            ViewBag.Profiles = String.Join(",", db.LPProfiles.Select(i => i.ProfileID));
+            return View(db.LPProfiles.ToList());
         }
 
         public ActionResult AllWriting(int? id)
@@ -37,6 +38,14 @@ namespace LandingPad.Controllers
             }
 
             return View(GetAllWritingAvailable(id.GetValueOrDefault()));
+        }
+
+        [ChildActionOnly]
+        public PartialViewResult _GetPermissionWritings(int id)
+        {
+            LPProfile lpProfile = db.LPProfiles.Find(id);
+
+            return PartialView(GetAllWritingAvailable(id));
         }
 
         public ActionResult SearchByFormatTag(int id)
@@ -67,9 +76,11 @@ namespace LandingPad.Controllers
 
             ViewBag.Document = doc;
 
-            ViewBag.ID = id;
+            ViewBag.Pseudonyms = String.Join(",", db.Pseudonyms.Where(i => i.ProfileID == wr.ProfileID).Select(j => j.PseudonymID));
 
-            return View(db);
+            ViewBag.FormatTags = String.Join(",", db.FormatTags.Select(i => i.FormatID));
+
+            return View(wr);
         }
 
         [HttpPost]
@@ -182,7 +193,7 @@ namespace LandingPad.Controllers
             else
             {
                 ViewBag.FileStatus = "Model Invalid";
-                return View(db);
+                return View();
             }
         }
 
@@ -228,6 +239,7 @@ namespace LandingPad.Controllers
             return RedirectToAction("Index");
         }
 
+        [ChildActionOnly]
         public PartialViewResult _WritingPreview(int id)
         {
             Writing wr = db.Writings.Find(id);
@@ -235,40 +247,50 @@ namespace LandingPad.Controllers
             return PartialView(wr);
         }
 
+        [ChildActionOnly]
         public PartialViewResult Editor()
         {
             return PartialView();
         }
 
+        [ChildActionOnly]
         public PartialViewResult _SelectAuthor()
         {
-            return PartialView(db.LPProfiles.ToList());
+            List<LPProfile> pAuthor = db.LPProfiles.Where(i => i.ProfileRoles.Select(j => j.RoleID).ToList().Contains(1)).ToList();
+            return PartialView(pAuthor);
         }
 
+        [ChildActionOnly]
         public PartialViewResult _SelectFormat()
         {
             return PartialView(db.FormatTags.ToList());
         }
 
+        [ChildActionOnly]
         public PartialViewResult _SelectPermissions()
         {
-            return PartialView(db);
+            return PartialView();
         }
 
+        [ChildActionOnly]
         public PartialViewResult _Confirmation()
         {
-            return PartialView(db);
+            return PartialView();
         }
         
+        [ChildActionOnly]
         public PartialViewResult _Menu()
         {
-            return PartialView(db);
+            ViewBag.Pseudonyms = String.Join(",", db.Pseudonyms.Select(i => i.PseudonymID));
+            ViewBag.FormatTags = String.Join(",", db.FormatTags.Select(i => i.FormatID));
+
+            return PartialView();
         }
 
         [HttpGet]
         public ActionResult Create()
         {
-            return View(db);
+            return View();
         }
 
         [HttpPost]
@@ -345,7 +367,7 @@ namespace LandingPad.Controllers
             else
             {
                 ViewBag.FileStatus = "Model Invalid";
-                return View(db);
+                return View();
             }
         }
 

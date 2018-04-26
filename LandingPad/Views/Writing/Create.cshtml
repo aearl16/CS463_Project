@@ -1,10 +1,8 @@
-﻿@model LandingPad.DAL.LandingPadContext
-
-@{
+﻿@{
     ViewBag.Title = "Create New Writing";
     Layout = "~/Views/Shared/_PenfolioLayout.cshtml";
 }
 
 <h2>Create New Writing</h2>
 
-@Html.Partial("_Menu", Model)
+@Html.Action("_Menu")
