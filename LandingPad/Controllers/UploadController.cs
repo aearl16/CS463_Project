@@ -92,10 +92,25 @@ namespace LandingPad.Controllers
             UTF8Encoding encoding = new UTF8Encoding();
             byte[] contentAsBytes = wr.Document;
 
-            if(wr.DocType == "HTML")
+            if(wr.DocType == "HTML" || wr.DocType == ".HTML")
             {
                 this.HttpContext.Response.ContentType = "application/force-download";
                 this.HttpContext.Response.AddHeader("Content-Disposition", "filename=" + "yourdocument.html");
+            }
+            else if(wr.DocType == "DOC" || wr.DocType == ".DOC")
+            {
+                this.HttpContext.Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + "yourdocument.doc");
+            }
+            else if(wr.DocType == "ODT" || wr.DocType ==".ODT")
+            {
+                this.HttpContext.Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + "yourdocument.odt");
+            }
+            else if(wr.DocType == "PDF" || wr.DocType == ".PDF")
+            {
+                this.HttpContext.Response.ContentType = "application/pdf";
+                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + "yourdocument.pdf");
             }
             else
             {
