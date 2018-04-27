@@ -131,6 +131,7 @@ input, textarea {
 
 .checkItem {
     margin-right: 15px;
+    white-space: pre;
 }
 
 /* Styling for the writingPreview */
@@ -207,4 +208,9 @@ input, textarea {
     box-shadow: 0 0 2px #cf909b;
     border-radius: 3px;
     margin: 0 5px 0 5px;
+}
+
+/*Styling for the partial views in menu*/
+.pseudonymSelector {
+    min-height: 84px;
 }
