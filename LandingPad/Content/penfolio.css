@@ -1,0 +1,210 @@
+﻿/* Layout stuff with backgrounds, general styling, etc. */
+html, body {
+    padding: 0;
+    margin: 0;
+    background-image: url("../Content/Images/Penfolio/penfoliobackground.png");
+    background-repeat: repeat;
+    height: 100%;
+}
+
+.leftSideBar {
+    background-image: url("../Content/Images/Penfolio/leftdivbackground.png");
+    background-repeat: repeat-y;
+    width: 100px;
+    height: 100%;
+    float: left;
+    display: inline-flex;
+    padding: 0;
+    margin: 0;
+}
+
+.rightSideBar {
+    background-image: url("../../Content/Images/Penfolio/rightdivbackround.png");
+    background-repeat: repeat-y;
+    width: 100px;
+    height: 100%;
+    float: right;
+    display: inline-flex;
+    padding: 0;
+    margin: 0;
+}
+
+.body-content, .container {
+    padding: 15px 0 15px 0;
+}
+
+.body-content {
+    padding-top: 50px;
+}
+
+h2 {
+    font-family: 'Homemade Apple', cursive;
+    color: #4f4c4c;
+    margin-bottom: 5px;
+}
+
+h3 {
+    font-family: 'Love Ya Like A Sister', cursive;
+    color: #3a3a3a;
+    margin-top: 0;
+}
+
+h4 {
+    font-family: 'La Belle Aurore', cursive;
+}
+
+a {
+    color: #6080c2;
+}
+
+a:hover {
+    color: #2c519d;
+    text-decoration: none;
+    text-shadow: 0 0 1px #6080c2;
+}
+
+/* Overwrite stuff from the snow stylesheet that messes up the display of the editor */
+#editorContainer {
+    display: inline-block;
+    background-color: #fff;
+}
+
+#editorContainer .ql-container {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    height: 375px;
+}
+
+.ql-editor .ql-font-times {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.ql-editor .ql-font-courier {
+    font-family: Courier New, Courier, monospace;
+}
+
+#editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label[data-value='arial']:not([data-label])::before,
+#editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-item[data-value='arial']::before,
+#editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label::before {
+    content: 'Arial';
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label[data-value='times']:not([data-label])::before,
+#editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-item[data-value='times']::before,
+#editorContainer .ql-font-times .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label::before {
+    content: 'Times';
+    font-family: 'Times New Roman', Times, serif;
+}
+
+#editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label[data-value='courier']:not([data-label])::before,
+#editorContainer .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-item[data-value='courier']::before,
+#editorContainer .ql-font-courier .ql-toolbar.ql-snow .ql-formats .ql-font.ql-picker .ql-picker-label::before {
+    content: 'Courier New';
+    font-family: Courier New, Courier, monospace;
+}
+
+.ql-snow .ql-picker.ql-font {
+    width: 125px;
+}
+
+/* Styling for display of writings outside of editor */
+.ql-font-times {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.ql-font-courier {
+    font-family: Courier New, Courier, monospace;
+}
+
+/* Styling for forms */
+input, textarea {
+    border: 1px solid;
+    border-color: #ccc;
+}
+
+.formItem {
+    margin-bottom: 5px;
+    min-width: 300px;
+    overflow: auto;
+}
+
+.checkItem {
+    margin-right: 15px;
+}
+
+/* Styling for the writingPreview */
+.writingPreview {
+    background-color: #fff;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px #d48383, -1px -1px 5px #d48383;
+    text-align: center;
+    overflow: auto;
+}
+
+.addDateTime {
+    text-align: right;
+}
+
+.writingDescription {
+    background-image: url("Images/Penfolio/penfoliobackground.png");
+    box-shadow: 0 0 2px #cf909b;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0 10% 1em 10%;
+}
+
+.descriptionText {
+    align-self: center;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.descriptionText p {
+    text-align: justify;
+}
+
+.tagScroller {
+    background-color: #efdedd;
+    overflow: hidden;
+}
+
+.scrollArrow {
+    background-color: #d48383;
+    border: none;
+    display: block;
+    padding: 0;
+    font-size: 18.3333px;
+    color: #efb0ad;
+}
+
+.scrollLeft {
+    float: left;
+    padding-right: 2px;
+}
+
+.scrollRight {
+    float: right;
+    padding-left: 2px;
+}
+
+.tagScrollbar {
+    padding: 3px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    margin-right: 18px;
+    margin-left: 18px;
+    margin-bottom: -17px;
+    white-space: pre;
+}
+
+.scrollbarTag {
+    background-color: #fcfcfc;
+    padding: 3px 4px 3px 4px;
+    box-shadow: 0 0 2px #cf909b;
+    border-radius: 3px;
+    margin: 0 5px 0 5px;
+}
