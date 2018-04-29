@@ -33,16 +33,20 @@
 
         @*?ref_src=twsrc%5Etfw*@
 
-        <a class="twitter-timeline" data-width="600" data-height="300" data-theme="dark" data-link-color="#19CF86" href="https://twitter.com/SquareOne2018">Tweets by SquareOne2018</a>
+        @*Testing to see if this works*@
+        @if (Convert.ToDateTime(@ViewBag.EndTime) > DateTime.Now)
+        {
 
-        @*<h2>Make a Post</h2>*@
+            <a class="twitter-timeline" data-width="600" data-height="300" data-theme="dark" data-link-color="#19CF86" href="https://twitter.com/@ViewBag.TwitterName">Tweets by @ViewBag.TwitterName</a>
 
-        @*<textarea id="my-tweet"> </textarea>
-            <br />*@
-
+        }
         <div class="lower_menu">
             <div class="center">
-                <button id="fixedbutton" onclick="tweetTweet()">Tweet</button>
+                @if (Convert.ToDateTime(@ViewBag.EndTime) > DateTime.Now)
+                {
+                    <button id="fixedbutton" onclick="tweetTweet()">Tweet</button>
+                }
+                <input type="button" value="Create Writing" onclick="location.href='@Url.Action("Create", "Writing", new {controller = "Writing" })'" />
             </div>
         </div>
 
@@ -102,9 +106,9 @@
         <th>
             @Html.DisplayNameFor(model => model.AddDate)
         </th>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.EditDate)
-        </th>
+        </th>*@
         <th>
             @Html.DisplayNameFor(model => model.DocType)
         </th>
@@ -131,9 +135,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.AddDate)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.EditDate)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.DocType)
             </td>

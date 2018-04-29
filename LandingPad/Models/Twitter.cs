@@ -13,6 +13,10 @@ namespace LandingPad.Models
 
         public int UserID { get; set; }
 
+        public DateTime Date { get; set; }
+
+        public DateTime EndDate { get; set; }
+
         [StringLength(60)]
         public string TwName { get; set; }
 
