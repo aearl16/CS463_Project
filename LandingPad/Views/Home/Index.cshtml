@@ -3,7 +3,7 @@
 
 @{
     ViewBag.Title = "Home Page";
-
+    Layout = "~/Views/Shared/_PenfolioLayout.cshtml";
 }
 <body>
 
@@ -25,11 +25,9 @@
     </style>
 
     <center>
-        <h1>
+        <h2>
             Welcome to LandingPad
-        </h1>
-
-        <h2>Welcome Timeline</h2>
+        </h2>
 
         @*?ref_src=twsrc%5Etfw*@
 
@@ -91,76 +89,19 @@
     </script>
 
 </body>
+@*<input type="button" value="View" onclick="location.href='@Url.Action("ViewWriting", "Writing", new { id = item.WritingID, controller = "Writing" })'" />*@
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.WritingID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        @*<th>
-                @Html.DisplayNameFor(model => model.Document)
-            </th>*@
-        <th>
-            @Html.DisplayNameFor(model => model.AddDate)
-        </th>
-        @*<th>
-            @Html.DisplayNameFor(model => model.EditDate)
-        </th>*@
-        <th>
-            @Html.DisplayNameFor(model => model.DocType)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DescriptionText)
-        </th>
-        @*<th>
-                @Html.DisplayNameFor(model => model.ProfileID)
-            </th>*@
-        <th></th>
-    </tr>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.WritingID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.Document)
-                </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.AddDate)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.EditDate)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.DocType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DescriptionText)
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.ProfileID)
-                </td>*@
-            <td>
-                @*<input type="button"
-                    @Url.Action("ViewWriting", new { id = item.WritingID, controller = "Writing" })
-                    />*@
+@foreach (var item in Model)
+{
+    @Html.Partial("../Writing/_WritingPreview", item)
+}
 
-                <input type="button" value="View" onclick="location.href='@Url.Action("ViewWriting", "Writing", new { id = item.WritingID, controller = "Writing" })'" />
 
-            </td>
-        </tr>
-    }
 
-</table>
 @section Scripts {
+
     @Scripts.Render("~/bundles/jqueryval")
-    <link href="@Url.Content("~/Content/login.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/penfolio.css")" rel="stylesheet" type="text/css" />
+
 }
 
