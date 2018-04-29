@@ -16,6 +16,8 @@ CREATE TABLE dbo.Twitter --Same Twitter data to access through project and use c
 (
 	TwitterID INT Identity(1,1) NOT NULL,
 	UserID Int NOT Null,	
+	Date DateTime Not NUll,
+	EndDate DateTime Not Null,
 	TwName VARCHAR(60),
 	TwTag VARCHAR(60),
 	TwOauth Varchar(MAX),
