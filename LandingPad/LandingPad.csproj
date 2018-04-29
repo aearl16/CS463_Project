@@ -476,6 +476,10 @@
     <Compile Include="Models\WritingFormat.cs" />
     <Compile Include="Models\WritingPseudonym.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositorys\IRepository.cs" />
+    <Compile Include="Repositorys\ITwitterRepository.cs" />
+    <Compile Include="Repositorys\Repository.cs" />
+    <Compile Include="Repositorys\TwitterRepository.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
