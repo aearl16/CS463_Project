@@ -20,7 +20,9 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-@foreach (var item in Model.LPProfiles)
+@{ var writings = Model.LPProfiles.ToList();}
+
+@foreach (var item in writings)
 {
     <div class="@item.ProfileID collapse">
         @foreach (var wItem in item.Writings)
