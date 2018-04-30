@@ -1,11 +1,14 @@
-﻿@{
+﻿@model IEnumerable<LandingPad.Models.Writing>
+@*@model IEnumerable<LandingPad.Models.Writing>*@
+
+@{
     ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_PenfolioLayout.cshtml";
 }
 <body>
 
     <style>
         #fixedbutton {
-            
         }
 
         div.lower_menu {
@@ -22,24 +25,26 @@
     </style>
 
     <center>
-        <h1>
+        <h2>
             Welcome to LandingPad
-        </h1>
-
-        <h2>Welcome  Timeline</h2>
+        </h2>
 
         @*?ref_src=twsrc%5Etfw*@
 
-        <a class="twitter-timeline" data-width="900" data-height="600" data-theme="dark" data-link-color="#19CF86" href="https://twitter.com/SquareOne2018">Tweets by SquareOne2018</a>
+        @*Testing to see if this works*@
+        @if (Convert.ToDateTime(@ViewBag.EndTime) > DateTime.Now)
+        {
 
-        @*<h2>Make a Post</h2>*@
+            <a class="twitter-timeline" data-width="600" data-height="300" data-theme="dark" data-link-color="#19CF86" href="https://twitter.com/@ViewBag.TwitterName">Tweets by @ViewBag.TwitterName</a>
 
-        @*<textarea id="my-tweet"> </textarea>
-            <br />*@
-
+        }
         <div class="lower_menu">
             <div class="center">
-                <button id="fixedbutton" onclick="tweetTweet()">Tweet</button>
+                @if (Convert.ToDateTime(@ViewBag.EndTime) > DateTime.Now)
+                {
+                    <button id="fixedbutton" onclick="tweetTweet()">Tweet</button>
+                }
+                <input type="button" value="Create Writing" onclick="location.href='@Url.Action("Create", "Writing", new {controller = "Writing" })'" />
             </div>
         </div>
 
@@ -56,6 +61,7 @@
                     "", "width=500,height=300");
             }
         </script>
+
 
         @*<h2>Likes</h2>
 
@@ -83,4 +89,19 @@
     </script>
 
 </body>
+@*<input type="button" value="View" onclick="location.href='@Url.Action("ViewWriting", "Writing", new { id = item.WritingID, controller = "Writing" })'" />*@
+
+@foreach (var item in Model)
+{
+    @Html.Partial("../Writing/_WritingPreview", item)
+}
+
+
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <link href="@Url.Content("~/Content/penfolio.css")" rel="stylesheet" type="text/css" />
+
+}
 

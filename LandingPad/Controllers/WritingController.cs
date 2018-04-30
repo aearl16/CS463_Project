@@ -8,6 +8,7 @@ using LandingPad.Models;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System.Text.RegularExpressions;
 
 namespace LandingPad.Controllers
 {
@@ -19,7 +20,28 @@ namespace LandingPad.Controllers
         // GET: Pseudonym
         public ActionResult Index()
         {
-            return View(db.Writings.ToList());
+            return View(db);
+        }
+
+        public ActionResult AllWriting(int? id)
+        {
+            if(id == null)
+            {
+                return HttpNotFound();
+            }
+
+            LPProfile p = db.LPProfiles.Find(id);
+            if(p == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(GetAllWritingAvailable(id.GetValueOrDefault()));
+        }
+
+        public ActionResult SearchByFormatTag(int id)
+        {
+            return View(db.Writings.Where(i => i.WritingFormats.Select(j => j.FormatTag.FormatID).ToList().Contains(id)).ToList());
         }
 
         [HttpGet]
@@ -69,6 +91,14 @@ namespace LandingPad.Controllers
                 db.Entry(wr).State = EntityState.Modified;
                 db.SaveChanges();
 
+                AccessPermission ap = db.AccessPermissions.Find(wr.AccessPermissionID);
+                ap.PublicAccess = form["PublicAccess"] != null ? true : false;
+                ap.FriendAccess = form["FriendAccess"] != null ? true : false;
+                ap.PublisherAccess = form["PublisherAccess"] != null ? true : false;
+                ap.MinorAccess = form["MinorAccess"] != null ? true : false;
+                db.Entry(ap).State = EntityState.Modified;
+                db.SaveChanges();
+
                 ICollection<FormatTag> allFT = db.FormatTags.ToList();
                 foreach (var item in allFT)
                 {
@@ -88,18 +118,21 @@ namespace LandingPad.Controllers
                 }
 
                 //add any format tags that don't already exist
-                foreach (var selection in FormatTags)
+                if(FormatTags != null)
                 {
-                    int selected = Int32.Parse(selection);
-                    if(db.WritingFormats.Where(w => w.WritingID == id).Where(w => w.FormatID == selected).ToList().Count == 0)
+                    foreach (var selection in FormatTags)
                     {
-                        WritingFormat wf = new WritingFormat()
+                        int selected = Int32.Parse(selection);
+                        if (db.WritingFormats.Where(w => w.WritingID == id).Where(w => w.FormatID == selected).ToList().Count == 0)
                         {
-                            WritingID = id,
-                            FormatID = selected
-                        };
-                        db.WritingFormats.Add(wf);
-                        db.SaveChanges();
+                            WritingFormat wf = new WritingFormat()
+                            {
+                                WritingID = id,
+                                FormatID = selected
+                            };
+                            db.WritingFormats.Add(wf);
+                            db.SaveChanges();
+                        }
                     }
                 }
 
@@ -107,10 +140,13 @@ namespace LandingPad.Controllers
                 foreach (var item in allPseudonyms)
                 {
                     bool isSelected = false;
-                    for (int i = 0; i < Pseudonyms.Length; i++)
+                    if(Pseudonyms != null)
                     {
-                        if (item.PseudonymID == Int32.Parse(Pseudonyms[i]))
-                            isSelected = true;
+                        for (int i = 0; i < Pseudonyms.Length; i++)
+                        {
+                            if (item.PseudonymID == Int32.Parse(Pseudonyms[i]))
+                                isSelected = true;
+                        }
                     }
 
                     if (db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == item.PseudonymID).ToList().Count > 0 && isSelected == false)
@@ -122,31 +158,24 @@ namespace LandingPad.Controllers
                 }
 
                 //add any pseudonyms that don't already exist
-                foreach (var selection in Pseudonyms)
+                if(Pseudonyms != null)
                 {
-                    int selected = Int32.Parse(selection);
-                    if (db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == selected).ToList().Count == 0)
+                    foreach (var selection in Pseudonyms)
                     {
-                        WritingPseudonym wp = new WritingPseudonym()
+                        int selected = Int32.Parse(selection);
+                        if (db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == selected).ToList().Count == 0)
                         {
-                            WritingID = id,
-                            PseudonymID = selected
-                        };
-                        db.WritingPseudonyms.Add(wp);
-                        db.SaveChanges();
+                            WritingPseudonym wp = new WritingPseudonym()
+                            {
+                                WritingID = id,
+                                PseudonymID = selected
+                            };
+                            db.WritingPseudonyms.Add(wp);
+                            db.SaveChanges();
+                        }
                     }
                 }
-
-                //previouslySelectedPseudonyms = previouslySelectedPseudonyms.Distinct().ToList();
-                //foreach(var item in previouslySelectedPseudonyms)
-                //{
-                //    if(db.WritingPseudonyms.Where(w => w.WritingID == id).Select(w => w.PseudonymID).ToList().Contains(item))
-                //    {
-                //        WritingPseudonym wp = db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == item).First();
-                //        db.WritingPseudonyms.Remove(wp);
-                //        db.SaveChanges();
-                //    }
-                //}
+                
 
                 return RedirectToAction("ViewWriting", "Writing", new { @id = id });
             }
@@ -199,6 +228,13 @@ namespace LandingPad.Controllers
             return RedirectToAction("Index");
         }
 
+        public PartialViewResult _WritingPreview(int id)
+        {
+            Writing wr = db.Writings.Find(id);
+
+            return PartialView(wr);
+        }
+
         public PartialViewResult Editor()
         {
             return PartialView();
@@ -241,9 +277,20 @@ namespace LandingPad.Controllers
         {
             if (!ModelState.IsValid)
             {
+                AccessPermission ap = new AccessPermission()
+                {
+                    PublicAccess = form["PublicAccess"] != null ? true : false,
+                    FriendAccess = form["FriendAccess"] != null ? true : false,
+                    PublisherAccess = form["PublisherAccess"] != null ? true : false,
+                    MinorAccess = form["MinorAccess"] != null ? true : false
+                };
+                db.AccessPermissions.Add(ap);
+                db.SaveChanges();
+
                 Writing wr = new Writing()
                 {
                     ProfileID = Int32.Parse(form["ProfileID"]),
+                    AccessPermissionID = ap.AccessPermissionID,
                     Title = form["Title"],
                     AddDate = DateTime.Now,
                     EditDate = null,
@@ -252,33 +299,45 @@ namespace LandingPad.Controllers
                     CritiqueOn = form["CritiqueOn"] != null ? true : false,
                     DocType = form["DocType"],
                     DescriptionText = form["DescriptionText"],
-                    Document = Encoding.Unicode.GetBytes(form["EditorContent"])
+                    Document = Encoding.Unicode.GetBytes(form["EditorContent"]),
+                    WritingFileName = form["WritingFileName"]
                 };
                 db.Writings.Add(wr);
                 db.SaveChanges();
 
                 int id = wr.WritingID;
 
-                foreach(var selection in FormatTags)
+                ap = db.AccessPermissions.Find(ap.AccessPermissionID);
+                ap.WritingID = id;
+                db.Entry(ap).State = EntityState.Modified;
+                db.SaveChanges();
+
+                if(FormatTags != null)
                 {
-                    WritingFormat wf = new WritingFormat()
+                    foreach (var selection in FormatTags)
                     {
-                        WritingID = id,
-                        FormatID = Int32.Parse(selection)
-                    };
-                    db.WritingFormats.Add(wf);
-                    db.SaveChanges();
+                        WritingFormat wf = new WritingFormat()
+                        {
+                            WritingID = id,
+                            FormatID = Int32.Parse(selection)
+                        };
+                        db.WritingFormats.Add(wf);
+                        db.SaveChanges();
+                    }
                 }
 
-                foreach(var selection in Pseudonyms)
+                if(Pseudonyms != null)
                 {
-                    WritingPseudonym wp = new WritingPseudonym()
+                    foreach (var selection in Pseudonyms)
                     {
-                        WritingID = id,
-                        PseudonymID = Int32.Parse(selection)
-                    };
-                    db.WritingPseudonyms.Add(wp);
-                    db.SaveChanges();
+                        WritingPseudonym wp = new WritingPseudonym()
+                        {
+                            WritingID = id,
+                            PseudonymID = Int32.Parse(selection)
+                        };
+                        db.WritingPseudonyms.Add(wp);
+                        db.SaveChanges();
+                    }
                 }
 
                 return RedirectToAction("ViewWriting", "Writing", new { @id = id });
@@ -322,16 +381,17 @@ namespace LandingPad.Controllers
             {
                 byline = " by " + wr.LPProfile.LPUser.FirstName + " " + wr.LPProfile.LPUser.LastName;
             }
+            else
+            {
+                byline = " by " + wr.LPProfile.LPUser.Username;
+            }
 
             string pageTitle = wr.Title + byline;
 
             ViewBag.Title = pageTitle;
 
-            if(byline.Length > 0)
-            {
-                byline = byline.TrimStart();
-                byline = byline[0].ToString().ToUpper() + byline.Substring(1);
-            }
+            byline = byline.TrimStart();
+            byline = byline[0].ToString().ToUpper() + byline.Substring(1);
 
             ViewBag.Byline = byline;
 
@@ -347,6 +407,75 @@ namespace LandingPad.Controllers
             output = output.Replace("&lt;", "<").Replace("&gt;", ">");
 
             return output;
+        }
+
+        public List<Writing> GetAllWritingAvailable(int id)
+        {
+            LPProfile lpProfile = db.LPProfiles.Find(id);
+            ICollection<Writing> w = db.Writings.ToList();
+            ICollection<Writing> toRemove;
+            bool isMinor = IsUserMinor(lpProfile);
+
+            toRemove = w.Where(i => i.ProfileID == id).ToList();
+
+            foreach(var item in toRemove)
+            {
+                w.Remove(item);
+            }
+
+            if(isMinor)
+            {
+                toRemove = w.Where(i => i.AccessPermission.MinorAccess == false).ToList();
+                foreach(var item in toRemove)
+                {
+                    w.Remove(item);
+                }
+            }
+
+            toRemove = w.Where(i => i.AccessPermission.IndividualAccessRevokes.Select(j => j.RevokeeID).ToList().Contains(id)).ToList();
+            foreach(var item in toRemove)
+            {
+                w.Remove(item);
+            }
+
+            //get all writings from w where individual access has not been granted to the user
+            toRemove = w.Except(w.Where(i => i.AccessPermission.IndividualAccessGrants.Select(j => j.GranteeID).ToList().Contains(id))).ToList();
+
+            //remove the writings that are set to public access
+            toRemove = toRemove.Except(toRemove.Where(i => i.AccessPermission.PublicAccess == true)).ToList();
+
+            //if the user has the publisher role, remove all writings with publisher access
+            if(lpProfile.ProfileRoles.Select(i => i.RoleID).ToList().Contains(2))
+            {
+                toRemove = toRemove.Except(toRemove.Where(i => i.AccessPermission.PublisherAccess == true)).ToList();
+            }
+
+            //remove the writings that have friend access and are by friends of the user
+            toRemove = toRemove.Except(toRemove.Where(i => i.AccessPermission.FriendAccess == true).ToList().Where(i => i.LPProfile.Friends.Select(j => j.SecondFriendID).ToList().Contains(id))).ToList();
+
+            foreach(var item in toRemove)
+            {
+                w.Remove(item);
+            }
+
+            return w.ToList();
+        }
+
+        public bool IsUserMinor(LPProfile p)
+        {
+            DateTime now = DateTime.Today;
+
+            if(p.LPUser.Birthdate != null)
+            {
+                DateTime bDay = p.LPUser.Birthdate.Value;
+                if(now.Year - bDay.Year > 17 ||
+                    (now.Year - bDay.Year == 17 && (now.Month > bDay.Month || (now.Month == bDay.Month && now.Date >= bDay.Date))))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
