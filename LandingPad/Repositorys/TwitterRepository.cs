@@ -17,6 +17,12 @@ namespace LandingPad.Repositorys
 
         }
 
+        public int GetTwitterId(int id)
+        {
+            return LandingPadContext.Twitters.Where(u => u.UserID == id).SingleOrDefault().UserID;
+        }
+
+
         public DateTime GetTwitterEndTime(int id)
         {
             return LandingPadContext.Twitters.Where(u => u.UserID == id).SingleOrDefault().EndDate;
@@ -30,6 +36,18 @@ namespace LandingPad.Repositorys
         public LandingPadContext LandingPadContext
         {
             get { return Context as LandingPadContext; }
+        }
+
+        public void Remove(int id)
+        {
+
+            Context.Twitters.Remove(LandingPadContext.Twitters.Where(u => u.UserID == id).SingleOrDefault());
+
+        }
+
+        public void Save()
+        {
+            Context.SaveChanges();
         }
     }
 }
