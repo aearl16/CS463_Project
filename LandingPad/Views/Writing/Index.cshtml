@@ -1,94 +1,53 @@
-﻿@model IEnumerable<LandingPad.Models.Writing>
+﻿@model LandingPad.DAL.LandingPadContext
 
 @{
     ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_PenfolioLayout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Select ProfileID</h2>
+
+<select id="profileID" onchange='toggleProfiles([@Html.Raw(String.Join(",", Model.LPProfiles.Select(i => i.ProfileID)))])'>
+    <option value="" selected disabled hidden>Select ProfileID</option>
+    @foreach (var item in Model.LPProfiles)
+    {
+        <option value="@item.ProfileID" class="@item.ProfileID">@item.ProfileID</option>
+    }
+</select>
+
+<h2>My Writing</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.WritingID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Document)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.AddDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EditDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LikesOn)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CommentsOn)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CritiqueOn)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DocType)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DescriptionText)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ProfileID)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.WritingID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Document)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AddDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EditDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LikesOn)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CommentsOn)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CritiqueOn)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DocType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DescriptionText)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProfileID)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.WritingID }) |
-            @Html.ActionLink("View", "ViewWriting", new { id = item.WritingID }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.WritingID }) |
-            @Html.ActionLink("Download","Download", "Upload", new { id = item.WritingID}, null)
-        </td>
-    </tr>
+@foreach (var item in Model.LPProfiles)
+{
+    <div class="@item.ProfileID collapse">
+        @foreach (var wItem in item.Writings)
+        {
+            @Html.Partial("_WritingPreview", wItem)
+        }
+    </div>
 }
 
-</table>
+<h2>Other People's Writing</h2>
+
+@foreach (var item in Model.LPProfiles)
+{
+    <div class="@item.ProfileID collapse"><a href="~/Writing/AllWriting/@item.ProfileID">View All Writings</a></div>
+}
+
+@section scripts {
+    <script>
+        function toggleProfiles(profiles) {
+            var id = $("#profileID").val();
+
+            for (var i = 0; i < profiles.length; i++) {
+                if ($("div." + profiles[i]).hasClass("collapse") !== true)
+                    $("div." + profiles[i]).addClass("collapse");
+            }
+
+            $("div." + id).removeClass("collapse");
+        }
+    </script>
+}

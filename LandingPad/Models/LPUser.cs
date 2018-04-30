@@ -14,6 +14,7 @@ namespace LandingPad.Models
         public LPUser()
         {
             LPProfiles = new HashSet<LPProfile>();
+            Twitters = new HashSet<Twitter>();
         }
 
         [Key]
@@ -35,9 +36,13 @@ namespace LandingPad.Models
 
         public string PhoneNumber { get; set; }
 
+        [Required]
         public string Username { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LPProfile> LPProfiles { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Twitter> Twitters { get; set; }
     }
 }
