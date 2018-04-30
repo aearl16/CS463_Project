@@ -106,6 +106,10 @@ namespace LandingPad.Controllers
                             html = f.ToHtml();
                         }
                     }
+                    else if (FileExt == ".DOCX" || FileExt == "DOCX" || FileExt == ".DOC" || FileExt == "DOC")
+                    {
+                        html = ConvertToHtml(Path.GetFullPath(file.FileName));
+                    }
                     else
                     {
                         ViewBag.FileStatus = "Model Invalid";
@@ -335,7 +339,14 @@ namespace LandingPad.Controllers
 
             try
             {
-                byte[] byteArray = File.ReadAllBytes(fileInfo.FullName);
+
+                // Create a file stream to read the data from
+                FileStream fileStream = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read);
+                // Create a byte array that will have the contents of the file.
+                byte[] byteArray = new byte[fileStream.Length];
+                // read the bytes from the file stream to the byte array.
+                fileStream.Read(byteArray, 0, byteArray.Length);
+                // Create a memory stream to manipulate the file information.
                 using (MemoryStream memoryStream = new MemoryStream())
                 {
                     memoryStream.Write(byteArray, 0, byteArray.Length);
