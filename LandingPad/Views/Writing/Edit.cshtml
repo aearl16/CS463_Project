@@ -56,10 +56,16 @@
             //and check the ones that are currently connected to the writing
             for (var i = 0; i < pseudonyms.length; i++) {
                 for (var j = 0; j < spCount; j++) {
-                    if (selectedPseudonyms[j] === pseudonyms[i])
+                    if (selectedPseudonyms[j] === pseudonyms[i]) {
                         $("#pseudonymContainer input." + pseudonyms[i]).prop("checked", true);
+
+                        if ($("#useUsername").hasClass("collapse"))
+                            $("#useUsername").removeClass("collapse");
+                    }
                 }
             }
+
+            $("#usePseudonymsInAdditionToUsername").prop("checked", @Model.UsePseudonymsInAdditionToUsername);
 
             //check the format tags that are currently connected to the writing
             for (var i = 0; i < formatTags.length; i++) {

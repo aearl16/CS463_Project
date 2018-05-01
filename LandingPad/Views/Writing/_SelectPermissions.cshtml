@@ -1,5 +1,5 @@
 ﻿<div class="permissionsSelector">
-    <h3 onmouseover='showExplanationNotFT("permissionsDescription", "Who can view a piece of writing (coming soon!) and how they are allowed to interact with it. All permissions options can be changed at any time. For more information on what the different options mean, hover over them.")'>Select Writing Permissions</h3>
+    <h3 onmouseover='showExplanationNotFT("permissionsDescription", "Who can view a piece of writing. All permissions options can be changed at any time. For more information on what the different options mean, hover over them.")'>Select Access Permissions</h3>
     <div id="permissionsContainer">
         <div id="accessContainer">
             <span class="public formItem" onmouseover='showExplanationNotFT("permissionsDescription", "Allowing public access means that anyone can view this piece of writing. By selecting this option, you will automatically allow friends, followers, and publishers alike to view your work.")'>
@@ -19,6 +19,7 @@
             </span>
         </div>
         <div id="interactionContainer">
+            <h3 onmouseover='showExplanationNotFT("permissionsDescription", "How those that can view a piece of writing are allowed to interact with it. All permissions options can be changed at any time. For more information on what the different options mean, hover over them.")'>Select Interaction Permissions</h3>
             <span class="likes formItem" onmouseover='showExplanationNotFT("permissionsDescription", "Anyone who can view this writing can leave a like to let you know they enjoyed your writing.")'>
                 Allow likes? <input type="checkbox" value="LikesOn" name="LikesOn" id="likesOn" /><br />
             </span>
@@ -33,6 +34,6 @@
         </div>
     </div>
 
-    <div id="permissionsDescription">
+    <div id="permissionsDescription" class="description">
     </div>
 </div>

@@ -181,6 +181,7 @@ CREATE TABLE dbo.Writing
 	LikesOn BIT NOT NULL, -- THERE IS NO BOOLEAN DATA TYPE
 	CommentsOn BIT NOT NULL,
 	CritiqueOn BIT NOT NULL,
+	UsePseudonymsInAdditionToUsername BIT NOT NULL DEFAULT 0, --Default no
 	DocType VARCHAR(MAX) NOT NULL,
 	DescriptionText VARCHAR(MAX) NOT NULL,
 	WritingFileName VARCHAR(MAX) NOT NULL,
@@ -337,11 +338,11 @@ INSERT INTO dbo.Friendship(FirstFriendID, SecondFriendID, FirstPseudonymID, Seco
 (2, 5, NULL, NULL), --saltshaker@oldnsalty.net agent@literary.com 7
 (5, 2, NULL, NULL); --agent@literary.com saltshaker@oldnsalty.net 8
 
-INSERT INTO dbo.Writing (ProfileID, AccessPermissionID, Title, Document, AddDate, EditDate, LikesOn, CommentsOn, CritiqueOn, DocType, DescriptionText, WritingFileName) VALUES
-(1, 4, 'Lord of the Things', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 0, 0, '.DOCX', 'A humorous play on lord of the rings', 'Lord_of_the_Things'), --dude@dude.com 1
-(2, 5, 'Ballad of The Trees', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 1, 1, '.RTF', 'Ballad About Trees', 'balladofthetrees'), --saltshaker@oldnsalty.net 2
-(3, 6, 'Hokey Folk Tales', CONVERT(VARBINARY(MAX), 'ABCD'), '1991-04-10', GETDATE(), 1, 1, 1, '.ODT', 'A collection of old forgotten tales: second edition', 'forgottentales'), --thestanza@gc.org 3
-(1, 9, 'The Test Song', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 1, 0, 0, '.HTML', 'I love tests; I love every kind of test.', 'everydayimtesting'); --dude@dude.com 4
+INSERT INTO dbo.Writing (ProfileID, AccessPermissionID, Title, Document, AddDate, EditDate, LikesOn, CommentsOn, CritiqueOn, UsePseudonymsInAdditionToUsername, DocType, DescriptionText, WritingFileName) VALUES
+(1, 4, 'Lord of the Things', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 0, 0, 0, '.DOCX', 'A humorous play on lord of the rings', 'Lord_of_the_Things'), --dude@dude.com 1
+(2, 5, 'Ballad of The Trees', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 1, 1, 0, '.RTF', 'Ballad About Trees', 'balladofthetrees'), --saltshaker@oldnsalty.net 2
+(3, 6, 'Hokey Folk Tales', CONVERT(VARBINARY(MAX), 'ABCD'), '1991-04-10', GETDATE(), 1, 1, 1, 1, '.ODT', 'A collection of old forgotten tales: second edition', 'forgottentales'), --thestanza@gc.org 3
+(1, 9, 'The Test Song', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 1, 0, 0, 0, '.HTML', 'I love tests; I love every kind of test.', 'everydayimtesting'); --dude@dude.com 4
 
 INSERT INTO dbo.Pseudonym (ProfileID, AccessPermissionID, Pseudonym) VALUES
 (1, 10, 'ComedyClubbed'), --dude@dude.com 1

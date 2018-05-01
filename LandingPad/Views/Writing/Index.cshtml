@@ -22,7 +22,7 @@
 </p>
 @foreach (var item in Model)
 {
-    <div class="loadedWritings @item.ProfileID collapse">
+    <div class="loadedWritings @item.ProfileID collapse myWriting">
         @foreach (var wItem in item.Writings)
         {
             @Html.Partial("_WritingPreview", wItem)
@@ -51,5 +51,11 @@
 
             $("div.loadedWritings." + id).removeClass("collapse");
         }
+
+        (function () {
+            $(document).ready(function () {
+                $(".myWriting .forUserWriting").removeClass("collapse");
+            });
+        })();
     </script>
 }

@@ -24,6 +24,12 @@ function loadSlideAndConfirm(current, next, pseudonyms, formatTags) {
         }
     }
 
+    $("#confirmUseInAdditionToUsername").empty();
+    if ($("#usePseudonymsInAdditionToUsername").is(':checked'))
+        $("#confirmUseInAdditionToUsername").append("Yes");
+    else
+        $("#confirmUseInAdditionToUsername").append("No");
+
     $("#confirmFormats").empty();
     for (i = 0; i < formatTags.length; i++) {
         if ($("#formatTagContainer input." + formatTags[i]).is(':checked')) {

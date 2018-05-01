@@ -69,7 +69,7 @@ namespace LandingPad.Controllers
 
             string doc = "";
 
-            if (wr.DocType == "HTML")
+            if (wr.DocType == ".HTML")
             {
                 doc = HTMLByteArrayToString(wr.Document);
             }
@@ -97,6 +97,7 @@ namespace LandingPad.Controllers
                 wr.LikesOn = form["LikesOn"] != null ? true : false;
                 wr.CommentsOn = form["CommentsOn"] != null ? true : false;
                 wr.CritiqueOn = form["CritiqueOn"] != null ? true : false;
+                wr.UsePseudonymsInAdditionToUsername = form["UsePseudonymsInAdditionToUsername"] != null ? true : false;
                 wr.DescriptionText = form["DescriptionText"];
                 wr.Document = Encoding.Unicode.GetBytes(form["EditorContent"]);
                 db.Entry(wr).State = EntityState.Modified;
@@ -234,7 +235,13 @@ namespace LandingPad.Controllers
             }
 
             Writing wr = db.Writings.Find(id);
+            int aId = wr.AccessPermissionID;
+
             db.Writings.Remove(wr);
+            db.SaveChanges();
+
+            AccessPermission ap = db.AccessPermissions.Find(aId);
+            db.AccessPermissions.Remove(ap);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -319,6 +326,7 @@ namespace LandingPad.Controllers
                     LikesOn = form["LikesOn"] != null ? true : false,
                     CommentsOn = form["CommentsOn"] != null ? true : false,
                     CritiqueOn = form["CritiqueOn"] != null ? true : false,
+                    UsePseudonymsInAdditionToUsername = form["UsePseudonymsInAdditionToUsername"] != null ? true : false,
                     DocType = form["DocType"],
                     DescriptionText = form["DescriptionText"],
                     Document = Encoding.Unicode.GetBytes(form["EditorContent"]),
@@ -386,7 +394,7 @@ namespace LandingPad.Controllers
 
             string doc = "";
 
-            if (wr.DocType == "HTML")
+            if (wr.DocType == ".HTML")
             {
                 doc = HTMLByteArrayToString(wr.Document);
             }
