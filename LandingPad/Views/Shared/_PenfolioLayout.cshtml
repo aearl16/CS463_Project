@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LandingPad</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <!-- Google Web Fonts for Penfolio -->
+    <link href="https://fonts.googleapis.com/css?family=Homemade+Apple|Love+Ya+Like+A+Sister|La+Belle+Aurore" rel="stylesheet" />
+    <!-- Include Quill stylesheet -->
+    <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet" />
+    <!-- Penfolio layout -->
+    <link href="~/Content/penfolio.css" rel="stylesheet" />
+</head>
+<body>
+    @Html.Partial("_NavBar")
+    <div class="leftSideBar"></div>
+    <div class="rightSideBar"></div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p><img src="~/Content/SquareOneLogo.png" height="25" hspace="5"> SquareOne&trade; @DateTime.Now.Year</p>
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" type="text/javascript"></script>
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
+    @RenderSection("editScripts", required: false)
+    <!-- Scripts for _WritingPreview -->
+    <script src="~/Scripts/writingPreviewScript.js" type="text/javascript"></script>
+    <!-- Script to Change Slides in Create and Edit -->
+    <script src="~/Scripts/slides.js" type="text/javascript"></script>
+    <!-- Script for Loading Format Tags Based on Selected Tags in Create and Edit -->
+    <script src="~/Scripts/formatTags.js" type="text/javascript"></script>
+    <!-- Script for Dynamic Permissions Change and Pseudonym Loading in Create and Edit -->
+    <script src="~/Scripts/permissions.js" type="text/javascript"></script>
+</body>
+</html>
+

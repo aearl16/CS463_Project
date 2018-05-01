@@ -1,14 +1,13 @@
-﻿@model LandingPad.DAL.LandingPadContext
+﻿@model LandingPad.Models.Writing
 
 @{
-    ViewBag.Title = "Edit";
-    int id = ViewBag.ID;
-    int pId = Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().ProfileID;
+    ViewBag.Title = "Edit Writing";
+    Layout = "~/Views/Shared/_PenfolioLayout.cshtml";
 }
 
-<h2>Edit</h2>
+<h2>Edit Writing</h2>
 
-@Html.Partial("_Menu", Model)
+@Html.Action("_Menu")
 
 <div>
     @Html.ActionLink("Back to List", "Index")
@@ -19,22 +18,26 @@
 }
 
 @section editScripts {
-<script>
+    <!--Initialize Quill Editor-->
+    <script src="~/Scripts/editorScript.js" type="text/javascript"></script>
+
+    <!--Populate Current Values From Model-->
+    <script>
         $(document).ready(function () {
             var True = true, False = false;
-            var pseudonyms = [@Html.Raw(String.Join(",", Model.Pseudonyms.Where(i => i.ProfileID == pId).Select(j => j.PseudonymID)))];
-            var formatTags = [@Html.Raw(String.Join(",", Model.FormatTags.Select(i => i.FormatID)))];
-            var selectedPseudonyms = [@Html.Raw(String.Join(",", Model.WritingPseudonyms.Where(i => i.WritingID == id).Select(i => i.PseudonymID)))];
-            var spCount = @Model.WritingPseudonyms.Where(i => i.WritingID == id).Select(i => i.PseudonymID).Count();
-            var selectedTags = [@Html.Raw(String.Join(",", Model.WritingFormats.Where(i => i.WritingID == id).Select(i => i.FormatID)))];
-            var sftCount = @Model.WritingFormats.Where(i => i.WritingID == id).Select(i => i.FormatID).Count();
+            var pseudonyms = [@Html.Raw(ViewBag.Pseudonyms)];
+            var formatTags = [@Html.Raw(ViewBag.FormatTags)];
+            var selectedPseudonyms = [@Html.Raw(String.Join(",", Model.WritingPseudonyms.Select(i => i.PseudonymID)))];
+            var spCount = @Model.WritingPseudonyms.Select(i => i.PseudonymID).Count();
+            var selectedTags = [@Html.Raw(String.Join(",", Model.WritingFormats.Select(i => i.FormatID)))];
+            var sftCount = @Model.WritingFormats.Select(i => i.FormatID).Count();
 
             //mark the writing id for easy access from controller on save
-            $("#writingID").val(@id);
+            $("#writingID").val(@Model.WritingID);
 
             //populate title, description, and editor
-            $("#title").val('@Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().Title');
-            $("#description").val('@Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().DescriptionText');
+            $("#title").val('@Model.Title');
+            $("#description").val('@Model.DescriptionText');
             $('.ql-editor').html('@Html.Raw(ViewBag.Document)');
 
             //get rid of all options for the select
@@ -43,35 +46,49 @@
             $("#profileID option").prop("disabled", true);
 
             //then add back in the correct option for the select and select it
-            $("#profileID option." + @pId).removeProp("hidden");
-            $("#profileID option." + @pId).removeProp("disabled");
-            $("#profileID option." + @pId).prop("selected", true);
+            $("#profileID option." + @Model.ProfileID).removeProp("hidden");
+            $("#profileID option." + @Model.ProfileID).removeProp("disabled");
+            $("#profileID option." + @Model.ProfileID).prop("selected", true);
 
             //load the pseudonyms for the profileID
-            $("#pseudonymContainer > span." + @pId).removeClass("collapse");
+            $("#pseudonymContainer > span." + @Model.ProfileID).removeClass("collapse");
 
             //and check the ones that are currently connected to the writing
-            for (var i = 0; i < @Model.Pseudonyms.Where(i => i.ProfileID == pId).Count(); i++) {
+            for (var i = 0; i < pseudonyms.length; i++) {
                 for (var j = 0; j < spCount; j++) {
-                    if (selectedPseudonyms[j] === pseudonyms[i])
+                    if (selectedPseudonyms[j] === pseudonyms[i]) {
                         $("#pseudonymContainer input." + pseudonyms[i]).prop("checked", true);
-                }
-            }
 
-            //check the format tags that are currently connected to the writing
-            for (var i = 0; i < @Model.FormatTags.Count(); i++) {
-                for (var j = 0; j < sftCount; j++) {
-                    if (selectedTags[j] === formatTags[i]) {
-                        $("#formatTagContainer input." + formatTags[i]).prop("checked", true);
-                        $("#formatTagContainer input." + formatTags[i]).trigger("change");
+                        if ($("#useUsername").hasClass("collapse"))
+                            $("#useUsername").removeClass("collapse");
                     }
                 }
             }
 
+            $("#usePseudonymsInAdditionToUsername").prop("checked", @Model.UsePseudonymsInAdditionToUsername);
+
+            //check the format tags that are currently connected to the writing
+            for (var i = 0; i < formatTags.length; i++) {
+                for (var j = 0; j < sftCount; j++) {
+                    if (selectedTags[j] === formatTags[i]) {
+                        $("#formatTagContainer input." + formatTags[i]).prop("checked", true);
+                        $("#formatTagContainer input." + formatTags[i]).trigger("change");
+                        if ($("#formatTagContainer span." + formatTags[i]).hasClass("collapse"))
+                            $("#formatTagContainer span." + formatTags[i]).removeClass("collapse");
+                    }
+                }
+            }
+
+            //check the current access settings
+            $("#publicAccess").prop("checked", @Model.AccessPermission.PublicAccess);
+            $("#friendAccess").prop("checked", @Model.AccessPermission.FriendAccess);
+            $("#publisherAccess").prop("checked", @Model.AccessPermission.PublisherAccess);
+            $("#minorAccess").prop("checked", @Model.AccessPermission.MinorAccess);
+
             //check the current permissions settings
-            $("#likesOn").prop("checked", @Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().LikesOn);
-            $("#commentsOn").prop("checked", @Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().CommentsOn);
-            $("#critiqueOn").prop("checked", @Model.Writings.Where(i => i.WritingID == id).FirstOrDefault().CritiqueOn);
+            $("#likesOn").prop("checked", @Model.LikesOn);
+            $("#commentsOn").prop("checked", @Model.CommentsOn);
+            $("#critiqueOn").prop("checked", @Model.CritiqueOn);
         });
-</script>
+    </script>
 }

@@ -28,18 +28,18 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.LPUser.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.LPUser.GivenName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.LPUser.FirstName)
-                @Html.ValidationMessageFor(model => model.LPUser.FirstName)
+                @Html.EditorFor(model => model.LPUser.GivenName)
+                @Html.ValidationMessageFor(model => model.LPUser.GivenName)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.LPUser.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.LPUser.Surname, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.LPUser.LastName)
-                @Html.ValidationMessageFor(model => model.LPUser.LastName)
+                @Html.EditorFor(model => model.LPUser.Surname)
+                @Html.ValidationMessageFor(model => model.LPUser.Surname)
             </div>
         </div>
 

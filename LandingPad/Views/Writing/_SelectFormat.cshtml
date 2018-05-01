@@ -5,22 +5,10 @@
     <div id="formatTagContainer">
         <!--Create visible checkboxes for all of the top level formats-->
         @foreach (var item in Model.Except(Model.Where(t => (Model.SelectMany(u => (u.ChildFormats.Select(v => v.FormatID))).Contains(t.FormatID)))))
-        {
-            <span class="@item.FormatID" onmouseover='showExplanation("@item.Explanation")'>
-                <input type="checkbox" value="@item.FormatID" name="FormatTags" onchange='ftChildren(@item.FormatID, [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID == null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.SecondaryParentID)))])' class="@item.FormatID" /> <span class="formatName">@item.FormatName</span>
-            </span>
-        }
-
-        <!--Create checkboxes for all the formats that have a parent and collapse them for now-->
-        @foreach (var item in Model.Where(t => (Model.SelectMany(u => (u.ChildFormats.Select(v => v.FormatID))).Contains(t.FormatID))))
-        {
-            <span class="@item.FormatID collapse" onmouseover='showExplanation("@item.Explanation")'>
-                <input type="checkbox" value="@item.FormatID" name="FormatTags" onchange='ftChildren(@item.FormatID, [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID == null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.SecondaryParentID)))])' class="@item.FormatID" /> <span class="formatName">@item.FormatName</span>
-            </span>
-        }
+        {<span class="@item.FormatID checkItem" onmouseover='showExplanation("@item.Explanation")'><input type="checkbox" value="@item.FormatID" name="FormatTags" onchange='ftChildren(@item.FormatID, [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID == null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.SecondaryParentID)))])' class="@item.FormatID" /> <span class="formatName">@item.FormatName</span></span> }@foreach (var item in Model.Where(t => (Model.SelectMany(u => (u.ChildFormats.Select(v => v.FormatID))).Contains(t.FormatID)))){<span class="@item.FormatID checkItem collapse" onmouseover="showExplanation('@item.Explanation')"><input type="checkbox" value="@item.FormatID" name="FormatTags" onchange='ftChildren(@item.FormatID, [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID == null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.SecondaryParentID)))])' class="@item.FormatID" /> <span class="formatName">@item.FormatName</span></span> }
     </div>
 
-    <div id="formatTagDescription">
+    <div id="formatTagDescription" class="description">
 
     </div>
 </div>

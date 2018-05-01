@@ -3,6 +3,17 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
+	WHERE tables.name = 'Friendship'
+
+)
+BEGIN
+	DROP TABLE dbo.Friendship
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
 	WHERE tables.name = 'WritingPseudonym'
 
 )
@@ -30,17 +41,6 @@ IF EXISTS
 )
 BEGIN
 	DROP TABLE dbo.WritingFormat
-END
-
-IF EXISTS
-(
-	SELECT *
-	FROM sys.tables
-	WHERE tables.name = 'AccessPermission'
-
-)
-BEGIN
-	DROP TABLE dbo.AccessPermission
 END
 
 IF EXISTS
@@ -91,6 +91,50 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
+	WHERE tables.name = 'ProfileRole'
+
+)
+BEGIN
+	DROP TABLE dbo.ProfileRole
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'LPRole'
+
+)
+BEGIN
+	DROP TABLE dbo.LPRole
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'IndividualAccessRevoke'
+
+)
+BEGIN
+	DROP TABLE dbo.IndividualAccessRevoke
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'IndividualAccessGrant'
+
+)
+BEGIN
+	DROP TABLE dbo.IndividualAccessGrant
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
 	WHERE tables.name = 'LPProfile'
 
 )
@@ -120,4 +164,13 @@ BEGIN
 	DROP TABLE dbo.LPUser
 END
 
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'AccessPermission'
 
+)
+BEGIN
+	DROP TABLE dbo.AccessPermission
+END

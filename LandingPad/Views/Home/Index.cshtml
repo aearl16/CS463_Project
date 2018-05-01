@@ -3,7 +3,7 @@
 
 @{
     ViewBag.Title = "Home Page";
-
+    Layout = "~/Views/Shared/_PenfolioLayout.cshtml";
 }
 <body>
 
@@ -25,24 +25,26 @@
     </style>
 
     <center>
-        <h1>
+        <h2>
             Welcome to LandingPad
-        </h1>
-
-        <h2>Welcome  Timeline</h2>
+        </h2>
 
         @*?ref_src=twsrc%5Etfw*@
 
-        <a class="twitter-timeline" data-width="600" data-height="300" data-theme="dark" data-link-color="#19CF86" href="https://twitter.com/SquareOne2018">Tweets by SquareOne2018</a>
+        @*Testing to see if this works*@
+        @if (Convert.ToDateTime(@ViewBag.EndTime) > DateTime.Now)
+        {
 
-        @*<h2>Make a Post</h2>*@
+            <a class="twitter-timeline" data-width="600" data-height="300" data-theme="dark" data-link-color="#19CF86" href="https://twitter.com/@ViewBag.TwitterName">Tweets by @ViewBag.TwitterName</a>
 
-        @*<textarea id="my-tweet"> </textarea>
-            <br />*@
-
+        }
         <div class="lower_menu">
             <div class="center">
-                <button id="fixedbutton" onclick="tweetTweet()">Tweet</button>
+                @if (Convert.ToDateTime(@ViewBag.EndTime) > DateTime.Now)
+                {
+                    <button id="fixedbutton" onclick="tweetTweet()">Tweet</button>
+                }
+                <input type="button" value="Create Writing" onclick="location.href='@Url.Action("Create", "Writing", new {controller = "Writing" })'" />
             </div>
         </div>
 
@@ -87,76 +89,19 @@
     </script>
 
 </body>
+@*<input type="button" value="View" onclick="location.href='@Url.Action("ViewWriting", "Writing", new { id = item.WritingID, controller = "Writing" })'" />*@
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.WritingID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        @*<th>
-                @Html.DisplayNameFor(model => model.Document)
-            </th>*@
-        <th>
-            @Html.DisplayNameFor(model => model.AddDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EditDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DocType)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DescriptionText)
-        </th>
-        @*<th>
-                @Html.DisplayNameFor(model => model.ProfileID)
-            </th>*@
-        <th></th>
-    </tr>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.WritingID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.Document)
-                </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.AddDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EditDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DocType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DescriptionText)
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.ProfileID)
-                </td>*@
-            <td>
-                @*<input type="button"
-                    @Url.Action("ViewWriting", new { id = item.WritingID, controller = "Writing" })
-                    />*@
+@foreach (var item in Model)
+{
+    @Html.Partial("../Writing/_WritingPreview", item)
+}
 
-                <input type="button" value="View" onclick="location.href='@Url.Action("ViewWriting", "Writing", new { id = item.WritingID, controller = "Writing" })'" />
 
-            </td>
-        </tr>
-    }
 
-</table>
 @section Scripts {
+
     @Scripts.Render("~/bundles/jqueryval")
-    <link href="@Url.Content("~/Content/login.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/penfolio.css")" rel="stylesheet" type="text/css" />
+
 }
 

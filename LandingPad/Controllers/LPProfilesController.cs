@@ -12,6 +12,7 @@ using System.Data.Entity.Infrastructure;
 
 namespace LandingPad.Controllers
 {
+    [RequireHttps]
     [Authorize]
     public class LPProfilesController : Controller
     {

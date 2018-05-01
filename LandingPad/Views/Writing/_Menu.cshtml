@@ -1,13 +1,18 @@
-﻿@model LandingPad.DAL.LandingPadContext
-<div class="editorMenu">
+﻿<div class="editorMenu">
     <div class="slideshowContainer">
         <form method="post" id="editorForm">
             <!--Title, description, and editor-->
             <div class="slide1">
                 <div class="inputGroup">
-                    Title <input type="text" id="title" name="Title" /><br />
-                    Description <textarea id="description" name="DescriptionText"></textarea><br />
-                    @Html.Partial("Editor")
+                    <div class="formItem">
+                        Title <input type="text" id="title" name="Title" /><br />
+                    </div>
+                    <div class="formItem">
+                        Description <textarea id="description" name="DescriptionText"></textarea><br />
+                    </div>
+                    <div class="formItem">
+                        @Html.Partial("Editor")
+                    </div>
                 </div>
 
                 <div class="buttonGroup">
@@ -18,7 +23,7 @@
             <!--Author-->
             <div class="slide2 collapse">
                 <div class="inputGroup">
-                    @Html.Partial("_SelectAuthor", Model.LPProfiles.ToList())
+                    @Html.Action("_SelectAuthor")
                 </div>
 
                 <div class="buttonGroup">
@@ -30,7 +35,7 @@
             <!--Format Tags-->
             <div class="slide3 collapse">
                 <div class="inputGroup">
-                    @Html.Partial("_SelectFormat", Model.FormatTags.ToList())
+                    @Html.Action("_SelectFormat")
                 </div>
 
                 <div class="buttonGroup">
@@ -47,7 +52,7 @@
 
                 <div class="buttonGroup">
                     <a class="prevPage" onclick='loadSlide("slide4", "slide3")'>Back</a>
-                    <a class="nextPage" onclick='loadSlideAndConfirm("slide4", "slide5", [@Html.Raw(String.Join(",", Model.Pseudonyms.Select(i => i.PseudonymID)))], [@Html.Raw(String.Join(",", Model.FormatTags.Select(i => i.FormatID)))])'>Next</a>
+                    <a class="nextPage" onclick='loadSlideAndConfirm("slide4", "slide5", [@Html.Raw(ViewBag.Pseudonyms)], [@Html.Raw(ViewBag.FormatTags)])'>Next</a>
                 </div>
             </div>
 
@@ -55,9 +60,10 @@
             <div class="slide5 collapse">
                 <div class="inputGroup">
                     @Html.Partial("_Confirmation")
-                    <input type="hidden" name="DocType" value="HTML" />
+                    <input type="hidden" name="DocType" value=".HTML" />
                     <input type="hidden" id="editorContent" name="EditorContent" />
                     <input type="hidden" id="writingID" name="WritingID" />
+                    <input type="hidden" id="fileName" name="WritingFileName" />
                 </div>
 
                 <div class="buttonGroup">

@@ -16,6 +16,8 @@ namespace LandingPad.DAL
 
         public virtual DbSet<LPProfile> LPProfiles { get; set; }
         public virtual DbSet<LPUser> LPUsers { get; set; }
+        public virtual DbSet<LPRole> LPRoles { get; set; }
+        public virtual DbSet<ProfileRole> ProfileRoles { get; set; }
         public virtual DbSet<Pseudonym> Pseudonyms { get; set; }
         public virtual DbSet<Writing> Writings { get; set; }
         public virtual DbSet<WritingPseudonym> WritingPseudonyms { get; set; }
@@ -39,11 +41,11 @@ namespace LandingPad.DAL
                 .IsUnicode(false);
 
             modelBuilder.Entity<LPUser>()
-                .Property(e => e.FirstName)
+                .Property(e => e.GivenName)
                 .IsUnicode(false);
 
             modelBuilder.Entity<LPUser>()
-                .Property(e => e.LastName)
+                .Property(e => e.Surname)
                 .IsUnicode(false);
 
             modelBuilder.Entity<LPUser>()

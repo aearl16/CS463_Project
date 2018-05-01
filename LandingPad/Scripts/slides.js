@@ -24,6 +24,12 @@ function loadSlideAndConfirm(current, next, pseudonyms, formatTags) {
         }
     }
 
+    $("#confirmUseInAdditionToUsername").empty();
+    if ($("#usePseudonymsInAdditionToUsername").is(':checked'))
+        $("#confirmUseInAdditionToUsername").append("Yes");
+    else
+        $("#confirmUseInAdditionToUsername").append("No");
+
     $("#confirmFormats").empty();
     for (i = 0; i < formatTags.length; i++) {
         if ($("#formatTagContainer input." + formatTags[i]).is(':checked')) {
@@ -31,6 +37,30 @@ function loadSlideAndConfirm(current, next, pseudonyms, formatTags) {
             $("#confirmFormats").append("<br />");
         }
     }
+
+    $("#confirmPublicAccess").empty();
+    if ($("span.public input").is(':checked'))
+        $("#confirmPublicAccess").append("True");
+    else
+        $("#confirmPublicAccess").append("False");
+
+    $("#confirmFriendAccess").empty();
+    if ($("span.friend input").is(':checked'))
+        $("#confirmFriendAccess").append("True");
+    else
+        $("#confirmFriendAccess").append("False");
+
+    $("#confirmPublisherAccess").empty();
+    if ($("span.publisher input").is(':checked'))
+        $("#confirmPublisherAccess").append("True");
+    else
+        $("#confirmPublisherAccess").append("False");
+
+    $("#confirmMinorAccess").empty();
+    if ($("span.minor input").is(':checked'))
+        $("#confirmMinorAccess").append("True");
+    else
+        $("#confirmMinorAccess").append("False");
 
     $("#confirmLikes").empty();
     if ($("span.likes input").is(':checked')) 
@@ -53,7 +83,12 @@ function loadSlideAndConfirm(current, next, pseudonyms, formatTags) {
     $("#confirmText").empty();
     $("#confirmText").append($(".ql-editor").html());
 
+    $("confirmFile").empty();
+    $("confirmFile").append($("input#File").html());
+
     $("#editorContent").val($(".ql-editor").html().replace(/</g, "&lt;").replace(/>/g, "&gt;"));
+
+    $("#fileName").val($("#title").val().replace(/\s/g, "_").replace(/[\~\#\%\&\*\{\}\\\:\<\>\?\/\+\|!=.]/g, ""));
 
     $("#validationMessage").empty();
 

@@ -1,0 +1,12 @@
+﻿@model IEnumerable<LandingPad.Models.Writing>
+@{
+    ViewBag.Title = "SearchByFormatTag";
+    Layout = "~/Views/Shared/_PenfolioLayout.cshtml";
+}
+
+<h2>Search Results</h2>
+
+@foreach (var item in Model)
+{
+    @Html.Partial("_WritingPreview", item)
+}
