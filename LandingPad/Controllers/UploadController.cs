@@ -15,6 +15,8 @@ using System.Xml.Linq;
 
 namespace LandingPad.Controllers
 {
+    [RequireHttps]
+    [Authorize]
     public class UploadController : Controller
     {
         private LandingPadContext db = new LandingPadContext();
@@ -148,7 +150,7 @@ namespace LandingPad.Controllers
 
 
 
-    public FileResult ViewDOC(int? id)
+        public FileResult ViewDOC(int? id)
         {
             Writing wr = db.Writings.Find(id);
 
@@ -200,8 +202,9 @@ namespace LandingPad.Controllers
             this.HttpContext.Response.End();
 
             return View();
-        }
+            }
 
+        /*
         public ActionResult Edit(int? id)
         {
             Writing wr = db.Writings.Find(id);
@@ -228,7 +231,7 @@ namespace LandingPad.Controllers
                     doc.Document = FileData;
                     doc.EditDate = DateTime.Now;
 
-                    /*
+                    
                     Writing wr = new Writing()
                     {
                         ProfileID = doc.ProfileID,
@@ -242,7 +245,7 @@ namespace LandingPad.Controllers
                         CritiqueOn = doc.CritiqueOn,
                         CommentsOn = doc.CommentsOn
                         //AccessPermission ac = new AccessPermission() //Later Feature
-                    };*/
+                    };
                     
                     db.Entry(wr).State = EntityState.Modified;
                     db.SaveChanges();
@@ -260,6 +263,7 @@ namespace LandingPad.Controllers
                 return View();
             }
         }
+        */
 
         /// <summary>
         /// Helper method for Upload Post
@@ -271,6 +275,22 @@ namespace LandingPad.Controllers
                 return true;
             }
             else if(ext == ".PDF" || ext == "PDF")
+            {
+                return true;
+            }
+            else if(ext == ".ODT" || ext == "ODT")
+            {
+                return true;
+            }
+            else if(ext == ".RTF" || ext == "RTF")
+            {
+                return true;
+            }
+            else if(ext == ".TXT" || ext == "TXT")
+            {
+                return true;
+            }
+            else if(ext == ".HTML" || ext == "HTML")
             {
                 return true;
             }
@@ -332,7 +352,11 @@ namespace LandingPad.Controllers
             return new Uri(newURI);
         }
 
-
+        /// <summary>
+        /// Helper method for converting DOCX to HTML. Parses file.
+        /// </summary>
+        /// <param name="fileInfo"></param>
+        /// <returns></returns>
         private string ParseDOCX(FileInfo fileInfo)
         {
 

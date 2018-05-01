@@ -17,13 +17,13 @@ using Moq;
 
 namespace LandingPad.Controllers
 {
+    [Authorize]
     [RequireHttps]
     public class HomeController : Controller
     {
         private LandingPadContext db = new LandingPadContext();
         ITwitterRepository repository = new TwitterRepository(new LandingPadContext());
 
-        //[Authorize]
         [HttpGet]
         public ActionResult TwitterAuth(int id)
         {
