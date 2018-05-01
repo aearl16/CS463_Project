@@ -669,6 +669,10 @@
     <Content Include="Views\Writing\_WritingPreview.cshtml" />
     <Content Include="Views\Writing\SearchByFormatTag.cshtml" />
     <Content Include="Views\Writing\_GetPermissionWritings.cshtml" />
+    <Content Include="Views\Upload\Store.cshtml" />
+    <Content Include="Views\Upload\_UploadMenu.cshtml" />
+    <Content Include="Views\Upload\_UploadConfirmation.cshtml" />
+    <Content Include="Views\Upload\_UploadEditMenu.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

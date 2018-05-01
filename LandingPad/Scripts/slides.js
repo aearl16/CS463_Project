@@ -83,6 +83,9 @@ function loadSlideAndConfirm(current, next, pseudonyms, formatTags) {
     $("#confirmText").empty();
     $("#confirmText").append($(".ql-editor").html());
 
+    $("confirmFile").empty();
+    $("confirmFile").append($("input#File").html());
+
     $("#editorContent").val($(".ql-editor").html().replace(/</g, "&lt;").replace(/>/g, "&gt;"));
 
     $("#fileName").val($("#title").val().replace(/\s/g, "_").replace(/[\~\#\%\&\*\{\}\\\:\<\>\?\/\+\|!=.]/g, ""));

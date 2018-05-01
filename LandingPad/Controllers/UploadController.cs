@@ -21,14 +21,14 @@ namespace LandingPad.Controllers
     {
         private LandingPadContext db = new LandingPadContext();
 
-        public ActionResult FileUpload()
+        [HttpGet]
+        public ActionResult UploadEdit()
         {
             return View();
         }
 
-
         [HttpPost]
-        public ActionResult FileUpload(HttpPostedFileBase file, [Bind(Include = "ProfileID, Title, LikesOn," +
+        public ActionResult UploadEdit(string[] FormatTags, string[] Pseudonyms, HttpPostedFileBase file, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
                 "CommentsOn, CritiqueOn, DescriptionText")] Writing doc)
         {
 
@@ -36,29 +36,103 @@ namespace LandingPad.Controllers
 
             if (CheckExt(FileExt))
             {
+                AccessPermission ap = new AccessPermission()
+                {
+                    PublicAccess = form["PublicAccess"] != null ? true : false,
+                    FriendAccess = form["FriendAccess"] != null ? true : false,
+                    PublisherAccess = form["PublisherAccess"] != null ? true : false,
+                    MinorAccess = form["MinorAccess"] != null ? true : false
+                };
+                db.AccessPermissions.Add(ap);
+                db.SaveChanges();
+
                 if (!ModelState.IsValid)
                 {
                     Stream str = file.InputStream;
                     BinaryReader Br = new BinaryReader(str);
                     Byte[] FileData = Br.ReadBytes((Int32)str.Length);
+                    string html = string.Empty;
+                    string[] namestring = file.FileName.Split('.');
+
+                    if (FileExt == ".PDF" || FileExt == "PDF")
+                    {
+
+                        SautinSoft.PdfFocus f = new SautinSoft.PdfFocus();
+                        f.OpenPdf(FileData);
+
+                        if (f.PageCount > 0)
+                        {
+                            f.HtmlOptions.IncludeImageInHtml = true;
+                            f.HtmlOptions.Title = "Simple text";
+                            html = f.ToHtml();
+                        }
+                    }
+                    else if (FileExt == ".DOCX" || FileExt == "DOCX" || FileExt == ".DOC" || FileExt == "DOC")
+                    {
+                        html = ConvertToHtml(Path.GetFullPath(file.FileName));
+                    }
+                    else
+                    {
+                        ViewBag.FileStatus = "Model Invalid";
+                        return View();
+                    }
 
                     Writing wr = new Writing()
                     {
-                        ProfileID = doc.ProfileID,
-                        DocType = FileExt,
+                        ProfileID = Int32.Parse(form["ProfileID"]),
+                        AccessPermissionID = ap.AccessPermissionID,
+                        Title = form["Title"],
                         AddDate = DateTime.Now,
-                        EditDate = DateTime.Now,
-                        Document = FileData,
-                        Title = doc.Title,
-                        DescriptionText = doc.DescriptionText,
-                        LikesOn = doc.LikesOn,
-                        CritiqueOn = doc.CritiqueOn,
-                        CommentsOn = doc.CommentsOn
-                        //AccessPermission ac = new AccessPermission() //Later Feature
+                        EditDate = null,
+                        LikesOn = form["LikesOn"] != null ? true : false,
+                        CommentsOn = form["CommentsOn"] != null ? true : false,
+                        CritiqueOn = form["CritiqueOn"] != null ? true : false,
+                        UsePseudonymsInAdditionToUsername = form["UsePseudonymsInAdditionToUsername"] != null ? true : false,
+                        DocType = ".HTML",
+                        DescriptionText = form["DescriptionText"],
+                        Document = Encoding.Unicode.GetBytes(html),
+                        WritingFileName = namestring[0] + ".html"
                     };
                     db.Writings.Add(wr);
                     db.SaveChanges();
-                    return RedirectToAction("Index", "Home");
+
+                    int id = wr.WritingID;
+
+                    ap = db.AccessPermissions.Find(ap.AccessPermissionID);
+                    ap.WritingID = id;
+                    db.Entry(ap).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                    if (FormatTags != null)
+                    {
+                        foreach (var selection in FormatTags)
+                        {
+                            WritingFormat wf = new WritingFormat()
+                            {
+                                WritingID = id,
+                                FormatID = Int32.Parse(selection)
+                            };
+                            db.WritingFormats.Add(wf);
+                            db.SaveChanges();
+                        }
+                    }
+
+                    if (Pseudonyms != null)
+                    {
+                        foreach (var selection in Pseudonyms)
+                        {
+                            WritingPseudonym wp = new WritingPseudonym()
+                            {
+                                WritingID = id,
+                                PseudonymID = Int32.Parse(selection)
+                            };
+                            db.WritingPseudonyms.Add(wp);
+                            db.SaveChanges();
+                        }
+                    }
+
+
+                    return RedirectToAction("Index", "Home", new { @id = id });
                 }
                 else
                 {
@@ -71,14 +145,113 @@ namespace LandingPad.Controllers
                 ViewBag.FileStatus = "Invalid file format.";
                 return View();
             }
+
         }
 
-        public ActionResult UploadEdit()
+
+        [HttpGet]
+        public ActionResult Store()
         {
             return View();
         }
 
         [HttpPost]
+        public ActionResult Store(string[] FormatTags, string[] Pseudonyms, HttpPostedFileBase file, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
+                "CommentsOn, CritiqueOn, DescriptionText")] Writing doc)
+        {
+
+            String FileExt = Path.GetExtension(file.FileName).ToUpper();
+
+            if (CheckExt(FileExt))
+            {
+                AccessPermission ap = new AccessPermission()
+                {
+                    PublicAccess = form["PublicAccess"] != null ? true : false,
+                    FriendAccess = form["FriendAccess"] != null ? true : false,
+                    PublisherAccess = form["PublisherAccess"] != null ? true : false,
+                    MinorAccess = form["MinorAccess"] != null ? true : false
+                };
+                db.AccessPermissions.Add(ap);
+                db.SaveChanges();
+
+                if (!ModelState.IsValid)
+                {
+                    Stream str = file.InputStream;
+                    BinaryReader Br = new BinaryReader(str);
+                    Byte[] FileData = Br.ReadBytes((Int32)str.Length);
+
+                    Writing wr = new Writing()
+                    {
+                        ProfileID = Int32.Parse(form["ProfileID"]),
+                        AccessPermissionID = ap.AccessPermissionID,
+                        Title = form["Title"],
+                        AddDate = DateTime.Now,
+                        EditDate = null,
+                        LikesOn = form["LikesOn"] != null ? true : false,
+                        CommentsOn = form["CommentsOn"] != null ? true : false,
+                        CritiqueOn = form["CritiqueOn"] != null ? true : false,
+                        UsePseudonymsInAdditionToUsername = form["UsePseudonymsInAdditionToUsername"] != null ? true : false,
+                        DocType = FileExt,
+                        DescriptionText = form["DescriptionText"],
+                        Document = FileData,
+                        WritingFileName = file.FileName
+                    };
+                    db.Writings.Add(wr);
+                    db.SaveChanges();
+
+                    int id = wr.WritingID;
+
+                    ap = db.AccessPermissions.Find(ap.AccessPermissionID);
+                    ap.WritingID = id;
+                    db.Entry(ap).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                    if (FormatTags != null)
+                    {
+                        foreach (var selection in FormatTags)
+                        {
+                            WritingFormat wf = new WritingFormat()
+                            {
+                                WritingID = id,
+                                FormatID = Int32.Parse(selection)
+                            };
+                            db.WritingFormats.Add(wf);
+                            db.SaveChanges();
+                        }
+                    }
+
+                    if (Pseudonyms != null)
+                    {
+                        foreach (var selection in Pseudonyms)
+                        {
+                            WritingPseudonym wp = new WritingPseudonym()
+                            {
+                                WritingID = id,
+                                PseudonymID = Int32.Parse(selection)
+                            };
+                            db.WritingPseudonyms.Add(wp);
+                            db.SaveChanges();
+                        }
+                    }
+
+
+                    return RedirectToAction("Index", "Home", new { @id = id});
+                }
+                else
+                {
+                    ViewBag.FileStatus = "Model Invalid";
+                    return View();
+                }
+            }
+            else
+            {
+                ViewBag.FileStatus = "Invalid file format.";
+                return View();
+            }
+
+        }
+
+        /*
         public ActionResult UploadEdit(HttpPostedFileBase file, [Bind(Include = "ProfileID, Title, LikesOn," +
                 "CommentsOn, CritiqueOn, DescriptionText")] Writing doc)
         {
@@ -128,7 +301,7 @@ namespace LandingPad.Controllers
                         DescriptionText = doc.DescriptionText,
                         LikesOn = doc.LikesOn,
                         CritiqueOn = doc.CritiqueOn,
-                        CommentsOn = doc.CommentsOn
+                        CommentsOn = doc.CommentsOn 
                         //AccessPermission ac = new AccessPermission() //Later Feature
                     };
                     db.Writings.Add(wr);
@@ -146,18 +319,7 @@ namespace LandingPad.Controllers
                 ViewBag.FileStatus = "Invalid file format.";
                 return View();
             }
-        }
-
-
-
-        public FileResult ViewDOC(int? id)
-        {
-            Writing wr = db.Writings.Find(id);
-
-            var DocByte = wr.Document;
-
-            return File(DocByte, "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        }
+        }*/
 
         public ActionResult Download(int? id)
         {
@@ -350,6 +512,30 @@ namespace LandingPad.Controllers
                 newURI = " ";
             }
             return new Uri(newURI);
+        }
+
+        [ChildActionOnly]
+        public PartialViewResult _UploadMenu()
+        {
+            ViewBag.Pseudonyms = String.Join(",", db.Pseudonyms.Select(i => i.PseudonymID));
+            ViewBag.FormatTags = String.Join(",", db.FormatTags.Select(i => i.FormatID));
+
+            return PartialView();
+        }
+
+        [ChildActionOnly]
+        public PartialViewResult _UploadEditMenu()
+        {
+            ViewBag.Pseudonyms = String.Join(",", db.Pseudonyms.Select(i => i.PseudonymID));
+            ViewBag.FormatTags = String.Join(",", db.FormatTags.Select(i => i.FormatID));
+
+            return PartialView();
+        }
+
+        [ChildActionOnly]
+        public PartialViewResult _UploadConfirmation()
+        {
+            return PartialView();
         }
 
         /// <summary>
