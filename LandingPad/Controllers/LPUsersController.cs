@@ -11,6 +11,7 @@ using LandingPad.Models;
 
 namespace LandingPad.Controllers
 {
+    [RequireHttps]
     [Authorize]
     public class LPUsersController : Controller
     {
