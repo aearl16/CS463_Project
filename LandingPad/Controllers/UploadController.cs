@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Mammoth;
 using System.Text;
 using System.Data.Entity;
 using OpenXmlPowerTools;
@@ -171,27 +170,27 @@ namespace LandingPad.Controllers
             if(wr.DocType == "HTML" || wr.DocType == ".HTML")
             {
                 this.HttpContext.Response.ContentType = "application/force-download";
-                this.HttpContext.Response.AddHeader("Content-Disposition", "filename=" + "yourdocument.html");
+                this.HttpContext.Response.AddHeader("Content-Disposition", "filename=" + wr.WritingFileName);
             }
             else if(wr.DocType == "DOC" || wr.DocType == ".DOC")
             {
                 this.HttpContext.Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + "yourdocument.doc");
+                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + wr.WritingFileName);
             }
             else if(wr.DocType == "ODT" || wr.DocType ==".ODT")
             {
                 this.HttpContext.Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + "yourdocument.odt");
+                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + wr.WritingFileName);
             }
             else if(wr.DocType == "PDF" || wr.DocType == ".PDF")
             {
                 this.HttpContext.Response.ContentType = "application/pdf";
-                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + "yourdocument.pdf");
+                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + wr.WritingFileName);
             }
             else
             {
                 this.HttpContext.Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + "yourdocument.docx");
+                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + wr.WritingFileName);
             }
             
             this.HttpContext.Response.Buffer = true;
