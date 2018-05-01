@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace LandingPad.Controllers
 {
+    [RequireHttps]
     [Authorize]
     public class WritingController : Controller
     {
@@ -20,7 +21,8 @@ namespace LandingPad.Controllers
         // GET: Pseudonym
         public ActionResult Index()
         {
-            return View(db);
+            ViewBag.Profiles = String.Join(",", db.LPProfiles.Select(i => i.ProfileID));
+            return View(db.LPProfiles.ToList());
         }
 
         public ActionResult AllWriting(int? id)
@@ -37,6 +39,14 @@ namespace LandingPad.Controllers
             }
 
             return View(GetAllWritingAvailable(id.GetValueOrDefault()));
+        }
+
+        [ChildActionOnly]
+        public PartialViewResult _GetPermissionWritings(int id)
+        {
+            LPProfile lpProfile = db.LPProfiles.Find(id);
+
+            return PartialView(GetAllWritingAvailable(id));
         }
 
         public ActionResult SearchByFormatTag(int id)
@@ -60,16 +70,18 @@ namespace LandingPad.Controllers
 
             string doc = "";
 
-            if (wr.DocType == "HTML")
+            if (wr.DocType == ".HTML")
             {
                 doc = HTMLByteArrayToString(wr.Document);
             }
 
             ViewBag.Document = doc;
 
-            ViewBag.ID = id;
+            ViewBag.Pseudonyms = String.Join(",", db.Pseudonyms.Where(i => i.ProfileID == wr.ProfileID).Select(j => j.PseudonymID));
 
-            return View(db);
+            ViewBag.FormatTags = String.Join(",", db.FormatTags.Select(i => i.FormatID));
+
+            return View(wr);
         }
 
         [HttpPost]
@@ -86,6 +98,7 @@ namespace LandingPad.Controllers
                 wr.LikesOn = form["LikesOn"] != null ? true : false;
                 wr.CommentsOn = form["CommentsOn"] != null ? true : false;
                 wr.CritiqueOn = form["CritiqueOn"] != null ? true : false;
+                wr.UsePseudonymsInAdditionToUsername = form["UsePseudonymsInAdditionToUsername"] != null ? true : false;
                 wr.DescriptionText = form["DescriptionText"];
                 wr.Document = Encoding.Unicode.GetBytes(form["EditorContent"]);
                 db.Entry(wr).State = EntityState.Modified;
@@ -182,7 +195,7 @@ namespace LandingPad.Controllers
             else
             {
                 ViewBag.FileStatus = "Model Invalid";
-                return View(db);
+                return View();
             }
         }
 
@@ -223,11 +236,18 @@ namespace LandingPad.Controllers
             }
 
             Writing wr = db.Writings.Find(id);
+            int aId = wr.AccessPermissionID;
+
             db.Writings.Remove(wr);
+            db.SaveChanges();
+
+            AccessPermission ap = db.AccessPermissions.Find(aId);
+            db.AccessPermissions.Remove(ap);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
+        [ChildActionOnly]
         public PartialViewResult _WritingPreview(int id)
         {
             Writing wr = db.Writings.Find(id);
@@ -235,40 +255,50 @@ namespace LandingPad.Controllers
             return PartialView(wr);
         }
 
+        [ChildActionOnly]
         public PartialViewResult Editor()
         {
             return PartialView();
         }
 
+        [ChildActionOnly]
         public PartialViewResult _SelectAuthor()
         {
-            return PartialView(db.LPProfiles.ToList());
+            List<LPProfile> pAuthor = db.LPProfiles.Where(i => i.ProfileRoles.Select(j => j.RoleID).ToList().Contains(1)).ToList();
+            return PartialView(pAuthor);
         }
 
+        [ChildActionOnly]
         public PartialViewResult _SelectFormat()
         {
             return PartialView(db.FormatTags.ToList());
         }
 
+        [ChildActionOnly]
         public PartialViewResult _SelectPermissions()
         {
-            return PartialView(db);
+            return PartialView();
         }
 
+        [ChildActionOnly]
         public PartialViewResult _Confirmation()
         {
-            return PartialView(db);
+            return PartialView();
         }
         
+        [ChildActionOnly]
         public PartialViewResult _Menu()
         {
-            return PartialView(db);
+            ViewBag.Pseudonyms = String.Join(",", db.Pseudonyms.Select(i => i.PseudonymID));
+            ViewBag.FormatTags = String.Join(",", db.FormatTags.Select(i => i.FormatID));
+
+            return PartialView();
         }
 
         [HttpGet]
         public ActionResult Create()
         {
-            return View(db);
+            return View();
         }
 
         [HttpPost]
@@ -297,6 +327,7 @@ namespace LandingPad.Controllers
                     LikesOn = form["LikesOn"] != null ? true : false,
                     CommentsOn = form["CommentsOn"] != null ? true : false,
                     CritiqueOn = form["CritiqueOn"] != null ? true : false,
+                    UsePseudonymsInAdditionToUsername = form["UsePseudonymsInAdditionToUsername"] != null ? true : false,
                     DocType = form["DocType"],
                     DescriptionText = form["DescriptionText"],
                     Document = Encoding.Unicode.GetBytes(form["EditorContent"]),
@@ -345,7 +376,7 @@ namespace LandingPad.Controllers
             else
             {
                 ViewBag.FileStatus = "Model Invalid";
-                return View(db);
+                return View();
             }
         }
 
@@ -364,7 +395,7 @@ namespace LandingPad.Controllers
 
             string doc = "";
 
-            if (wr.DocType == "HTML")
+            if (wr.DocType == ".HTML")
             {
                 doc = HTMLByteArrayToString(wr.Document);
             }
@@ -377,9 +408,9 @@ namespace LandingPad.Controllers
             {
                 byline = " by " + wr.WritingPseudonyms.First().Pseudonym.Pseudonym1;
             }
-            else if(wr.LPProfile.DisplayRealName == true)
+            else if(wr.LPProfile.DisplayRealName == true && wr.LPProfile.LPUser.GivenName != null && wr.LPProfile.LPUser.Surname != null)
             {
-                byline = " by " + wr.LPProfile.LPUser.FirstName + " " + wr.LPProfile.LPUser.LastName;
+                byline = " by " + wr.LPProfile.LPUser.GivenName + " " + wr.LPProfile.LPUser.Surname;
             }
             else
             {

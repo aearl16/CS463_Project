@@ -1,4 +1,4 @@
-﻿@model LandingPad.DAL.LandingPadContext
+﻿@model IEnumerable<LandingPad.Models.LPProfile>
 
 @{
     ViewBag.Title = "Index";
@@ -7,9 +7,9 @@
 
 <h2>Select ProfileID</h2>
 
-<select id="profileID" onchange='toggleProfiles([@Html.Raw(String.Join(",", Model.LPProfiles.Select(i => i.ProfileID)))])'>
+<select id="profileID" onchange='toggleProfiles([@Html.Raw(ViewBag.Profiles)])'>
     <option value="" selected disabled hidden>Select ProfileID</option>
-    @foreach (var item in Model.LPProfiles)
+    @foreach (var item in Model)
     {
         <option value="@item.ProfileID" class="@item.ProfileID">@item.ProfileID</option>
     }
@@ -20,9 +20,10 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-@foreach (var item in Model.LPProfiles)
+
+@foreach (var item in Model)
 {
-    <div class="@item.ProfileID collapse">
+    <div class="loadedWritings @item.ProfileID collapse myWriting">
         @foreach (var wItem in item.Writings)
         {
             @Html.Partial("_WritingPreview", wItem)
@@ -32,9 +33,11 @@
 
 <h2>Other People's Writing</h2>
 
-@foreach (var item in Model.LPProfiles)
+@foreach (var item in Model)
 {
-    <div class="@item.ProfileID collapse"><a href="~/Writing/AllWriting/@item.ProfileID">View All Writings</a></div>
+    <div class="loadedWritings @item.ProfileID collapse">
+        @Html.Action("_GetPermissionWritings", new { id = item.ProfileID })
+    </div>
 }
 
 @section scripts {
@@ -43,11 +46,17 @@
             var id = $("#profileID").val();
 
             for (var i = 0; i < profiles.length; i++) {
-                if ($("div." + profiles[i]).hasClass("collapse") !== true)
-                    $("div." + profiles[i]).addClass("collapse");
+                if ($("div.loadedWritings." + profiles[i]).hasClass("collapse") !== true)
+                    $("div.loadedWritings." + profiles[i]).addClass("collapse");
             }
 
-            $("div." + id).removeClass("collapse");
+            $("div.loadedWritings." + id).removeClass("collapse");
         }
+
+        (function () {
+            $(document).ready(function () {
+                $(".myWriting .forUserWriting").removeClass("collapse");
+            });
+        })();
     </script>
 }

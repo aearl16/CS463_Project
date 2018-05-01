@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Mammoth;
 using System.Text;
 using System.Data.Entity;
 using OpenXmlPowerTools;
@@ -16,6 +15,8 @@ using System.Xml.Linq;
 
 namespace LandingPad.Controllers
 {
+    [RequireHttps]
+    [Authorize]
     public class UploadController : Controller
     {
         private LandingPadContext db = new LandingPadContext();
@@ -149,7 +150,7 @@ namespace LandingPad.Controllers
 
 
 
-    public FileResult ViewDOC(int? id)
+        public FileResult ViewDOC(int? id)
         {
             Writing wr = db.Writings.Find(id);
 
@@ -171,27 +172,27 @@ namespace LandingPad.Controllers
             if(wr.DocType == "HTML" || wr.DocType == ".HTML")
             {
                 this.HttpContext.Response.ContentType = "application/force-download";
-                this.HttpContext.Response.AddHeader("Content-Disposition", "filename=" + "yourdocument.html");
+                this.HttpContext.Response.AddHeader("Content-Disposition", "filename=" + wr.WritingFileName);
             }
             else if(wr.DocType == "DOC" || wr.DocType == ".DOC")
             {
                 this.HttpContext.Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + "yourdocument.doc");
+                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + wr.WritingFileName);
             }
             else if(wr.DocType == "ODT" || wr.DocType ==".ODT")
             {
                 this.HttpContext.Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + "yourdocument.odt");
+                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + wr.WritingFileName);
             }
             else if(wr.DocType == "PDF" || wr.DocType == ".PDF")
             {
                 this.HttpContext.Response.ContentType = "application/pdf";
-                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + "yourdocument.pdf");
+                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + wr.WritingFileName);
             }
             else
             {
                 this.HttpContext.Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + "yourdocument.docx");
+                this.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + wr.WritingFileName);
             }
             
             this.HttpContext.Response.Buffer = true;
@@ -201,8 +202,9 @@ namespace LandingPad.Controllers
             this.HttpContext.Response.End();
 
             return View();
-        }
+            }
 
+        /*
         public ActionResult Edit(int? id)
         {
             Writing wr = db.Writings.Find(id);
@@ -229,7 +231,7 @@ namespace LandingPad.Controllers
                     doc.Document = FileData;
                     doc.EditDate = DateTime.Now;
 
-                    /*
+                    
                     Writing wr = new Writing()
                     {
                         ProfileID = doc.ProfileID,
@@ -243,7 +245,7 @@ namespace LandingPad.Controllers
                         CritiqueOn = doc.CritiqueOn,
                         CommentsOn = doc.CommentsOn
                         //AccessPermission ac = new AccessPermission() //Later Feature
-                    };*/
+                    };
                     
                     db.Entry(wr).State = EntityState.Modified;
                     db.SaveChanges();
@@ -261,6 +263,7 @@ namespace LandingPad.Controllers
                 return View();
             }
         }
+        */
 
         /// <summary>
         /// Helper method for Upload Post
@@ -272,6 +275,22 @@ namespace LandingPad.Controllers
                 return true;
             }
             else if(ext == ".PDF" || ext == "PDF")
+            {
+                return true;
+            }
+            else if(ext == ".ODT" || ext == "ODT")
+            {
+                return true;
+            }
+            else if(ext == ".RTF" || ext == "RTF")
+            {
+                return true;
+            }
+            else if(ext == ".TXT" || ext == "TXT")
+            {
+                return true;
+            }
+            else if(ext == ".HTML" || ext == "HTML")
             {
                 return true;
             }
@@ -333,7 +352,11 @@ namespace LandingPad.Controllers
             return new Uri(newURI);
         }
 
-
+        /// <summary>
+        /// Helper method for converting DOCX to HTML. Parses file.
+        /// </summary>
+        /// <param name="fileInfo"></param>
+        /// <returns></returns>
         private string ParseDOCX(FileInfo fileInfo)
         {
 

@@ -118,6 +118,10 @@ a:hover {
 }
 
 /* Styling for forms */
+.inputGroup {
+    min-height: 300px;
+}
+
 input, textarea {
     border: 1px solid;
     border-color: #ccc;
@@ -131,7 +135,13 @@ input, textarea {
 
 .checkItem {
     margin-right: 15px;
+    white-space: pre;
 }
+
+.checkItem2 {
+    margin-right: 15px;
+    white-space: normal;
+} 
 
 /* Styling for the writingPreview */
 .writingPreview {
@@ -207,4 +217,23 @@ input, textarea {
     box-shadow: 0 0 2px #cf909b;
     border-radius: 3px;
     margin: 0 5px 0 5px;
+}
+
+/*Styling for the partial views in menu*/
+.pseudonymSelector {
+    min-height: 84px;
+}
+
+.description {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 20px;
+}
+
+#accessContainer {
+   margin-bottom: 40px;
+}
+
+.confirm {
+    font-weight: bold;
 }

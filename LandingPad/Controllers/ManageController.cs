@@ -10,6 +10,7 @@ using LandingPad.Models;
 
 namespace LandingPad.Controllers
 {
+    [RequireHttps]
     [Authorize]
     public class ManageController : Controller
     {

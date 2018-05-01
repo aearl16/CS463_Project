@@ -11,6 +11,8 @@ using LandingPad.Models;
 
 namespace LandingPad.Controllers
 {
+    [RequireHttps]
+    [Authorize]
     public class TwittersController : Controller
     {
         private LandingPadContext db = new LandingPadContext();

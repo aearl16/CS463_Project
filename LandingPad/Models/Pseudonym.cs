@@ -19,6 +19,8 @@ namespace LandingPad.Models
 
         public int ProfileID { get; set; }
 
+        public int AccessPermissionID { get; set; }
+
         [Column("Pseudonym")]
         [Required]
         public string Pseudonym1 { get; set; }
@@ -27,5 +29,7 @@ namespace LandingPad.Models
         public virtual ICollection<WritingPseudonym> WritingPseudonyms { get; set; }
 
         public virtual LPProfile LPProfile { get; set; }
+
+        public virtual AccessPermission AccessPermission { get; set; }
     }
 }

@@ -41,11 +41,11 @@ namespace LandingPad.DAL
                 .IsUnicode(false);
 
             modelBuilder.Entity<LPUser>()
-                .Property(e => e.FirstName)
+                .Property(e => e.GivenName)
                 .IsUnicode(false);
 
             modelBuilder.Entity<LPUser>()
-                .Property(e => e.LastName)
+                .Property(e => e.Surname)
                 .IsUnicode(false);
 
             modelBuilder.Entity<LPUser>()

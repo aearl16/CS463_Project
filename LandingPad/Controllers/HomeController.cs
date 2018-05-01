@@ -10,38 +10,40 @@ using System.IO;
 using System.Text;
 using TweetSharp;
 using LandingPad.DAL;
+using LandingPad.Repositorys;
 using LandingPad.Models;
+using Moq;
 
 
 namespace LandingPad.Controllers
 {
+    [Authorize]
     [RequireHttps]
     public class HomeController : Controller
     {
         private LandingPadContext db = new LandingPadContext();
+        ITwitterRepository repository = new TwitterRepository(new LandingPadContext());
 
-        //[Authorize]
         [HttpGet]
         public ActionResult TwitterAuth(int id)
         {
-
             try
             {
-                Twitter twitterData = db.Twitters.Where(u => u.UserID == id).FirstOrDefault();
-                db.Twitters.Remove(twitterData);
-                db.SaveChanges();
+                //Twitter twitterData = repository.GetTwitterId(id);
+                //db.Twitters.Where(u => u.UserID == id).FirstOrDefault();
+                //db.Twitters.Remove(twitterData);
+                repository.Remove(id);
+                repository.Save();
             }
             catch (Exception e)
             {
                 //do nothing
             }
-
             string Key = System.Configuration.ConfigurationManager.AppSettings["twKey"];
             string Secret = System.Configuration.ConfigurationManager.AppSettings["twSecret"];
             TwitterService service = new TwitterService(Key, Secret);
             OAuthRequestToken requestToken = service.GetRequestToken("https://localhost:44315/Home/TwitterCallback" + "?id=" + Convert.ToString(id));
             Uri uri = service.GetAuthenticationUrl(requestToken);
-
             if (CheckToken(Key))
             {
                 if (CheckToken(Secret))
@@ -88,7 +90,6 @@ namespace LandingPad.Controllers
                 var VToken = oauth_verifier;
                 String TwName = user.ScreenName;
                 String TagName = user.Name;
-
                 twitterUser.UserID = id;
                 twitterUser.TwName = TwName;
                 twitterUser.TwTag = TagName;
@@ -96,13 +97,10 @@ namespace LandingPad.Controllers
                 twitterUser.TwVOauth = VToken;
                 twitterUser.Date = DateTime.Now;
                 twitterUser.EndDate = DateTime.Now.AddMinutes(60);
-
-
-                db.Twitters.Add(twitterUser);
-                db.SaveChanges();
-
-
-
+                //db.Twitters.Add(twitterUser);
+                repository.Add(twitterUser);
+                repository.Save();
+                //db.SaveChanges();
                 return RedirectToAction("Settings/" + id);
                 //return View();
             }
@@ -155,8 +153,9 @@ namespace LandingPad.Controllers
             //{
             try
             {
-                ViewBag.TwitterName = db.Twitters.Where(u => u.UserID == id).FirstOrDefault().TwName;
-                DateTime EndTime = db.Twitters.Where(u => u.UserID == id).FirstOrDefault().EndDate;
+                //ViewBag.TwitterName = UnitOfWork.Twitter.GetTwitterEndTime(id);
+                ViewBag.TwitterName = repository.GetTwitterTag(id.Value);
+                DateTime EndTime = repository.GetTwitterEndTime(id.Value);
                 ViewBag.EndTime = EndTime;
                 return View(db.Writings.ToList());
             }
@@ -182,8 +181,8 @@ namespace LandingPad.Controllers
             //else {
             try
             {
-                ViewBag.TwitterName = db.Twitters.Where(u => u.UserID == id).FirstOrDefault().TwName;
-                DateTime EndTime = db.Twitters.Where(u => u.UserID == id).FirstOrDefault().EndDate;
+                ViewBag.TwitterName = repository.GetTwitterTag(id.Value);
+                DateTime EndTime = repository.GetTwitterEndTime(id.Value);
                 ViewBag.EndTime = EndTime;
                 return View();
             }
@@ -220,6 +219,34 @@ namespace LandingPad.Controllers
                 {
                     return false;
                 }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool TestTwitterAuth(int id)
+        {
+            return true;
+        }
+
+        //public bool TestUserIdInfor(int test, int id)
+        //{
+        //    return TestUserIdInfor(test, id, repository);
+        //}
+        // This is an entry point for testing.
+        public bool TestUserIdInfor(int test,  Mock<ITwitterRepository> mock)
+        {       
+            string name = mock.Name;
+            //int tid = repository.GetTwitterId(id.Value);
+            
+            if (test == 1)
+            {
+                return true;
+            }
+            else if(test == 2)
+            {
+                return true;
             }
             else
             {

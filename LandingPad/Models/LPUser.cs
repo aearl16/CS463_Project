@@ -28,11 +28,9 @@ namespace LandingPad.Models
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? Birthdate { get; set; }
 
-        [Required]
-        public string FirstName { get; set; }
+        public string GivenName { get; set; }
 
-        [Required]
-        public string LastName { get; set; }
+        public string Surname { get; set; }
 
         public string PhoneNumber { get; set; }
 
