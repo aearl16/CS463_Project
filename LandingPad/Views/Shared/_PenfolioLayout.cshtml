@@ -15,14 +15,16 @@
 </head>
 <body>
     @Html.Partial("_NavBar")
-    <div class="leftSideBar"></div>
-    <div class="rightSideBar"></div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p><img src="~/Content/SquareOneLogo.png" height="25" hspace="5"> SquareOne&trade; @DateTime.Now.Year</p>
-        </footer>
+    <div class="leftSideBar">
+        <div class="rightSideBar">
+            <div class="container body-content">
+                @RenderBody()
+                <hr />
+                <footer>
+                    <p><img src="~/Content/SquareOneLogo.png" height="25" hspace="5"> SquareOne&trade; @DateTime.Now.Year</p>
+                </footer>
+            </div>
+        </div>
     </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
