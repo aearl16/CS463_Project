@@ -576,6 +576,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\editorScript.js" />
     <Content Include="Scripts\formatTags.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -668,6 +669,7 @@
     <Content Include="Views\Writing\AllWriting.cshtml" />
     <Content Include="Views\Writing\_WritingPreview.cshtml" />
     <Content Include="Views\Writing\SearchByFormatTag.cshtml" />
+    <Content Include="Views\Writing\_GetPermissionWritings.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

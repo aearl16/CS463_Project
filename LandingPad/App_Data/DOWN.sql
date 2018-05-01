@@ -3,6 +3,17 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
+	WHERE tables.name = 'Friendship'
+
+)
+BEGIN
+	DROP TABLE dbo.Friendship
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
 	WHERE tables.name = 'WritingPseudonym'
 
 )
@@ -96,17 +107,6 @@ IF EXISTS
 )
 BEGIN
 	DROP TABLE dbo.LPRole
-END
-
-IF EXISTS
-(
-	SELECT *
-	FROM sys.tables
-	WHERE tables.name = 'Friendship'
-
-)
-BEGIN
-	DROP TABLE dbo.Friendship
 END
 
 IF EXISTS

@@ -18,5 +18,9 @@ namespace LandingPad.Models
 
         [Required]
         public int SecondFriendID { get; set; }
+
+        public int? FirstPseudonymID { get; set; }
+
+        public int? SecondPseudonymID { get; set; }
     }
 }

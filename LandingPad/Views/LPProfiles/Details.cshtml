@@ -11,7 +11,7 @@
 else
 {
     <p>
-        @Html.DisplayFor(model => model.LPUser.FirstName)  @Html.DisplayFor(model => model.LPUser.LastName)
+        @Html.DisplayFor(model => model.LPUser.GivenName)  @Html.DisplayFor(model => model.LPUser.Surname)
     </p>
 }
     </h2>
@@ -22,19 +22,19 @@ else
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.LPUser.FirstName)
+            @Html.DisplayNameFor(model => model.LPUser.GivenName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.LPUser.FirstName)
+            @Html.DisplayFor(model => model.LPUser.GivenName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.LPUser.LastName)
+            @Html.DisplayNameFor(model => model.LPUser.Surname)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.LPUser.LastName)
+            @Html.DisplayFor(model => model.LPUser.Surname)
         </dd>
 
         <dt>

@@ -45,6 +45,8 @@ namespace LandingPad.Models
 
         public bool CritiqueOn { get; set; }
 
+        public bool UsePseudonymsInAdditionToUsername { get; set; }
+
         [Required]
         public string DocType { get; set; }
 

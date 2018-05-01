@@ -25,7 +25,7 @@ function loadChildren(sdChildren, mdChildren, dependencies) {
 
     for (i = 0; i < mdChildren.length; i++) {
         if ($("#formatTagContainer span." + dependencies[i] + " input[type=checkbox]").is(':checked')) {
-            if ($("#formatTagContainer span." + dChildren[i]).hasClass("collapse"))
+            if ($("#formatTagContainer span." + sdChildren[i]).hasClass("collapse"))
                 $("#formatTagContainer span." + mdChildren[i]).removeClass("collapse");
         }
     }

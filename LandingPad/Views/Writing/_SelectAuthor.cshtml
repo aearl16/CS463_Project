@@ -19,12 +19,24 @@
                 <span class="@item.ProfileID collapse">
                     @foreach (var subitem in item.Pseudonyms)
                     {
-                        <span class="checkItem">
-                            <input type="checkbox" value="@subitem.PseudonymID" name="Pseudonyms" class="@subitem.PseudonymID" /> <span class="pseudonymName @subitem.PseudonymID">@subitem.Pseudonym1</span>
+                        <span class="checkItem2">
+                            <input type="checkbox" value="@subitem.PseudonymID" name="Pseudonyms" class="@subitem.PseudonymID" onchange='checkIfOnlyPseudonym()' /> <span class="pseudonymName @subitem.PseudonymID">@subitem.Pseudonym1</span>
                         </span>
                     }
                 </span>
             }
         </div>
+    </div>
+
+    <div id="useUsername" class="collapse">
+        <div class="formItem">
+            <span class="checkItem2" onmouseover='showExplanationNotFT("pseudonymDescription", "If this box is checked, this piece of writing will also show up under your main username for your profile. Do not check this box if this is a piece of writing you would like to distance your main username from.")'>
+                Use pseudonym(s) in addition to username? <input type="checkbox" name="UsePseudonymsInAdditionToUsername" value="UsePseudonymsInAdditionToUsername" id="usePseudonymsInAdditionToUsername" /><br />
+            </span>
+        </div>
+    </div>
+
+    <div id="pseudonymDescription" class="description">
+
     </div>
 </div>
