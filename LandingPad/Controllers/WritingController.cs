@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace LandingPad.Controllers
 {
+    [RequireHttps]
     [Authorize]
     public class WritingController : Controller
     {
