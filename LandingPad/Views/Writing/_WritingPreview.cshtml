@@ -30,7 +30,7 @@
     <div class="writingDescription">
         <div class="descriptionText">
             <p>@Html.DisplayFor(model => model.DescriptionText)</p>
-            <span class="viewMore">@Html.ActionLink("Read More", "ViewWriting", "Writing", new { id = Model.WritingID })<span class="forUserWriting collapse"> | @Html.ActionLink("Edit", "Edit", "Writing", new { id = Model.WritingID }) | @Html.ActionLink("Delete", "Delete", "Writing", new { id = Model.WritingID })</span></span>
+            <span class="viewMore"><a href="~/Writing/ViewWriting/@Model.WritingID">Read More</a><span class="forUserWriting collapse"> | <a href="~/Writing/Edit/@Model.WritingID">Edit</a> | <a href="~/Writing/Delete/@Model.WritingID">Delete</a></span></span>
         </div>
     </div>
     <div class="tagScroller @Model.WritingID@tagCollapse"><button class="scrollLeft scrollArrow" data-scroll-modifier='-1' data-parent="@Model.WritingID">&#9666;</button><button class="scrollRight scrollArrow" data-scroll-modifier="1" data-parent="@Model.WritingID">&#9656;</button><div class="tagScrollbar" data-parent="@Model.WritingID">@foreach (var item in Model.WritingFormats){<span class="scrollbarTag"><a href="~/Writing/SearchByFormatTag/@item.FormatID">#@item.FormatTag.FormatName</a></span>foreach (var subitem in item.FormatTag.AltFormatNames){<span class="scrollbarTag"><a href="~/Writing/SearchByFormatTag/@item.FormatID">#@subitem.AltName</a></span>}}</div></div>
