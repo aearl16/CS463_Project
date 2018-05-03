@@ -6,8 +6,11 @@
 
 <h2>Select ProfileID</h2>
 
+<!--selector for ProfileID of the user; switches which writings are visible based on the current user when the selection is changed; this will eventually go away when the database connections are there-->
 <select id="profileID" onchange='toggleProfiles([@Html.Raw(ViewBag.Profiles)])'>
+    <!--Initial value; the attributes are to make the option disappear/not be selectable after first selection is made-->
     <option value="" selected disabled hidden>Select ProfileID</option>
+    <!--For each profile, make an option in the selector with that ProfileID-->
     @foreach (var item in Model)
     {
         <option value="@item.ProfileID" class="@item.ProfileID">@item.ProfileID</option>
@@ -16,24 +19,32 @@
 
 <h2>My Writing</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-
+<!--for each profile-->
 @foreach (var item in Model)
 {
+    <!--create a div to hold the loaded writings; make collapsed initially; the myWriting class is for the purpose of specifying this area so that the collapse for the edit and delete links can be removed-->
     <div class="loadedWritings @item.ProfileID collapse myWriting">
+        <!--if the current profile belongs to a writer, add a link to create a new piece of writing-->
+        @if(item.ProfileRoles.Select(i => i.RoleID).ToList().Contains(1))
+        {
+            <p>
+                @Html.ActionLink("Create New", "Create")
+            </p>
+        }
+        <!--for each writing for this profile, return a partial view-->
         @foreach (var wItem in item.Writings)
         {
             @Html.Partial("_WritingPreview", wItem)
         }
-    </div>
+    </div> <!--loadedWritings-->
 }
 
 <h2>Other People's Writing</h2>
 
+<!--for each profile-->
 @foreach (var item in Model)
 {
+    <!--create a div to hold all of the writings the user with this profile is allowed to view-->
     <div class="loadedWritings @item.ProfileID collapse">
         @Html.Action("_GetPermissionWritings", new { id = item.ProfileID })
     </div>
@@ -41,18 +52,27 @@
 
 @section scripts {
     <script>
+        /**
+         * A function to unload previous writings and load the correct writings for the selected profile
+         * @@param {int[]} profiles (the ProfileIDs for all of the profiles)
+         */
         function toggleProfiles(profiles) {
+            //get the current ProfileID
             var id = $("#profileID").val();
 
+            //for each profile
             for (var i = 0; i < profiles.length; i++) {
+                //collapse the associated writings if they aren't already collapsed
                 if ($("div.loadedWritings." + profiles[i]).hasClass("collapse") !== true)
                     $("div.loadedWritings." + profiles[i]).addClass("collapse");
             }
 
+            //uncollapse the writings for the current ProfileID
             $("div.loadedWritings." + id).removeClass("collapse");
         }
 
         (function () {
+            //when the document has fully loaded, uncollapse the edit and delete links on the writing previews that are under the My Writing heading
             $(document).ready(function () {
                 $(".myWriting .forUserWriting").removeClass("collapse");
             });

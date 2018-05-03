@@ -27,6 +27,7 @@
                     @foreach (var subitem in item.Pseudonyms)
                     {
                         <span class="checkItem2">
+                            <!--on change: if the checkbox was unchecked and no other pseudonyms are checked, collapses the option to use pseudonyms in addition to the username; if checkbox was checked, uncollapses the same-->
                             <input type="checkbox" value="@subitem.PseudonymID" name="Pseudonyms" class="@subitem.PseudonymID" onchange='checkIfOnlyPseudonym()' /> <span class="pseudonymName @subitem.PseudonymID">@subitem.Pseudonym1</span>
                         </span>
                     }

@@ -18,13 +18,14 @@ namespace LandingPad.Controllers
     {
         LandingPadContext db = new LandingPadContext();
 
-        // GET: Pseudonym
+        // View displays a dropdown of ProfileIDs that changes the writings displayed to the ones written by/viewable by that profile
         public ActionResult Index()
         {
             ViewBag.Profiles = String.Join(",", db.LPProfiles.Select(i => i.ProfileID));
             return View(db.LPProfiles.ToList());
         }
 
+        //View displays all the writing that the user with a ProfileID == id has access to
         public ActionResult AllWriting(int? id)
         {
             if(id == null)
@@ -41,14 +42,14 @@ namespace LandingPad.Controllers
             return View(GetAllWritingAvailable(id.GetValueOrDefault()));
         }
 
+        //Gets all writing that the user with a ProfileID of id has access to
         [ChildActionOnly]
         public PartialViewResult _GetPermissionWritings(int id)
         {
-            LPProfile lpProfile = db.LPProfiles.Find(id);
-
             return PartialView(GetAllWritingAvailable(id));
         }
 
+        //Displays writings that have the format tag with a FormatID of id
         public ActionResult SearchByFormatTag(int id)
         {
             return View(db.Writings.Where(i => i.WritingFormats.Select(j => j.FormatTag.FormatID).ToList().Contains(id)).ToList());
@@ -62,6 +63,7 @@ namespace LandingPad.Controllers
                 return HttpNotFound();
             }
 
+            //grabs the writing with the proper id
             Writing wr = db.Writings.Find(id);
             if (wr == null)
             {
@@ -70,13 +72,16 @@ namespace LandingPad.Controllers
 
             string doc = "";
 
+            //if its DocType is HTML, set doc equal to the value of Document converted to an HTML string
             if (wr.DocType == ".HTML")
             {
                 doc = HTMLByteArrayToString(wr.Document);
             }
 
+            //puts doc in a form the view can access
             ViewBag.Document = doc;
 
+            //passes an array of all the pseudonyms for this writing's author to the view
             ViewBag.Pseudonyms = String.Join(",", db.Pseudonyms.Where(i => i.ProfileID == wr.ProfileID).Select(j => j.PseudonymID));
 
             ViewBag.FormatTags = String.Join(",", db.FormatTags.Select(i => i.FormatID));

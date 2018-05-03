@@ -1,4 +1,5 @@
-﻿<div class="editorMenu">
+﻿<!--Menu that holds the editor and the other "pages" that are used for picking the options you want for that writing-->
+<div class="editorMenu">
     <div class="slideshowContainer">
         <form method="post" id="editorForm">
             <!--Title, description, and editor-->
@@ -11,67 +12,83 @@
                         Description <textarea id="description" name="DescriptionText"></textarea><br />
                     </div>
                     <div class="formItem">
+                        <!--call the partial view for the editor-->
                         @Html.Partial("Editor")
                     </div>
-                </div>
+                </div> <!--inputGroup-->
 
+                <!--when you click next, slide1 collapses and slide2 uncollapses-->
                 <div class="buttonGroup">
                     <a class="nextPage" onclick='loadSlide("slide1", "slide2")'>Next</a>
                 </div>
-            </div>
+            </div> <!--slide1-->
 
             <!--Author-->
             <div class="slide2 collapse">
+                <!--call the partial view for selecting pseudonyms, etc.-->
                 <div class="inputGroup">
                     @Html.Action("_SelectAuthor")
                 </div>
-
+                
+                <!--back uncollapses slide1 and next uncollapses slide3; both collapse slide2-->
                 <div class="buttonGroup">
                     <a class="prevPage" onclick='loadSlide("slide2", "slide1")'>Back</a>
                     <a class="nextPage" onclick='loadSlide("slide2", "slide3")'>Next</a>
                 </div>
-            </div>
+            </div> <!--slide2-->
 
             <!--Format Tags-->
             <div class="slide3 collapse">
+                <!--call the partial view for selecting format tags-->
                 <div class="inputGroup">
                     @Html.Action("_SelectFormat")
                 </div>
 
+                <!--back uncollapses slide2 and next uncollapses slide4; both collapse slide3-->
                 <div class="buttonGroup">
                     <a class="prevPage" onclick='loadSlide("slide3", "slide2")'>Back</a>
                     <a class="nextPage" onclick='loadSlide("slide3", "slide4")'>Next</a>
                 </div>
-            </div>
+            </div> <!--slide3-->
 
             <!--Permissions-->
             <div class="slide4 collapse">
+                <!--call the partial view for selecting view and access permissions for the writing-->
                 <div class="inputGroup">
                     @Html.Partial("_SelectPermissions")
                 </div>
 
+                <!--back collapses slide4 and uncollapses slide3; next also collapses slide4, in addition to uncollapsing slide5 and populating the confirmation messages with the current form values-->
                 <div class="buttonGroup">
                     <a class="prevPage" onclick='loadSlide("slide4", "slide3")'>Back</a>
                     <a class="nextPage" onclick='loadSlideAndConfirm("slide4", "slide5", [@Html.Raw(ViewBag.Pseudonyms)], [@Html.Raw(ViewBag.FormatTags)])'>Next</a>
                 </div>
-            </div>
+            </div> <!--slide4-->
 
             <!--Confirmation-->
             <div class="slide5 collapse">
+                <!--call the partial view for viewing the current selected values so the user can confirm their choices-->
                 <div class="inputGroup">
                     @Html.Partial("_Confirmation")
+                    <!--a hidden input to hold the doc type so the controller can access it; set to .HTML because all writings are turned into HTML strings in order to be able to display/edit them-->
                     <input type="hidden" name="DocType" value=".HTML" />
+                    <!--a hidden input to hold the content of the editor so the controller can access it-->
                     <input type="hidden" id="editorContent" name="EditorContent" />
+                    <!--a hidden input to hold the WritingID of a writing that is being edited-->
                     <input type="hidden" id="writingID" name="WritingID" />
+                    <!--a hidden input to hold the file name minus extension of a piece of writing-->
                     <input type="hidden" id="fileName" name="WritingFileName" />
-                </div>
+                </div> <!--inputGroup-->
 
                 <div class="buttonGroup">
+                    <!--a div for printing a message if the current input isn't valid-->
                     <div id="validationMessage"></div>
+                    <!--keeps your current selections and takes you back to the first slide if the user doesn't choose to confirm their current selections-->
                     <a class="prevPage" onclick='loadSlide("slide5", "slide1")'>No</a>
+                    <!--the save button if they are happy with their selections and the inputs are valid-->
                     <input type="submit" id="createWriting" value="Save" />
-                </div>
-            </div>
+                </div> <!--buttonGroup-->
+            </div> <!--slide5-->
         </form>
-    </div>
-</div>
+    </div> <!--slideshowContainer-->
+</div> <!--editorMenu-->

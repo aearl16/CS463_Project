@@ -1,33 +1,37 @@
 ﻿@model LandingPad.Models.Writing
 @{ 
-    //get the author name for the byline
+    //variable for author to use in the byline
     string author;
 
+    //if there is at least one pseudonym selected, set author to the value of the first pseudonym
     if(Model.WritingPseudonyms.Count > 0)
     {
         author = Model.WritingPseudonyms.FirstOrDefault().Pseudonym.Pseudonym1;
-    }
+    } //if they haven't selected any pseudonyms but their profile allows the use of their real name, set author to their given and surname
     else if(Model.LPProfile.DisplayRealName && Model.LPProfile.LPUser.GivenName != null && Model.LPProfile.LPUser.Surname != null)
     {
         author = Model.LPProfile.LPUser.GivenName + " " + Model.LPProfile.LPUser.Surname;
     }
-    else
+    else //otherwise, set author to their username
     {
         author = Model.LPProfile.LPUser.Username;
     }
 
-    //a variable for the tag scroller class that will
-    //be collapse if there aren't any tags so that the
-    //tag scroller only shows up if there are tags to 
-    //display
+    //set tagCollapse to empty string
     string tagCollapse = "";
 
+    //if the writing doesn't have any tags, set tagCollapse to collapse
     if(Model.WritingFormats.Count() <= 0)
     {
         tagCollapse = " collapse";
     }
+
+    //tagCollapse is always placed with the tag scroller's classes,
+    //but because its value is decided based on whether or not there
+    //are any tags, the tag scroller will only collapse if it is empty
 }
 
+<!--A partial view for displaying a summary of a piece of writing; designed to be self contained so that it can easily be used for search results or LandingPad feeds-->
 <div class="writingPreview">
     <div class="addDateTime">Posted @Html.DisplayFor(model => model.AddDate)</div>
     <h3>@Model.Title</h3>
@@ -35,8 +39,10 @@
     <div class="writingDescription">
         <div class="descriptionText">
             <p>@Html.DisplayFor(model => model.DescriptionText)</p>
+            <!--Links to view the full writing and to interact with it in other ways, such as edit and delete; edit and delete are in a separate span that can be collapsed if the writing doesn't belong to the user-->
             <span class="viewMore"><a href="~/Writing/ViewWriting/@Model.WritingID">Read More</a><span class="forUserWriting collapse"> | <a href="~/Writing/Edit/@Model.WritingID">Edit</a> | <a href="~/Writing/Delete/@Model.WritingID">Delete</a></span></span>
-        </div>
-    </div>
+        </div> <!--descriptionText-->
+    </div> <!--writingDescription-->
+    <!--A container to hold all of the tags associated with this piece of writing; has arrow buttons on each side that can be used to scroll through tags; each tag is also a link to a view that returns writings that share that tag-->
     <div class="tagScroller @Model.WritingID@tagCollapse"><button class="scrollLeft scrollArrow" data-scroll-modifier='-1' data-parent="@Model.WritingID">&#9666;</button><button class="scrollRight scrollArrow" data-scroll-modifier="1" data-parent="@Model.WritingID">&#9656;</button><div class="tagScrollbar" data-parent="@Model.WritingID">@foreach (var item in Model.WritingFormats){<span class="scrollbarTag"><a href="~/Writing/SearchByFormatTag/@item.FormatID">#@item.FormatTag.FormatName</a></span>foreach (var subitem in item.FormatTag.AltFormatNames){<span class="scrollbarTag"><a href="~/Writing/SearchByFormatTag/@item.FormatID">#@subitem.AltName</a></span>}}</div></div>
-</div>
+</div> <!--writingPreview-->
