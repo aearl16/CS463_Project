@@ -3,20 +3,27 @@
 <div class="pseudonymSelector">
     <h3>Select Pseudonyms for Writing</h3>
     <div class="formItem">
+        <!--ProfileID selector; calls loadPseudonyms when value is changed-->
         ProfileID <select id="profileID" name="ProfileID" onchange='loadPseudonyms([@Html.Raw(String.Join(",", Model.Select(i => i.ProfileID)))])'>
-            <option value="" selected disabled hidden>Select ProfileID</option>
+            <!--Initial value; the attributes are to make the option disappear/not be selectable after first selection is made-->
+            <option value="" selected disabled hidden>Select ProfileID</option> 
+            <!--For each profile, make an option in the selector with that ProfileID-->
             @foreach (var item in Model)
             {
                 <option value="@item.ProfileID" class="@item.ProfileID">@item.ProfileID</option>
             }
         </select>
-    </div>
+    </div> <!--formItem for ProfileID selector-->
 
+    <!--Pseudonyms-->
     <div class="formItem">
         <div id="pseudonymContainer">
+            <!--For each profile, create a span with all of that profile's pseudonyms-->
             @foreach (var item in Model)
             {
+                <!--A span to surround all of the pseudonyms for each profile; collapsed until the corresponding ProfileID is selected-->
                 <span class="@item.ProfileID collapse">
+                    <!--For each pseudonym connected to the current profile, create a checkbox for that pseudonym-->
                     @foreach (var subitem in item.Pseudonyms)
                     {
                         <span class="checkItem2">
@@ -25,18 +32,21 @@
                     }
                 </span>
             }
-        </div>
-    </div>
+        </div> <!--pseudonymContainer-->
+    </div> <!--formItem for the pseudonyms-->
 
+    <!--Container for the checkbox to indicate if pseudonyms are being used in addition to the username; defaults to collapsed and uncollapses when at least one pseudonym is selected-->
     <div id="useUsername" class="collapse">
         <div class="formItem">
+            <!--A checkbox with a label that explains its purpose on mouse over-->
             <span class="checkItem2" onmouseover='showExplanationNotFT("pseudonymDescription", "If this box is checked, this piece of writing will also show up under your main username for your profile. Do not check this box if this is a piece of writing you would like to distance your main username from.")'>
                 Use pseudonym(s) in addition to username? <input type="checkbox" name="UsePseudonymsInAdditionToUsername" value="UsePseudonymsInAdditionToUsername" id="usePseudonymsInAdditionToUsername" /><br />
             </span>
-        </div>
-    </div>
+        </div> <!--formItem-->
+    </div> <!--useUsername-->
 
+    <!--Container for the description for items on this partial view-->
     <div id="pseudonymDescription" class="description">
 
     </div>
-</div>
+</div> <!--pseudonymSelector-->
