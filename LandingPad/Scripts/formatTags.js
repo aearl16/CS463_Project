@@ -32,7 +32,12 @@
  *    immediate children unless one of those said children's checkbox is checked,
  *    in which case, all children without a checked checkbox should be unloaded
  *    and the child(ren) with (a) checked checkbox(es) should remain.
- * 6. "Loaded" is not being used literally. The content of the format tag container
+ * 6. Some format tags don't have multiple required parents, but have more than one
+ *    potential parent. In the case of children that have potential parents in
+ *    addition to the one that matches the checkbox being unchecked, the child
+ *    will be unloaded if and only if none of the other potential parents are
+ *    checked either.
+ * 7. "Loaded" is not being used literally. The content of the format tag container
  *    shouldn't be repopulated every time a checkbox is checked or unchecked, it should
  *    just appear that way to the end user through the use of things like display: hidden,
  *    the collapse class, etc.
@@ -60,7 +65,7 @@ function showExplanation(explanation) {
  * @param {int[]} mpChildren (FormatIDs for children with more than one possible parent other than id; each FormatID is listed once for each additional parent)
  * @param {int[]} altParents (FormatID for each parent other than id; indexes match mpChildren)
  * sd stands for singular dependency and md stands for multiple dependency
- * mp stands for multiple parent; this is different than md because
+ * mp stands for multiple parent; this is different than md because md REQUIRES both parents while mp can have ANY of the parents
  */
 function ftChildren(id, sdChildren, mdChildren, dependencies, mpChildren, altParents) {
     //if the checkbox for the format tag with a FormatID of id was checked
@@ -122,42 +127,83 @@ function loadChildren(sdChildren, mdChildren, dependencies) {
     }
 }
 
+/**
+ * A function for depopulating the format tags that no longer have a parent tag (or in the case of tags with multiple dependencies, have both
+ * the required tags) selected
+ * @param {int[]} sdChildren (Children who are definitely going to be collapsed)
+ * @param {int[]} mpChildren (Children with more than one potential parent; will be collapsed only if one of their other potential parents is not already selected)
+ * @param {int[]} altParents (Each index corresponds to an index in mpChildren and is a potential parent that is not the format tag that was unchecked)
+ * sd stands for singular dependency; in this case it also includes md (or multiple dependency) children
+ * mp stands for multiple parent; this is different than md because md REQUIRES both parents while mp can have ANY of the parents
+ */
 function unloadChildren(sdChildren, mpChildren, altParents) {
+    //for all of the children that we KNOW can be depopulated
     for (var i = 0; i < sdChildren.length; i++) {
+        //if the checkbox for this child is not checked
         if ($("#formatTagContainer span." + sdChildren[i] + " input[type=checkbox]").is(':checked') !== true) {
+            //and this child isn't already collapsed, collapse it
             if ($("#formatTagContainer span." + sdChildren[i]).hasClass("collapse") !== true)
                 $("#formatTagContainer span." + sdChildren[i]).addClass("collapse");
         }
     }
 
+    //next, it's necessary to check the tags that have alternate parents to see if those parents are 
+    //checked or they can be depopulated
+
+    //set the value of the variable current to the first item in the list of children we might unload
     var current = mpChildren[0];
+    //set a variable to keep track of whether or not a parent is checked to false
     var parentChecked = false;
+    //for each child in mpChildren
     for (i = 0; i < mpChildren.length; i++) {
-        if ((i + 1) < mpChildren.length && mpChildren[i + 1] === current) {
-            if (parentChecked !== true) {
-                if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(':checked')) {
-                    parentChecked = true;
+        //because selected format tags are not depopulated, we only need to check if a tag needs to be depopulated
+        //if we know it isn't already checked
+
+        //if this child doesn't have its checkbox checked
+        if ($("#formatTagContainer span." + mpChildren[i] + " input[type=checkbox]").is(':checked') !== true) {
+            //since some children appear in mpChildren more than once due to having more than 
+            //one possible alternate parent, we need to check if the for loop will continue to 
+            //run after this and, if so, if the value of mpChildren will be the same at the next
+            //index; the reason for this is because we don't want to depopulate a child tag when
+            //parentChecked is false unless it is still false after checking the last potential parent
+
+            //if the next item in mpChildren is the same as the current item
+            if ((i + 1) < mpChildren.length && mpChildren[i + 1] === current) {
+                //if parentChecked is not already true and the current potential parent needs to be checked
+                if (parentChecked !== true) {
+                    //if this potential parent is checked, mark parentChecked true so that a check won't be made
+                    //next iteration that might result in a false negative
+                    if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(':checked')) 
+                        parentChecked = true;
                 }
             }
-        }
-        else if (mpChildren[i] === current) {
-            if (parentChecked !== true) {
-                if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(':checked') !== true) {
+            else if (mpChildren[i] === current) { //if mpCurrent is the same as last time but will not be next time
+                //basically this means this is the last chance to depopulate this child
+
+                //if one of the possible parents for this child wasn't already checked on a previous iteration
+                if (parentChecked !== true) {
+                    //if the possible parent this time around isn't checked either
+                    if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(':checked') !== true) {
+                        //collapse the child if it isn't arleady collapsed
+                        if ($("#formatTagContainer span." + mpChildren[i]).hasClass("collapse") !== true)
+                            $("#formatTagContainer span." + mpChildren[i]).addClass("collapse");
+                    }
+                }
+            }
+            else { //if this child isn't the same child as was being checked lasted iteration
+                //reset the values of our variables to their default
+                parentChecked = false;
+                current = mpChildren[i];
+
+                //if this child has its matching parent checked, mark parentChecked as true
+                if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(':checked')) {
+                    parentChecked = true;
+                } //if this potential parent isn't checked and mpChildren will not be the same child next iteration
+                else if ((i + 1) === mpChildren.length || mpChildren[i + 1] !== current) {
+                    //collapse this child if it isn't already collapsed
                     if ($("#formatTagContainer span." + mpChildren[i]).hasClass("collapse") !== true)
                         $("#formatTagContainer span." + mpChildren[i]).addClass("collapse");
                 }
-            }
-        }
-        else {
-            parentChecked = false;
-            current = mpChildren[i];
-
-            if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(':checked')) {
-                parentChecked = true;
-            }
-            else if ((i + 1) === mpChildren.length || mpChildren[i + 1] !== current) {
-                if ($("#formatTagContainer span." + mpChildren[i]).hasClass("collapse") !== true)
-                    $("#formatTagContainer span." + mpChildren[i]).addClass("collapse");
             }
         }
     }

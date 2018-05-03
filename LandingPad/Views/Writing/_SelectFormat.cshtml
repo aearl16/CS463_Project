@@ -1,25 +1,54 @@
 ﻿@model IEnumerable<LandingPad.Models.FormatTag>
 @{ 
+    //a way to access the WritingController so a controller function can be used to grab another model
     var controller = (LandingPad.Controllers.WritingController)this.ViewContext.Controller;
 
+    //basically another model; this one is for getting FormatCategories for format tags that might have alternate parents
     IEnumerable<LandingPad.Models.FormatCategory> fc = controller.GetChildrenWithAltParents();
+
+    /**
+     * The fc model from the controller is just the FormatCategories without secondary parents
+     * because in order to run the full code, you need a FormatID for the specific tag, which
+     * is impractical to do when the data is not temporary, but can't be selected from if recieved
+     * from a function call in a parameter list. Given this, I was unable to think of a solution 
+     * that didn't involve using LINQ in the view; sorry.
+     * 
+     * The full LINQ query for getting only the format categories where the children of a specific
+     * format tag only have parents other than said format tag is:
+     * FormatCategories.Where(i => i.SecondaryParentID == null)
+     *  .GroupBy(i => i.FormatID)
+     *  .Where(j => j.Count() > 1)
+     *  .Where(k => k.Select(l => l.ParentID).ToList().Contains(id))
+     *  .SelectMany(r => r)
+     *  .Where(r => r.ParentID != id)
+     *  
+     *  Basically, it grabs all the format categories with FormatIDs that appear more than once,
+     *  then selects the groups of format categories with FormatIDs where one of the ParentIDs is
+     *  equal to the FormatID of the parent whose children we are trying to find, then it ungroups
+     *  the remaining format categories and removes the format categories with a ParentID that is 
+     *  the same as the FormatID we started with.
+     */
 }
 
+<!--The div container for the content of the slide with all of the format tag selections-->
 <div class="tagSelector">
+    <!--The header for this particular section; shows an explanation in the description box at the bottom when you mouse over it-->
     <h3 onmouseover='showExplanation("A writing format is the type of writing your piece falls under. Formats include things like essays, poems, and novels and are not decided by the writing&apos;s genre. By selecting writing formats, you will be providing categorizations that will help organize your pieces and help others find it more easily should you choose to share it. For more information on what different formats mean, hover over the format names. Selecting higher level formats will load more formats that fall under that category.")'>Select Writing Format</h3>
+    <!--The container for all of the format tags themselves-->
     <div id="formatTagContainer">
-        <!--Create visible checkboxes for all of the top level formats-->
+        <!--For each of the top level formats (aka the formats that don't have any parents)-->
         @foreach (var item in Model.Except(Model.Where(t => (Model.SelectMany(u => (u.ChildFormats.Select(v => v.FormatID))).Contains(t.FormatID)))))
-        {
+        { <!--Creates each checkbox and corresponding name in its own span for easy access; function parameters in ftChildren are the FormatID, an array of its children that don't have a secondary parent, an array of its children that do have a secondary parent, an array of secondary parents for the children in the previous array with matching indexes, an array of children without secondary parents that have alternate possible parents, and an array of alternate possible parents for the children in the last array with matching indexes-->
             <span class="@item.FormatID checkItem" onmouseover='showExplanation("@item.Explanation")'><input type="checkbox" value="@item.FormatID" name="FormatTags" onchange='ftChildren(@item.FormatID, [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID == null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.SecondaryParentID)))], [@Html.Raw(String.Join(",", fc.GroupBy(i => i.FormatID).Where(j => j.Select(k => k.ParentID).ToList().Contains(item.FormatID)).SelectMany(r => r).Where(r => r.ParentID != item.FormatID).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", fc.GroupBy(i => i.FormatID).Where(j => j.Select(k => k.ParentID).ToList().Contains(item.FormatID)).SelectMany(r => r).Where(r => r.ParentID != item.FormatID).Select(i => i.ParentID)))])' class="@item.FormatID" /> <span class="formatName">@item.FormatName</span></span> 
-        }
+        } <!--For each of the lower level formats (aka the formats that have at least one parent)-->
         @foreach (var item in Model.Where(t => (Model.SelectMany(u => (u.ChildFormats.Select(v => v.FormatID))).Contains(t.FormatID))))
-        {
+        { <!--Creates each checkbox and corresponding name in its own span for easy access; function parameters in ftChildren are the FormatID, an array of its children that don't have a secondary parent, an array of its children that do have a secondary parent, an array of secondary parents for the children in the previous array with matching indexes, an array of children without secondary parents that have alternate possible parents, and an array of alternate possible parents for the children in the last array with matching indexes-->
             <span class="@item.FormatID checkItem collapse" onmouseover='showExplanation("@item.Explanation")'><input type="checkbox" value="@item.FormatID" name="FormatTags" onchange='ftChildren(@item.FormatID, [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID == null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", item.ChildFormats.Where(i => i.SecondaryParentID != null).Select(i => i.SecondaryParentID)))], [@Html.Raw(String.Join(",", fc.GroupBy(i => i.FormatID).Where(j => j.Select(k => k.ParentID).ToList().Contains(item.FormatID)).SelectMany(r => r).Where(r => r.ParentID != item.FormatID).Select(i => i.FormatID)))], [@Html.Raw(String.Join(",", fc.GroupBy(i => i.FormatID).Where(j => j.Select(k => k.ParentID).ToList().Contains(item.FormatID)).SelectMany(r => r).Where(r => r.ParentID != item.FormatID).Select(i => i.ParentID)))])' class="@item.FormatID" /> <span class="formatName">@item.FormatName</span></span> 
         }
-    </div>
+    </div> <!--formatTagContainer-->
 
+    <!--div for holding the description for the format tags-->
     <div id="formatTagDescription" class="description">
 
     </div>
-</div>
+</div> <!--tagSelector-->

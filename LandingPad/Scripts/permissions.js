@@ -1,4 +1,17 @@
-﻿function showExplanationNotFT(id, explanation) {
+﻿/**
+ * Scripts for dealing with the permissions on the _Menu partial view
+ * and all other partial views derived from it; also has some scripts
+ * for handling pseudonym selection on the same partial views
+ */
+
+/**
+ * A function for emptying a field and appending an explanation to it.
+ * Unlike the similar function in formatTags.js, it lets you specify
+ * the container you are emptying/appending
+ * @param {string} id (the id of the container you want to empty/write to as a string)
+ * @param {string} explanation (explanation of whatever from the partial view)
+ */
+function showExplanationNotFT(id, explanation) {
     $("#" + id).empty();
     $("#" + id).append(explanation);
 }
