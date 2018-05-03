@@ -9,6 +9,7 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Text.RegularExpressions;
+using System.ServiceProcess;
 
 namespace LandingPad.Controllers
 {
@@ -271,7 +272,40 @@ namespace LandingPad.Controllers
         [ChildActionOnly]
         public PartialViewResult _SelectFormat()
         {
+            var fCategory = db.FormatCategories
+                .Where(i => i.SecondaryParentID == null)
+                .GroupBy(i => i.FormatID)
+                .Where(j => j.Count() > 1)
+                .Select(k => new {
+                    FormatID = k.Key,
+                    ParentList = k.Select(l => l.ParentID).ToList()
+                });
+
+            string fc = String.Join(",", fCategory.Select(i => i.FormatID));
+            string mp = String.Join(",", fCategory.Select(i => i.ParentList.Count()));
+            //StringBuilder fc = new StringBuilder("");
+            //foreach(var item in fCategory)
+            //{
+            //    fc.Append("[");
+            //    fc.Append(item.FormatID);
+            //    fc.Append(",[");
+            //    fc.Append(String.Join(",", item.ParentList));
+            //    fc.Append("]],");
+            //}
+            //char[] fcCopy = new char[fc.Length - 1];
+            //fc.CopyTo(0, fcCopy, 0, fc.Length - 1);
+            //fc.Clear();
+            //fc.Append(fcCopy);
+            ViewBag.mpFormatCategories = fc;
+            ViewBag.mpfcCount = mp;
+
             return PartialView(db.FormatTags.ToList());
+        }
+
+        [ChildActionOnly]
+        public PartialViewResult _FormatCategories(int id)
+        {
+            return PartialView(GetChildrenWithAltParents());
         }
 
         [ChildActionOnly]
@@ -507,6 +541,30 @@ namespace LandingPad.Controllers
             }
 
             return true;
+        }
+
+        public List<FormatCategory> GetChildrenWithAltParents()
+        {
+            return db.FormatCategories
+                .Where(i => i.SecondaryParentID == null)
+                //.GroupBy(i => i.FormatID)
+                //.Where(j => j.Count() > 1)
+                //.Where(k => k.Select(l => l.ParentID).ToList().Contains(id))
+                //.SelectMany(r => r)
+                //.Where(r => r.ParentID != id)
+                .ToList();
+        }
+
+        public List<FormatCategory> GetStatically(int id, List<FormatCategory> fc)
+        {
+            return fc
+                .Where(i => i.SecondaryParentID == null)
+                .GroupBy(i => i.FormatID)
+                .Where(j => j.Count() > 1)
+                .Where(k => k.Select(l => l.ParentID).ToList().Contains(id))
+                .SelectMany(r => r)
+                .Where(r => r.ParentID != id)
+                .ToList();
         }
     }
 }

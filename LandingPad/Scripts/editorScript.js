@@ -1,4 +1,8 @@
-﻿(function () {
+﻿//script for initializing the Quill editor
+//Quill rich text editor is from https://quilljs.com/
+//initialization code is based on the full editor initialization in the demo
+//Quill can also be found on GitHub here: https://github.com/quilljs/quill
+(function () {
     $(document).ready(function () {
         var fonts = ['arial', 'times', 'courier'];
         var Font = Quill.import('formats/font');
@@ -30,6 +34,8 @@
         loadFonts();
     });
 
+    //function for loading the fonts from the Google fonts api
+    //This is not being used in the current version of the editor, but is here for later use if that changes
     function loadFonts() {
         window.WebFontConfig = {
             google: { families: ['Inconsolata::latin', 'Ubuntu+Mono::latin', 'Slabo+27px::latin', 'Roboto+Slab::latin'] }
