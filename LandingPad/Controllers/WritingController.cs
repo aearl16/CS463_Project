@@ -508,5 +508,12 @@ namespace LandingPad.Controllers
 
             return true;
         }
+
+        public List<FormatCategory> GetChildrenWithAltParents()
+        {
+            return db.FormatCategories
+                .Where(i => i.SecondaryParentID == null)
+                .ToList();
+        }
     }
 }

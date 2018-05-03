@@ -10,23 +10,24 @@ html, body {
 .leftSideBar {
     background-image: url("../Content/Images/Penfolio/leftdivbackground.png");
     background-repeat: repeat-y;
-    width: 100px;
-    height: 100%;
-    float: left;
-    display: inline-flex;
+    background-position-x: left;
+    width: 100%;
     padding: 0;
     margin: 0;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
 }
 
 .rightSideBar {
     background-image: url("../../Content/Images/Penfolio/rightdivbackround.png");
     background-repeat: repeat-y;
-    width: 100px;
-    height: 100%;
-    float: right;
-    display: inline-flex;
+    background-position-x: right;
     padding: 0;
     margin: 0;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
 }
 
 .body-content, .container {
