@@ -434,10 +434,7 @@ namespace LandingPad.Controllers
             if (input == null)
                 return null;
 
-            string output = Encoding.Unicode.GetString(input);
-            output = output.Replace("&lt;", "<").Replace("&gt;", ">");
-
-            return output;
+            return Encoding.Unicode.GetString(input);
         }
 
         public List<Writing> GetAllWritingAvailable(int id)
