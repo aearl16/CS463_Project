@@ -1,5 +1,6 @@
 ﻿@model LandingPad.Models.Writing
 @{ 
+    //get the author name for the byline
     string author;
 
     if(Model.WritingPseudonyms.Count > 0)
@@ -15,6 +16,10 @@
         author = Model.LPProfile.LPUser.Username;
     }
 
+    //a variable for the tag scroller class that will
+    //be collapse if there aren't any tags so that the
+    //tag scroller only shows up if there are tags to 
+    //display
     string tagCollapse = "";
 
     if(Model.WritingFormats.Count() <= 0)
