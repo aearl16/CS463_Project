@@ -90,10 +90,6 @@ function ftChildren(id, sdChildren, mdChildren, dependencies, mpChildren, altPar
         for (i = 0; i < mdChildren.length; i++) 
             sdChildren.push(mdChildren[i]);
 
-        console.log("mdChildren: " + mdChildren);
-        console.log("mpChildren: " + mpChildren);
-        console.log("sdChildren should overlap with mdChildren, but not mpChildren: " + sdChildren);
-
         //call the function to unload all of the singular dependency children with only one possible parent
         //and the multiple dependency children with only one possible combination of parents;
         //remove the children with multiple possible parents only if none of the parents are selected
@@ -168,7 +164,7 @@ function unloadChildren(sdChildren, mpChildren, altParents) {
             //parentChecked is false unless it is still false after checking the last potential parent
 
             //if the next item in mpChildren is the same as the current item
-            if ((i + 1) < mpChildren.length && mpChildren[i + 1] === current) {
+            if (i + 1 < mpChildren.length && mpChildren[i + 1] === current) {
                 //if parentChecked is not already true and the current potential parent needs to be checked
                 if (parentChecked !== true) {
                     //if this potential parent is checked, mark parentChecked true so that a check won't be made
@@ -199,7 +195,7 @@ function unloadChildren(sdChildren, mpChildren, altParents) {
                 if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(':checked')) {
                     parentChecked = true;
                 } //if this potential parent isn't checked and mpChildren will not be the same child next iteration
-                else if ((i + 1) === mpChildren.length || mpChildren[i + 1] !== current) {
+                else if (i + 1 === mpChildren.length || mpChildren[i + 1] !== current) {
                     //collapse this child if it isn't already collapsed
                     if ($("#formatTagContainer span." + mpChildren[i]).hasClass("collapse") !== true)
                         $("#formatTagContainer span." + mpChildren[i]).addClass("collapse");
