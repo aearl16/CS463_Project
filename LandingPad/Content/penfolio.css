@@ -7,22 +7,11 @@ html, body {
     height: 100%;
 }
 
-.leftSideBar {
-    background-image: url("../Content/Images/Penfolio/leftdivbackground.png");
-    background-repeat: repeat-y;
-    background-position-x: left;
+.sideBars {
+    background-image: url("../Content/Images/Penfolio/leftdivbackground.png"), url("../../Content/Images/Penfolio/rightdivbackround.png");
+    background-repeat: repeat-y, repeat-y;
+    background-position-x: left, right;
     width: 100%;
-    padding: 0;
-    margin: 0;
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
-}
-
-.rightSideBar {
-    background-image: url("../../Content/Images/Penfolio/rightdivbackround.png");
-    background-repeat: repeat-y;
-    background-position-x: right;
     padding: 0;
     margin: 0;
     min-height: 100%;
