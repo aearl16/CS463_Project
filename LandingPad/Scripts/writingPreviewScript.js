@@ -1,5 +1,15 @@
-﻿//Cannot be added to the _WritingPreview partial view because @section doesn't work!
-//File must be sourced on the layout page or in a section on the page that is calling _WritingPreview
+﻿/**
+ * Scripts for the _WritingPreview partial view, which is a view that displays a
+ * summary of a piece of writing it is passed; mainly used to create the scroll
+ * buttons for the tags
+ *
+ * Cannot be added to the _WritingPreview partial view because @section doesn't work
+ * in partial views! File must be sourced on the layout page or in a section on the
+ * page that is calling _WritingPreview
+ *
+ * Code for the scrolling is based off of code by Josh Carroll that can be found here: 
+ * http://jsfiddle.net/jwcarroll/atAHh/
+ */
 
 (function () {
     var scrollHandle = 0,
@@ -31,7 +41,7 @@
     function startScrolling(modifier, step) {
         if (scrollHandle === 0) {
             scrollHandle = setInterval(function () {
-                var newOffset = parent.scrollLeft() + (scrollStep * modifier);
+                var newOffset = parent.scrollLeft() + scrollStep * modifier;
                 parent.scrollLeft(newOffset);
             }, 10);
         }

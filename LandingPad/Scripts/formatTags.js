@@ -99,7 +99,7 @@ function ftChildren(id, sdChildren, mdChildren, dependencies, mpChildren, altPar
         //remove the children with multiple possible parents only if none of the parents are selected
         unloadChildren(sdChildren, mpChildren, altParents);
     }
-}
+} //ftChildren(id, sdChildren, mdChildren, dependencies, mpChildren, altParents)
 
 /**
  * A function to load the correct children of a format tag that has been checked.
@@ -176,7 +176,7 @@ function unloadChildren(sdChildren, mpChildren, altParents) {
                     if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(':checked')) 
                         parentChecked = true;
                 }
-            }
+            } //if the next item in mpChildren is the same as the current item
             else if (mpChildren[i] === current) { //if mpCurrent is the same as last time but will not be next time
                 //basically this means this is the last chance to depopulate this child
 
@@ -189,7 +189,7 @@ function unloadChildren(sdChildren, mpChildren, altParents) {
                             $("#formatTagContainer span." + mpChildren[i]).addClass("collapse");
                     }
                 }
-            }
+            } //if mpCurrent is the same as last time but will not be next time
             else { //if this child isn't the same child as was being checked lasted iteration
                 //reset the values of our variables to their default
                 parentChecked = false;
@@ -204,7 +204,7 @@ function unloadChildren(sdChildren, mpChildren, altParents) {
                     if ($("#formatTagContainer span." + mpChildren[i]).hasClass("collapse") !== true)
                         $("#formatTagContainer span." + mpChildren[i]).addClass("collapse");
                 }
-            }
-        }
-    }
-}
+            } //if this child isn't the same child as was being checked lasted iteration
+        } //if this child doesn't have its checkbox checked
+    } //for each child in mpChildren
+} //unloadChildren(sdChildren, mpChildren, altParents)
