@@ -251,11 +251,11 @@ CREATE TABLE dbo.FormatCategory
 	REFERENCES dbo.FormatTag (FormatID)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
-	CONSTRAINT [FK_dbo.ParentID] FOREIGN KEY (ParentID)
+	CONSTRAINT [FK_dbo.ParentIDforFormat] FOREIGN KEY (ParentID)
 	REFERENCES dbo.FormatTag (FormatID)
 	ON DELETE NO ACTION
 	ON UPDATE NO ACTION,
-	CONSTRAINT [FK_dbo.SecondaryParentID] FOREIGN KEY (SecondaryParentID)
+	CONSTRAINT [FK_dbo.SecondaryParentIDforFormat] FOREIGN KEY (SecondaryParentID)
 	REFERENCES dbo.FormatTag (FormatID) 
 	ON DELETE NO ACTION
 	ON UPDATE NO ACTION
@@ -272,8 +272,86 @@ CREATE TABLE dbo.WritingFormat
 	REFERENCES dbo.Writing (WritingID)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
-	CONSTRAINT [FK_dbo.FormatTag] FOREIGN KEY (FormatID)
+	CONSTRAINT [FK_dbo.FormatIDforWF] FOREIGN KEY (FormatID)
 	REFERENCES dbo.FormatTag (FormatID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
+);
+
+--GenreTag Table
+CREATE TABLE dbo.GenreTag
+(
+	GenreID INT IDENTITY(1,1) NOT NULL,
+	GenreName VARCHAR(MAX) NOT NULL,
+	Explanation VARCHAR(MAX) NOT NULL,
+	CONSTRAINT [PK_dbo.GenreTag] PRIMARY KEY (GenreID)
+);
+
+--AltGenreName Table
+CREATE TABLE dbo.AltGenreName
+(
+	AltGenreNameID INT IDENTITY(1,1) NOT NULL,
+	GenreID INT NOT NULL,
+	AltName VARCHAR(MAX) NOT NULL,
+	CONSTRAINT [PK_dbo.AltGenreName] PRIMARY KEY (AltGenreNameID),
+	CONSTRAINT [FK_dbo.GenreIDForAltGenreName] FOREIGN KEY (GenreID)
+	REFERENCES dbo.GenreTag (GenreID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
+);
+
+--GenreCategory Table
+CREATE TABLE dbo.GenreCategory
+(
+	GenreCategoryID INT IDENTITY(1,1) NOT NULL,
+	GenreID INT NOT NULL,
+	ParentID INT NOT NULL,
+	SecondaryParentID INT,
+	CONSTRAINT [PK_dbo.GenreCategory] PRIMARY KEY (GenreCategoryID),
+	CONSTRAINT [FK_dbo.GenreIDforCategory] FOREIGN KEY (GenreID)
+	REFERENCES dbo.GenreTag (GenreID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	CONSTRAINT [FK_dbo.ParentIDforGenre] FOREIGN KEY (ParentID)
+	REFERENCES dbo.GenreTag (GenreID)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION,
+	CONSTRAINT [FK_dbo.SecondaryParentIDforGenre] FOREIGN KEY (SecondaryParentID)
+	REFERENCES dbo.GenreTag (GenreID)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION
+);
+
+--GenreFormat Table
+CREATE TABLE dbo.GenreFormat
+(
+	GenreFormatID INT IDENTITY(1,1) NOT NULL,
+	GenreID INT NOT NULL,
+	ParentFormatID INT NOT NULL,
+	CONSTRAINT [PK_dbo.GenreFormat] PRIMARY KEY (GenreFormatID),
+	CONSTRAINT [FK_dbo.GenreIDforGenreFormat] FOREIGN KEY (GenreID)
+	REFERENCES dbo.GenreTag (GenreID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	CONSTRAINT [FK_dbo.ParentFormatID] FOREIGN KEY (ParentFormatID)
+	REFERENCES dbo.FormatTag (FormatID)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION
+);
+
+--WritingGenre Table
+CREATE TABLE dbo.WritingGenre
+(
+	WritingGenreID INT IDENTITY(1,1) NOT NULL,
+	WritingID INT NOT NULL,
+	GenreID INT NOT NULL,
+	CONSTRAINT [PK_dbo.WritingGenre] PRIMARY KEY (WritingGenreID),
+	CONSTRAINT [FK_dbo.WritingIDforWG] FOREIGN KEY (WritingID)
+	REFERENCES dbo.Writing (WritingID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	CONSTRAINT [FK_dbo.GenreIDforWG] FOREIGN KEY (GenreID)
+	REFERENCES dbo.GenreTag (GenreID)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE
 );
@@ -613,3 +691,315 @@ INSERT INTO dbo.WritingFormat (WritingID, FormatID) VALUES
 (3, 9), --Hokey Folk Tales, Fiction prose
 (3, 36), --Hokey Folk Tales, Limerick
 (3, 44); --Hokey Folk Tales, Short story
+
+INSERT INTO dbo.GenreTag (GenreName, Explanation) VALUES
+--Top tier
+('Fiction', ''), --1
+('Nonfiction', ''), --2
+
+--Immediate children of fiction ONLY
+('Drama', ''), --3
+('Historical fiction', ''), --4
+('Literary fiction', ''), --5
+('Realistic fiction', ''), --6
+('Slice of life', ''), --7
+('Speculative fiction', ''), --8
+('Thriller', ''), --9
+
+--Immediate children of Drama, fiction ONLY
+('Courtroom drama', ''), --10
+('Medical drama', ''), --11
+('Political drama', ''), --12
+('Soap opera', ''), --13
+
+--Immediate children of Historical fiction, fiction ONLY
+('Docudrama', ''), --14
+('Period piece', ''), --15
+
+--Immediate children of Speculative fiction, fiction ONLY
+('Alternate history', ''), --16
+('Apocalyptic', ''), --17
+('Dystopian', ''), --18
+('Fantasy', ''), --19
+('Horror', ''), --20
+('Post-apocalyptic', ''), --21
+('Science fiction', ''), --22
+('Superhero', ''), --23
+('Utopian', ''), --24
+
+--Immediate children of Fantasy
+('Fairy tale', ''), --25
+('Hard fantasy', ''), --26
+('Heroic fantasy', ''), --27
+('High fantasy', ''), --28
+('Magical realism', ''), --29
+('Sword and sorcery', ''), --30
+('Urban fantasy', ''), --31
+
+--Immediate children of Horror
+('Gothic', ''), --32
+('Slasher', ''), --33
+('Supernatural', ''), --34
+('Survival horror', ''), --35
+
+--Immediate children of Science fiction
+('Hard science fiction', ''), --36
+('Punk', ''), --37
+('Soft science fiction', ''), --38
+('Space opera', ''), --39
+
+--Immediate children of Punk
+('Atompunk', ''), --40
+('Biopunk', ''), --41
+('Clockpunk', ''), --42
+('Cyberpunk', ''), --43
+('Dieselpunk', ''), --44
+('Steampunk', ''), --45
+
+--Immediate child of BOTH Fantasy and Science fiction
+('Science fantasy', ''), --46
+
+--Immediate children of Thriller, fiction ONLY
+('Conspiracy', ''), --47
+('Legal thriller', ''), --48
+('Psychological thriller', ''), --49
+
+--Immediate children of either fiction or nonfiction
+('Action', ''), --50
+('Adventure', ''), --51
+('Comedy', ''), --52
+('Crime', ''), --53
+('Family saga', ''), --54
+('Inspirational', ''), --55
+('Mystery', ''), --56
+('Philosophical', ''), --57
+('Political', ''), --58
+('Religious', ''), --59
+('Romance', ''), --60
+('Tragedy', ''), --61
+
+--Immediate children of Action or Adventure, fiction ONLY
+('Western', ''), --62
+
+--Immediate children of Action or Adventure, fiction or nonfiction
+('Military', ''), --63
+('Spy', ''), --64
+('Survivalism', ''), --65
+('War', ''), --66
+
+--Immediate children of Action or Adventure or Crime, fiction or nonfiction
+('Gangster', ''), --67
+
+--Immediate children of Comedy, fiction ONLY
+('Absurdist', ''), --68
+('Comedy of manners', ''), --69
+('Parody', ''), --70
+('Satire', ''), --71
+('Sitcom', ''), --72
+('Sketch comedy', ''), --73
+
+--Immediate children of Comedy, fiction or nonfiction
+('Black comedy', ''), --74
+('Stand-up comedy', ''), --75
+
+--Immediate children of Crime, fiction ONLY
+('Gentleman thief', ''), --76
+('Hardboiled', ''), --77
+('Noir', ''), --78
+
+--Immediate children of Crime, fiction or nonfiction
+('Detective story', ''), --79
+('Police procedural', ''), --80
+
+--Immediate child of Crime, nonfiction ONLY
+('True crime', ''), --81
+
+--Immediate child of Crime or Mystery, fiction or nonfiction
+('Murder mystery', ''), --82
+
+--Immediate child of both Comedy and Romance, fiction ONLY
+('Romantic comedy', ''), --83
+
+--Immediate children of nonfiction ONLY
+('Art', ''), --84
+('Biography', ''), --85
+('Culture', ''), --86
+('Documentary', 'A nonfiction film intended to document true events or teaching.'), --87
+('Food', ''), --88
+('History', ''), --89
+('Language', ''), --90
+('Math', ''), --91
+('Music', ''), --92
+('Nature', ''), --93
+('Science', ''), --94
+('Society', ''), --95
+('Technology', ''), --96
+('Travel', ''), --97
+
+--Immediate children of Biography, nonfiction ONLY
+('Autobiography', ''), --98
+('Memoir', ''); --99
+
+INSERT INTO dbo.AltGenreName(GenreID, AltName) VALUES
+(9, 'Suspense'), --Thriller 1
+(13, 'Telenovela'), --Soap opera 2
+(25, 'Fable'), --Fairy tale 3
+(28, 'Epic fantasy'), --High fantasy 4
+(68, 'Surreal'); --Absurdist 5
+
+INSERT INTO dbo.GenreCategory(GenreID, ParentID, SecondaryParentID) VALUES
+(3, 1, NULL), --1
+(4, 1, NULL), --2
+(5, 1, NULL), --3
+(6, 1, NULL), --4
+(7, 1, NULL), --5
+(8, 1, NULL), --6
+(9, 1, NULL), --7
+(10, 3, 1), --8
+(11, 3, 1), --9
+(12, 3, 1), --10
+(13, 3, 1), --11
+(14, 4, 1), --12
+(15, 4, 1), --13
+(16, 8, 1), --14
+(17, 8, 1), --15
+(18, 8, 1), --16
+(19, 8, 1), --17
+(20, 8, 1), --18
+(21, 8, 1), --19
+(22, 8, 1), --20
+(23, 8, 1), --21
+(24, 8, 1), --22
+(25, 19, 1), --23
+(26, 19, 1), --24
+(27, 19, 1), --25
+(28, 19, 1), --26
+(29, 19, 1), --27
+(30, 19, 1), --28
+(31, 19, 1), --29
+(32, 20, 1), --30
+(33, 20, 1), --31
+(34, 20, 1), --32
+(35, 20, 1), --33
+(36, 22, 1), --34
+(37, 22, 1), --35
+(38, 22, 1), --36
+(39, 22, 1), --37
+(40, 37, 1), --38
+(41, 37, 1), --39
+(42, 37, 1), --40
+(43, 37, 1), --41
+(44, 37, 1), --42
+(45, 37, 1), --43
+(46, 19, 22), --44
+(46, 22, 19), --45
+(47, 9, 1), --46
+(48, 9, 1), --47
+(49, 9, 1), --48
+(50, 1, NULL), --49
+(50, 2, NULL), --50
+(51, 1, NULL), --51
+(51, 2, NULL), --52
+(52, 1, NULL), --53
+(52, 2, NULL), --54
+(53, 1, NULL), --55
+(53, 2, NULL), --56
+(54, 1, NULL), --57
+(54, 2, NULL), --58
+(55, 1, NULL), --59
+(55, 2, NULL), --60
+(56, 1, NULL), --61
+(56, 2, NULL), --62
+(57, 1, NULL), --63
+(57, 2, NULL), --64
+(58, 1, NULL), --65
+(58, 2, NULL), --66
+(59, 1, NULL), --67
+(59, 2, NULL), --68
+(60, 1, NULL), --69
+(60, 2, NULL), --70
+(61, 1, NULL), --71
+(61, 2, NULL), --72
+(62, 50, 1), --73
+(62, 51, 1), --74
+(63, 50, NULL), --75
+(63, 51, NULL), --76
+(64, 50, NULL), --77
+(64, 51, NULL), --78
+(65, 50, NULL), --79
+(65, 51, NULL), --80
+(66, 50, NULL), --81
+(66, 51, NULL), --82
+(67, 50, NULL), --83
+(67, 51, NULL), --84
+(67, 53, NULL), --85
+(68, 52, 1), --86
+(69, 52, 1), --87
+(70, 52, 1), --88
+(71, 52, 1), --89
+(72, 52, 1), --90
+(73, 52, 1), --91
+(74, 52, NULL), --92
+(75, 52, NULL), --93
+(76, 53, 1), --94
+(77, 53, 1), --95
+(78, 53, 1), --96
+(79, 53, NULL), --97
+(80, 53, NULL), --98
+(81, 53, 2), --99
+(82, 53, NULL), --100
+(82, 56, NULL), --101
+(83, 52, 60), --102
+(83, 60, 52), --103
+(84, 2, NULL), --104
+(85, 2, NULL), --105
+(86, 2, NULL), --106
+(87, 2, NULL), --107
+(88, 2, NULL), --108
+(89, 2, NULL), --109
+(90, 2, NULL), --110
+(91, 2, NULL), --111
+(92, 2, NULL), --112
+(93, 2, NULL), --113
+(94, 2, NULL), --114
+(95, 2, NULL), --115
+(96, 2, NULL), --116
+(97, 2, NULL), --117
+(98, 85, 2), --118
+(99, 85, 2); --119
+
+INSERT INTO dbo.GenreFormat(GenreID, ParentFormatID) VALUES
+(1, 9), --1
+(1, 43), --2
+(1, 44), --3
+(1, 45), --4
+(1, 46), --5
+(1, 47), --6
+(2, 10), --7
+(2, 24), --8
+(2, 25), --9
+(2, 26), --10
+(2, 27), --11
+(2, 28), --12
+(2, 54), --13
+(2, 55), --14
+(2, 66), --15
+(2, 67), --16
+(2, 68), --17
+(2, 69), --18
+(2, 70), --19
+(2, 71), --20
+(2, 72), --21
+(2, 73), --22
+(2, 74), --23
+(2, 75), --24
+(2, 76), --25
+(2, 77); --26
+
+INSERT INTO dbo.WritingGenre(WritingID, GenreID) VALUES
+(1, 1),
+(1, 52),
+(1, 70),
+(2, 2),
+(2, 52),
+(2, 93);

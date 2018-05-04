@@ -47,6 +47,17 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
+	WHERE tables.name = 'WritingGenre'
+
+)
+BEGIN
+	DROP TABLE dbo.WritingGenre
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
 	WHERE tables.name = 'Writing'
 
 )
@@ -69,6 +80,17 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
+	WHERE tables.name = 'AltGenreName'
+
+)
+BEGIN
+	DROP TABLE dbo.AltGenreName
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
 	WHERE tables.name = 'FormatCategory'
 
 )
@@ -80,11 +102,44 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
+	WHERE tables.name = 'GenreCategory'
+
+)
+BEGIN
+	DROP TABLE dbo.GenreCategory
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'GenreFormat'
+
+)
+BEGIN
+	DROP TABLE dbo.GenreFormat
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
 	WHERE tables.name = 'FormatTag'
 
 )
 BEGIN
 	DROP TABLE dbo.FormatTag
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
+	WHERE tables.name = 'GenreTag'
+
+)
+BEGIN
+	DROP TABLE dbo.GenreTag
 END
 
 IF EXISTS
