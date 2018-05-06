@@ -22,6 +22,8 @@ namespace LandingPad.Models
 
         public int? SecondaryParentID { get; set; }
 
+        public int? TertiaryParentID { get; set; }
+
         public virtual GenreTag GenreTag { get; set; }
     }
 }

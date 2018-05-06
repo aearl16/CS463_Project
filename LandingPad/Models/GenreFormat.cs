@@ -20,6 +20,9 @@ namespace LandingPad.Models
         [Required]
         public int ParentFormatID { get; set; }
 
+        public int? ParentGenreID { get; set; }
+
+        [ForeignKey("GenreID")]
         public virtual GenreTag GenreTag { get; set; }
 
         [ForeignKey("ParentFormatID")]
