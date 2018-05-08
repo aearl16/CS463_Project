@@ -9,6 +9,8 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Text.RegularExpressions;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.Identity;
 
 namespace LandingPad.Controllers
 {
@@ -16,12 +18,36 @@ namespace LandingPad.Controllers
     [Authorize]
     public class WritingController : Controller
     {
-        LandingPadContext db = new LandingPadContext();
+        private LandingPadContext db = new LandingPadContext();
+        private ApplicationUserManager _userManager;
+
+        /// <summary>
+        /// Used to get the user manager for helper methods
+        /// </summary>
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+        }
 
         // GET: Pseudonym
         public ActionResult Index()
         {
-            ViewBag.Profiles = String.Join(",", db.LPProfiles.Select(i => i.ProfileID));
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if(!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string id = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(id);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
+            //This operation didn't change ==> just gets the LPProfile with LPUser's ID
+            ViewBag.Profiles = String.Join(",", db.LPProfiles.Find(lpCurrentUser.UserID));
             return View(db.LPProfiles.ToList());
         }
 
@@ -512,5 +538,53 @@ namespace LandingPad.Controllers
                 .Where(i => i.SecondaryParentID == null)
                 .ToList();
         }
+
+        /*
+         * Begin Helper method section
+         */
+        /// <summary>
+        /// Helper method that checks if a user is logged in
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckLogin()
+        {
+            if(User.Identity.IsAuthenticated)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the currently logged in user's ID
+        /// </summary>
+        /// <returns></returns>
+        private string GetUserID()
+        {
+            return User.Identity.GetUserId();
+        }
+
+        /// <summary>
+        /// Gets the user object from the database
+        /// </summary>
+        /// <returns></returns>
+        private ApplicationUser GetUser(string id)
+        {
+            return UserManager.FindById(id);
+        }
+
+        /// <summary>
+        /// Gets the LP user
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        private LPUser GetLPUser(string email)
+        {
+            return db.LPUsers.Find(email);
+        }
+
     }
 }

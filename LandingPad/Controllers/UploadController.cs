@@ -11,6 +11,7 @@ using OpenXmlPowerTools;
 using DocumentFormat.OpenXml.Packaging;
 using System.Drawing.Imaging;
 using System.Xml.Linq;
+using Microsoft.AspNet.Identity;
 
 namespace LandingPad.Controllers
 {
@@ -561,5 +562,4 @@ namespace LandingPad.Controllers
 
         }
     }
-
 }
