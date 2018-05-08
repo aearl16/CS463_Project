@@ -45,7 +45,7 @@ namespace LandingPad.Controllers
             //Get ASP.NET User Object
             ApplicationUser currentUser = GetUser(id);
             //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
             //This operation didn't change ==> just gets the LPProfile with LPUser's ID
             ViewBag.Profiles = String.Join(",", db.LPProfiles.Find(lpCurrentUser.UserID));
             return View(db.LPProfiles.ToList());
@@ -545,7 +545,7 @@ namespace LandingPad.Controllers
         /// <summary>
         /// Helper method that checks if a user is logged in
         /// </summary>
-        /// <returns></returns>
+        /// <returns> tf if the user is logged in</returns>
         private bool CheckLogin()
         {
             if(User.Identity.IsAuthenticated)
@@ -561,7 +561,7 @@ namespace LandingPad.Controllers
         /// <summary>
         /// Gets the currently logged in user's ID
         /// </summary>
-        /// <returns></returns>
+        /// <returns> string id of the current user</returns>
         private string GetUserID()
         {
             return User.Identity.GetUserId();
