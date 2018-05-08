@@ -45,7 +45,7 @@ namespace LandingPad.Controllers
             //Get ASP.NET User Object
             ApplicationUser currentUser = GetUser(id);
             //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
             //This operation didn't change ==> just gets the LPProfile with LPUser's ID
             ViewBag.Profiles = String.Join(",", db.LPProfiles.Find(lpCurrentUser.UserID));
             return View(db.LPProfiles.ToList());
@@ -545,7 +545,7 @@ namespace LandingPad.Controllers
         /// <summary>
         /// Helper method that checks if a user is logged in
         /// </summary>
-        /// <returns></returns>
+        /// <returns> tf if the user is logged in</returns>
         private bool CheckLogin()
         {
             if(User.Identity.IsAuthenticated)
@@ -561,7 +561,7 @@ namespace LandingPad.Controllers
         /// <summary>
         /// Gets the currently logged in user's ID
         /// </summary>
-        /// <returns></returns>
+        /// <returns> string id of the current user</returns>
         private string GetUserID()
         {
             return User.Identity.GetUserId();
@@ -570,17 +570,18 @@ namespace LandingPad.Controllers
         /// <summary>
         /// Gets the user object from the database
         /// </summary>
-        /// <returns></returns>
+        /// <returns> ApplicationUser object of the current user </returns>
         private ApplicationUser GetUser(string id)
         {
             return UserManager.FindById(id);
         }
 
         /// <summary>
-        /// Gets the LP user
+        /// Gets the LP user object based on e-mail link
+        /// Can also be used separately for obtaining the user object
         /// </summary>
         /// <param name="email"></param>
-        /// <returns></returns>
+        /// <returns> LPUser object after ApplicationUser object</returns>
         private LPUser GetLPUser(string email)
         {
             return db.LPUsers.Find(email);
