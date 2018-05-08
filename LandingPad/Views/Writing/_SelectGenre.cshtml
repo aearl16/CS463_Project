@@ -1,0 +1,45 @@
+﻿@model IEnumerable<LandingPad.Models.GenreTag>
+@{ 
+    //a way to access the WritingController so a controller function can be used to grab another model
+    var controller = (LandingPad.Controllers.WritingController)this.ViewContext.Controller;
+
+    //basically another model; this one is for getting GenreCategories for genre tags that might have alternate parents
+    IEnumerable<LandingPad.Models.GenreCategory> gc = controller.GetChildGenresWithAltParents();
+
+    //basically another model; this one is for getting GenreCategories that can only be fiction
+    IEnumerable<LandingPad.Models.GenreCategory> fictionOnly = controller.FictionOnly();
+
+    //basically another model; this one is for getting GenreCategories that can only be nonfiction
+    IEnumerable<LandingPad.Models.GenreCategory> nonfictionOnly = controller.NonfictionOnly();
+}
+
+<!--The div class for the genre tag selector-->
+<div class="genreTagSelector">
+    <!--The header for this particular section; shows an explanation in the description box at the bottom when you mouse over it-->
+    <h3 onmouseover='showExplanationNotFT("genreTagDescription", "A writing genre is the style or subject matter your piece of writing falls under. Examples include fantasy, travel, and thriller. By selecting writing genre, you will be providing categorizations that will help organize your writing and help others find it more easily should you choose to share it. For more information on what each of the genres mean, hover over the genre names. Selecting higher level genres will load more genres that fall under that category.")'>Select Writing Genre</h3>
+    <!--The container for all of the genre tags themselves-->
+    <div id="genreTagContainer">
+        <div class="fictionOrNonfiction">
+            <!--The header the fiction or nonfiction part of genre selection; shows an explanation in the description box at the bottom when you mouse over it-->
+            <h4 onmouseover='showExplanationNotFT("genreTagDescription", "While some genres are available no matter what, whether your writing is fictional or nonfictional affects many of the genres that it can potentially be. Some writing formats are by definition fictional or nonfictional, so if one of the options has already been selected, feel free ignore this part of the options and continue to select genres for your writing below.")'>Is your writing fiction or nonfiction?</h4>
+            @foreach (var item in Model.Where(i => i.GenreID < 3))
+            {
+                <span class="@item.GenreID" onmouseover='showExplanationNotFT("genreTagDescription", "@item.Explanation")'><input type="radio" value="@item.GenreID" name="FictionOrNonfiction" onchange='fictionOrNonfiction("@item.GenreName", [@Html.Raw(String.Join(",", fictionOnly.GroupBy(i => i.GenreID).SelectMany(r => r).Select(r => r.GenreID)))], [@Html.Raw(String.Join(",", nonfictionOnly.GroupBy(i => i.GenreID).SelectMany(r => r).Select(r => r.GenreID)))], [@Html.Raw(String.Join(",", item.ChildGenres.Select(i => i.GenreID)))])' /> <span class="genreName">@item.GenreName</span></span><br />
+            }
+        </div>
+        <div class="genreTagsThreePlus collapse">
+            <!--The header for the rest of the genre tags-->
+            <h4>Genres</h4>
+            @foreach(var item in Model.Where(i => i.GenreID > 2))
+            { <!--Creates each checkbox and corresponding name in its own span for easy access; function parameters in gtChildren are the GenreID, an array of its children that don't have any dependencies (meaning no secondary parent), an array of its children that do have a secondary parent but don't have a tertiary parent (single dependency), an array of secondary parents for the children in the previous array with matching indexes, an array of children with a tertiary parent (multiple dependencies), an array of the secondary parents of the previous array with matching indexes, an array of tertiary parents for the same array as the last one with matching indexes, an array of children without secondary parents (meaning no dependencies) that have alternate possible parents, an array of alternate possible parents for the children in the last array with matching indexes, an array of children with a secondary parent and no tertiary parent (single dependency) that have alternate parents, an array of possible alternate parents for the children in the last array with matching indexes, an array of dependencies for the last two arrays with matching indexes, an array of genres that are only fiction, and an array of genres that are only nonfiction-->
+                <span class="@item.GenreID checkItem"  onmouseover='showExplanationNotFT("genreTagDescription", "@item.Explanation")'><input type="checkbox" value="@item.GenreID" name="GenreTags" onchange='gtChildren(@item.GenreID, [@Html.Raw(String.Join(",", item.ChildGenres.Where(i => i.SecondaryParentID == null).Select(i => i.GenreID)))], [@Html.Raw(String.Join(",", item.ChildGenres.Where(i => i.TertiaryParentID == null).Where(i => i.SecondaryParentID != null).Select(i => i.GenreID)))], [@Html.Raw(String.Join(",", item.ChildGenres.Where(i => i.TertiaryParentID == null).Where(i => i.SecondaryParentID != null).Select(i => i.SecondaryParentID)))], [@Html.Raw(String.Join(",", item.ChildGenres.Where(i => i.TertiaryParentID != null).Select(i => i.GenreID)))], [@Html.Raw(String.Join(",", item.ChildGenres.Where(i => i.TertiaryParentID != null).Select(i => i.SecondaryParentID)))], [@Html.Raw(String.Join(",", item.ChildGenres.Where(i => i.TertiaryParentID != null).Select(i => i.TertiaryParentID)))], [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID == null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.GenreID)))], [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID == null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.ParentID)))], [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID != null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.GenreID)))], [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID != null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.ParentID)))], [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID != null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.SecondaryParentID)))], [@Html.Raw(String.Join(",", fictionOnly.GroupBy(i => i.GenreID).SelectMany(r => r).Select(r => r.GenreID)))], [@Html.Raw(String.Join(",", nonfictionOnly.GroupBy(i => i.GenreID).SelectMany(r => r).Select(r => r.GenreID)))])' /> <span class="genreName">@item.GenreName</span></span> 
+            }
+        </div>
+    </div> <!--genreTagContainer-->
+
+    <!--div for holding the description for the format tags-->
+    <div id="genreTagDescription" class="description">
+
+    </div>
+</div> <!--genreTagSelector-->
+

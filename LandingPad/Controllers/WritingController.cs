@@ -55,6 +55,13 @@ namespace LandingPad.Controllers
             return View(db.Writings.Where(i => i.WritingFormats.Select(j => j.FormatTag.FormatID).ToList().Contains(id)).ToList());
         }
 
+        //Displays writings that have the genre tag with a GenreID of id
+        public ActionResult SearchByGenreTag(int id)
+        {
+            return View(db.Writings.Where(i => i.WritingGenres.Select(j => j.GenreTag.GenreID).ToList().Contains(id)).ToList());
+        }
+
+        //The view for editing existing writing; uses the id to edit the correct writing
         [HttpGet]
         public ActionResult Edit(int? id)
         {
@@ -84,13 +91,17 @@ namespace LandingPad.Controllers
             //passes an array of all the pseudonyms for this writing's author to the view
             ViewBag.Pseudonyms = String.Join(",", db.Pseudonyms.Where(i => i.ProfileID == wr.ProfileID).Select(j => j.PseudonymID));
 
+            //passes an array of all the format tags to the view
             ViewBag.FormatTags = String.Join(",", db.FormatTags.Select(i => i.FormatID));
+
+            //passes an array of all the genre tags to the view
+            ViewBag.GenreTags = String.Join(",", db.GenreTags.Select(i => i.GenreID));
 
             return View(wr);
         }
 
         [HttpPost]
-        public ActionResult Edit(string[] FormatTags, string[] Pseudonyms, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
+        public ActionResult Edit(string[] FormatTags, string[] Pseudonyms, string[] FictionOrNonfiction, string[] GenreTags, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
                 "CommentsOn, CritiqueOn, DescriptionText")] Writing ed)
         {
             if (!ModelState.IsValid)
@@ -193,7 +204,80 @@ namespace LandingPad.Controllers
                         }
                     }
                 }
-                
+
+                ICollection<GenreTag> allGT = db.GenreTags.ToList();
+                foreach (var item in allGT)
+                {
+                    bool isSelected = false;
+                    for (int i = 0; i < FictionOrNonfiction.Length; i++)
+                    {
+                        if (item.GenreID == Int32.Parse(FictionOrNonfiction[i]))
+                            isSelected = true;
+                    }
+
+                    if (db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).ToList().Count > 0 && isSelected == false)
+                    {
+                        WritingGenre wg = db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).First();
+                        db.WritingGenres.Remove(wg);
+                        db.SaveChanges();
+                    }
+                }
+
+                //add any genre tags that don't already exist
+                if (FictionOrNonfiction != null)
+                {
+                    foreach (var selection in FictionOrNonfiction)
+                    {
+                        int selected = Int32.Parse(selection);
+                        if (db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == selected).ToList().Count == 0)
+                        {
+                            WritingGenre wg = new WritingGenre()
+                            {
+                                WritingID = id,
+                                GenreID = selected
+                            };
+                            db.WritingGenres.Add(wg);
+                            db.SaveChanges();
+                        }
+                    }
+                }
+
+                foreach (var item in allGT)
+                {
+                    bool isSelected = false;
+                    for (int i = 0; i < GenreTags.Length; i++)
+                    {
+                        if (item.GenreID == Int32.Parse(GenreTags[i]))
+                            isSelected = true;
+                    }
+
+                    if (db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).ToList().Count > 0 && isSelected == false)
+                    {
+                        WritingGenre wg = db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).First();
+                        db.WritingGenres.Remove(wg);
+                        db.SaveChanges();
+                    }
+                }
+
+                //add any genre tags that don't already exist
+                if (GenreTags != null)
+                {
+                    foreach (var selection in GenreTags)
+                    {
+                        int selected = Int32.Parse(selection);
+                        if (db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == selected).ToList().Count == 0)
+                        {
+                            WritingGenre wg = new WritingGenre()
+                            {
+                                WritingID = id,
+                                GenreID = selected
+                            };
+                            db.WritingGenres.Add(wg);
+                            db.SaveChanges();
+                        }
+                    }
+                }
+
 
                 return RedirectToAction("ViewWriting", "Writing", new { @id = id });
             }
@@ -225,6 +309,7 @@ namespace LandingPad.Controllers
         {
             ICollection<WritingFormat> wfToDelete = db.WritingFormats.Where(w => w.WritingID == id).ToList();
             ICollection<WritingPseudonym> wpToDelete = db.WritingPseudonyms.Where(w => w.WritingID == id).ToList();
+            ICollection<WritingGenre> wgToDelete = db.WritingGenres.Where(w => w.WritingID == id).ToList();
 
             foreach(var item in wfToDelete)
             {
@@ -237,6 +322,13 @@ namespace LandingPad.Controllers
             {
                 WritingPseudonym wp = db.WritingPseudonyms.Where(w => w.WritingID == id).First();
                 db.WritingPseudonyms.Remove(wp);
+                db.SaveChanges();
+            }
+
+            foreach (var item in wgToDelete)
+            {
+                WritingGenre wg = db.WritingGenres.Where(w => w.WritingID == id).First();
+                db.WritingGenres.Remove(wg);
                 db.SaveChanges();
             }
 
@@ -280,6 +372,12 @@ namespace LandingPad.Controllers
         }
 
         [ChildActionOnly]
+        public PartialViewResult _SelectGenre()
+        {
+            return PartialView(db.GenreTags.ToList());
+        }
+
+        [ChildActionOnly]
         public PartialViewResult _SelectPermissions()
         {
             return PartialView();
@@ -296,6 +394,7 @@ namespace LandingPad.Controllers
         {
             ViewBag.Pseudonyms = String.Join(",", db.Pseudonyms.Select(i => i.PseudonymID));
             ViewBag.FormatTags = String.Join(",", db.FormatTags.Select(i => i.FormatID));
+            ViewBag.GenreTags = String.Join(",", db.GenreTags.Select(i => i.GenreID));
 
             return PartialView();
         }
@@ -307,7 +406,7 @@ namespace LandingPad.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(string[] FormatTags, string[] Pseudonyms, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
+        public ActionResult Create(string[] FormatTags, string[] Pseudonyms, string[] FictionOrNonfiction, string[] GenreTags, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
                 "CommentsOn, CritiqueOn, DescriptionText")] Writing ed)
         {
             if (!ModelState.IsValid)
@@ -372,6 +471,34 @@ namespace LandingPad.Controllers
                             PseudonymID = Int32.Parse(selection)
                         };
                         db.WritingPseudonyms.Add(wp);
+                        db.SaveChanges();
+                    }
+                }
+
+                if(FictionOrNonfiction != null)
+                {
+                    foreach (var selection in FictionOrNonfiction)
+                    {
+                        WritingGenre wg = new WritingGenre()
+                        {
+                            WritingID = id,
+                            GenreID = Int32.Parse(selection)
+                        };
+                        db.WritingGenres.Add(wg);
+                        db.SaveChanges();
+                    }
+                }
+
+                if (GenreTags != null)
+                {
+                    foreach (var selection in GenreTags)
+                    {
+                        WritingGenre wg = new WritingGenre()
+                        {
+                            WritingID = id,
+                            GenreID = Int32.Parse(selection)
+                        };
+                        db.WritingGenres.Add(wg);
                         db.SaveChanges();
                     }
                 }
@@ -515,6 +642,52 @@ namespace LandingPad.Controllers
         {
             return db.FormatCategories
                 .Where(i => i.SecondaryParentID == null)
+                .ToList();
+        }
+
+        public List<GenreCategory> FictionOnly()
+        {
+            return db.GenreCategories
+                .GroupBy(i => i.GenreID)
+                .Where(j => j.Select(k => k.TertiaryParentID).ToList().Contains(2) == false)
+                .Where(j => j.Select(k => k.SecondaryParentID).ToList().Contains(2) == false)
+                .Where(j => j.Select(k => k.ParentID).ToList().Contains(2) == false)
+                .SelectMany(r => r)
+                .Where(r => r.ParentID == 1 || r.SecondaryParentID == 1 || r.TertiaryParentID == 1)
+                .ToList();
+        }
+
+        public List<GenreCategory> NonfictionOnly()
+        {
+            return db.GenreCategories
+                .GroupBy(i => i.GenreID)
+                .Where(j => j.Select(k => k.TertiaryParentID).ToList().Contains(1) == false)
+                .Where(j => j.Select(k => k.SecondaryParentID).ToList().Contains(1) == false)
+                .Where(j => j.Select(k => k.ParentID).ToList().Contains(1) == false)
+                .SelectMany(r => r)
+                .Where(r => r.ParentID == 2 || r.SecondaryParentID == 2 || r.TertiaryParentID == 2)
+                .ToList();
+        }
+
+        public List<GenreCategory> GetChildGenresWithAltParents()
+        {
+            return db.GenreCategories
+                .Where(i => i.TertiaryParentID == null)
+                .ToList();
+        }
+
+        public List<GenreCategory> GetChildGenresWithAltParentsAndNoDependencies()
+        {
+            return db.GenreCategories
+                .Where(i => i.SecondaryParentID == null)
+                .ToList();
+        }
+
+        public List<GenreCategory> GetChildGenresWithSingularDependenciesAndAltParents()
+        {
+            return db.GenreCategories
+                .Where(i => i.TertiaryParentID == null)
+                .Where(i => i.SecondaryParentID != null)
                 .ToList();
         }
     }
