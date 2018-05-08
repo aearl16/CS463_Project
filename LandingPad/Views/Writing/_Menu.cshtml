@@ -51,8 +51,22 @@
                 </div>
             </div> <!--slide3-->
 
-            <!--Permissions-->
+            <!--Genre Tags-->
             <div class="slide4 collapse">
+                <!--call the partial view for selecting genre tags-->
+                <div class="inputGroup">
+                    @Html.Action("_SelectGenre")
+                </div>
+
+                <!--back uncollapses slide3 and next uncollapses slide5; both collapse slide4-->
+                <div class="buttonGroup">
+                    <a class="prevPage" onclick='loadSlide("slide4", "slide3")'>Back</a>
+                    <a class="nextPage" onclick='loadSlide("slide4", "slide5")'>Next</a>
+                </div>
+            </div> <!--slide4-->
+
+            <!--Permissions-->
+            <div class="slide5 collapse">
                 <!--call the partial view for selecting view and access permissions for the writing-->
                 <div class="inputGroup">
                     @Html.Partial("_SelectPermissions")
@@ -60,13 +74,13 @@
 
                 <!--back collapses slide4 and uncollapses slide3; next also collapses slide4, in addition to uncollapsing slide5 and populating the confirmation messages with the current form values-->
                 <div class="buttonGroup">
-                    <a class="prevPage" onclick='loadSlide("slide4", "slide3")'>Back</a>
-                    <a class="nextPage" onclick='loadSlideAndConfirm("slide4", "slide5", [@Html.Raw(ViewBag.Pseudonyms)], [@Html.Raw(ViewBag.FormatTags)], [@Html.Raw(ViewBag.GenreTags)])'>Next</a>
+                    <a class="prevPage" onclick='loadSlide("slide5", "slide4")'>Back</a>
+                    <a class="nextPage" onclick='loadSlideAndConfirm("slide5", "slide6", [@Html.Raw(ViewBag.Pseudonyms)], [@Html.Raw(ViewBag.FormatTags)], [@Html.Raw(ViewBag.GenreTags)])'>Next</a>
                 </div>
-            </div> <!--slide4-->
+            </div> <!--slide5-->
 
             <!--Confirmation-->
-            <div class="slide5 collapse">
+            <div class="slide6 collapse">
                 <!--call the partial view for viewing the current selected values so the user can confirm their choices-->
                 <div class="inputGroup">
                     @Html.Partial("_Confirmation")
@@ -84,11 +98,11 @@
                     <!--a div for printing a message if the current input isn't valid-->
                     <div id="validationMessage"></div>
                     <!--keeps your current selections and takes you back to the first slide if the user doesn't choose to confirm their current selections-->
-                    <a class="prevPage" onclick='loadSlide("slide5", "slide1")'>No</a>
+                    <a class="prevPage" onclick='loadSlide("slide6", "slide1")'>No</a>
                     <!--the save button if they are happy with their selections and the inputs are valid-->
                     <input type="submit" id="createWriting" value="Save" />
                 </div> <!--buttonGroup-->
-            </div> <!--slide5-->
+            </div> <!--slide6-->
         </form>
     </div> <!--slideshowContainer-->
 </div> <!--editorMenu-->

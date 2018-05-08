@@ -34,14 +34,14 @@ function fictionOrNonfiction(name, fictionOnly, nonfictionOnly, children) {
             if ($("#genreTagContainer span." + nonfictionOnly[i]).hasClass("collapse") !== true) {
                 //if it is currently checked, uncheck it
                 if ($("#genreTagContainer span." + nonfictionOnly[i] + " input[type=checkbox]").is(":checked"))
-                    $("#genreTagContainer span." + nonfictionOnly[i] + " input[type=checkbox]").checked = false;
+                    $("#genreTagContainer span." + nonfictionOnly[i] + " input[type=checkbox]").prop(":checked", false);
 
                 //collapse it
                 $("#genreTagContainer span." + nonfictionOnly[i]).addClass("collapse");
             }
 
             //and let the checkbox know that it has been changed so the fuction on it will run
-            $("#genreTagContainer span." + nonfictionOnly[i] + " input[type=checkbox]").toggle();
+            $("#genreTagContainer span." + nonfictionOnly[i] + " input[type=checkbox]").toggle("change");
         }
     }
     else { //if nonfiction is the one that was just selected
@@ -51,14 +51,14 @@ function fictionOrNonfiction(name, fictionOnly, nonfictionOnly, children) {
             if ($("#genreTagContainer span." + fictionOnly[i]).hasClass("collapse") !== true) {
                 //if it is currently checked, uncheck it
                 if ($("#genreTagContainer span." + fictionOnly[i] + " input[type=checkbox]").is(":checked"))
-                    $("#genreTagContainer span." + fictionOnly[i] + " input[type=checkbox]").checked = false;
+                    $("#genreTagContainer span." + fictionOnly[i] + " input[type=checkbox]").prop(":checked", false);
 
                 //collapse it
                 $("#genreTagContainer span." + fictionOnly[i]).addClass("collapse");
             }
 
             //and let the checkbox know that it has been changed so the fuction on it will run
-            $("#genreTagContainer span." + fictionOnly[i] + " input[type=checkbox]").toggle();
+            $("#genreTagContainer span." + fictionOnly[i] + " input[type=checkbox]").toggle("change");
         }
     }
 }
@@ -169,14 +169,14 @@ function unloadGenres(rChildren, mpndChildren, mpndParents, mpsdChildren, mpsdPa
                     //if the current item in rChildren is the same as the current item in nonfictionOnly
                     if (rChildren[i] === nonfictionOnly[j]) {
                         //uncheck the checkbox because it is no longer valid
-                        $("#genreTagContainer span." + rChildren[i] + " input").checked = false;
+                        $("#genreTagContainer span." + rChildren[i] + " input").prop(":checked", false);
 
                         //if it isn't already collapsed, collapse it
                         if ($("#genreTagContainer span." + rChildren[i]).hasClass("collapse") !== true)
                             $("#genreTagContainer span." + rChildren[i]).addClass("collapse");
 
                         //Call toggle to let the input know to run its onchange function
-                        $("#genreTagContainer span." + rChildren[i] + " input").toggle();
+                        $("#genreTagContainer span." + rChildren[i] + " input").toggle("change");
                     }
                 }
             }
@@ -186,14 +186,14 @@ function unloadGenres(rChildren, mpndChildren, mpndParents, mpsdChildren, mpsdPa
                     //if the current item in rChildren is the same as the current item in fictionOnly
                     if (rChildren[i] === fictionOnly[j]) {
                         //uncheck the checkbox because it is no longer valid
-                        $("#genreTagContainer span." + rChildren[i] + " input").checked = false;
+                        $("#genreTagContainer span." + rChildren[i] + " input").prop(":checked", false);
 
                         //if it isn't already collapsed, collapse it
                         if ($("#genreTagContainer span." + rChildren[i]).hasClass("collapse") !== true)
                             $("#genreTagContainer span." + rChildren[i]).addClass("collapse");
 
                         //Call toggle to let the input know to run its onchange function
-                        $("#genreTagContainer span." + rChildren[i] + " input").toggle();
+                        $("#genreTagContainer span." + rChildren[i] + " input").toggle("change");
                     }
                 }
             }
@@ -227,14 +227,14 @@ function unloadGenres(rChildren, mpndChildren, mpndParents, mpsdChildren, mpsdPa
                     //if the current item in mpndChildren is the same as the current item in nonfictionOnly
                     if (mpndChildren[i] === nonfictionOnly[j]) {
                         //uncheck the checkbox because it is no longer valid
-                        $("#genreTagContainer span." + mpndChildren[i] + " input").checked = false;
+                        $("#genreTagContainer span." + mpndChildren[i] + " input").prop(":checked", false);
 
                         //if it isn't already collapsed, collapse it
                         if ($("#genreTagContainer span." + mpndChildren[i]).hasClass("collapse") !== true)
                             $("#genreTagContainer span." + mpndChildren[i]).addClass("collapse");
 
                         //Call toggle to let the input know to run its onchange function
-                        $("#genreTagContainer span." + mpndChildren[i] + " input").toggle();
+                        $("#genreTagContainer span." + mpndChildren[i] + " input").toggle("change");
                     }
                 }
             } //if Fiction is currently selected
@@ -244,14 +244,14 @@ function unloadGenres(rChildren, mpndChildren, mpndParents, mpsdChildren, mpsdPa
                     //if the current item in mpndChildren is the same as the current item in fictionOnly
                     if (mpndChildren[i] === fictionOnly[j]) {
                         //uncheck the checkbox because it is no longer valid
-                        $("#genreTagContainer span." + mpndChildren[i] + " input").checked = false;
+                        $("#genreTagContainer span." + mpndChildren[i] + " input").prop(":checked", false);
 
                         //if it isn't already collapsed, collapse it
                         if ($("#genreTagContainer span." + mpndChildren[i]).hasClass("collapse") !== true)
                             $("#genreTagContainer span." + mpndChildren[i]).addClass("collapse");
 
                         //Call toggle to let the input know to run its onchange function
-                        $("#genreTagContainer span." + mpndChildren[i] + " input").toggle();
+                        $("#genreTagContainer span." + mpndChildren[i] + " input").toggle("change");
                     }
                 }
             } //if Nonfiction is currently selected
@@ -322,14 +322,14 @@ function unloadGenres(rChildren, mpndChildren, mpndParents, mpsdChildren, mpsdPa
                     //if the current item in mpndChildren is the same as the current item in nonfictionOnly
                     if (mpsdChildren[i] === nonfictionOnly[j]) {
                         //uncheck the checkbox because it is no longer valid
-                        $("#genreTagContainer span." + mpsdChildren[i] + " input").checked = false;
+                        $("#genreTagContainer span." + mpsdChildren[i] + " input").prop(":checked", false);
 
                         //if it isn't already collapsed, collapse it
                         if ($("#genreTagContainer span." + mpsdChildren[i]).hasClass("collapse") !== true)
                             $("#genreTagContainer span." + mpsdChildren[i]).addClass("collapse");
 
                         //Call toggle to let the input know to run its onchange function
-                        $("#genreTagContainer span." + mpsdChildren[i] + " input").toggle();
+                        $("#genreTagContainer span." + mpsdChildren[i] + " input").toggle("change");
                     }
                 }
             } //if Fiction is currently selected
@@ -339,14 +339,14 @@ function unloadGenres(rChildren, mpndChildren, mpndParents, mpsdChildren, mpsdPa
                     //if the current item in mpsdChildren is the same as the current item in fictionOnly
                     if (mpsdChildren[i] === fictionOnly[j]) {
                         //uncheck the checkbox because it is no longer valid
-                        $("#genreTagContainer span." + mpsdChildren[i] + " input").checked = false;
+                        $("#genreTagContainer span." + mpsdChildren[i] + " input").prop(":checked", false);
 
                         //if it isn't already collapsed, collapse it
                         if ($("#genreTagContainer span." + mpsdChildren[i]).hasClass("collapse") !== true)
                             $("#genreTagContainer span." + mpsdChildren[i]).addClass("collapse");
 
                         //Call toggle to let the input know to run its onchange function
-                        $("#genreTagContainer span." + mpsdChildren[i] + " input").toggle();
+                        $("#genreTagContainer span." + mpsdChildren[i] + " input").toggle("change");
                     }
                 }
             } //if Nonfiction is currently selected
