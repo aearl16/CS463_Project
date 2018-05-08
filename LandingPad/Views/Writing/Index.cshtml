@@ -4,16 +4,6 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Select ProfileID</h2>
-
-<select id="profileID" onchange='toggleProfiles([@Html.Raw(ViewBag.Profiles)])'>
-    <option value="" selected disabled hidden>Select ProfileID</option>
-    @foreach (var item in Model)
-    {
-        <option value="@item.ProfileID" class="@item.ProfileID">@item.ProfileID</option>
-    }
-</select>
-
 <h2>My Writing</h2>
 
 <p>

@@ -1,7 +1,6 @@
 ﻿using LandingPad.DAL;
 using LandingPad.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -12,6 +11,7 @@ using OpenXmlPowerTools;
 using DocumentFormat.OpenXml.Packaging;
 using System.Drawing.Imaging;
 using System.Xml.Linq;
+using Microsoft.AspNet.Identity;
 
 namespace LandingPad.Controllers
 {
@@ -19,14 +19,28 @@ namespace LandingPad.Controllers
     [Authorize]
     public class UploadController : Controller
     {
+        //LandingPad Context
         private LandingPadContext db = new LandingPadContext();
 
+        /// <summary>
+        /// Gets upload edit page, contains partial views that build it
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult UploadEdit()
         {
             return View();
         }
 
+        /// <summary>
+        /// User can upload a file given a specific type constraint, and it will be converted to html for use in our editor
+        /// </summary>
+        /// <param name="FormatTags"></param>
+        /// <param name="Pseudonyms"></param>
+        /// <param name="file"></param>
+        /// <param name="form"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult UploadEdit(string[] FormatTags, string[] Pseudonyms, HttpPostedFileBase file, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
                 "CommentsOn, CritiqueOn, DescriptionText")] Writing doc)
@@ -148,13 +162,25 @@ namespace LandingPad.Controllers
 
         }
 
-
+        /// <summary>
+        /// Returns the Store view, built from partial views
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult Store()
         {
             return View();
         }
 
+        /// <summary>
+        /// User can upload a file and store it in the original format
+        /// </summary>
+        /// <param name="FormatTags"></param>
+        /// <param name="Pseudonyms"></param>
+        /// <param name="file"></param>
+        /// <param name="form"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Store(string[] FormatTags, string[] Pseudonyms, HttpPostedFileBase file, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
                 "CommentsOn, CritiqueOn, DescriptionText")] Writing doc)
@@ -251,76 +277,11 @@ namespace LandingPad.Controllers
 
         }
 
-        /*
-        public ActionResult UploadEdit(HttpPostedFileBase file, [Bind(Include = "ProfileID, Title, LikesOn," +
-                "CommentsOn, CritiqueOn, DescriptionText")] Writing doc)
-        {
-            
-            String FileExt = Path.GetExtension(file.FileName).ToUpper();
-
-            if (CheckExt(FileExt))
-            {
-                if (!ModelState.IsValid)
-                {
-                    Stream str = file.InputStream;
-                    BinaryReader Br = new BinaryReader(str);
-                    Byte[] FileData = Br.ReadBytes((Int32)str.Length);
-                    string html = string.Empty;
-
-                    if (FileExt == ".PDF" || FileExt == "PDF")
-                    {
-
-                        SautinSoft.PdfFocus f = new SautinSoft.PdfFocus();
-                        f.OpenPdf(FileData);
-
-                        if (f.PageCount > 0)
-                        {
-                            f.HtmlOptions.IncludeImageInHtml = true;
-                            f.HtmlOptions.Title = "Simple text";
-                            html = f.ToHtml();
-                        }
-                    }
-                    else if (FileExt == ".DOCX" || FileExt == "DOCX" || FileExt == ".DOC" || FileExt == "DOC")
-                    {
-                        html = ConvertToHtml(Path.GetFullPath(file.FileName));
-                    }
-                    else
-                    {
-                        ViewBag.FileStatus = "Model Invalid";
-                        return View();
-                    }
-
-                    Writing wr = new Writing()
-                    {
-                        ProfileID = doc.ProfileID,
-                        DocType = ".HTML",
-                        AddDate = DateTime.Now,
-                        EditDate = DateTime.Now,
-                        Document = Encoding.Unicode.GetBytes(html),
-                        Title = doc.Title,
-                        DescriptionText = doc.DescriptionText,
-                        LikesOn = doc.LikesOn,
-                        CritiqueOn = doc.CritiqueOn,
-                        CommentsOn = doc.CommentsOn 
-                        //AccessPermission ac = new AccessPermission() //Later Feature
-                    };
-                    db.Writings.Add(wr);
-                    db.SaveChanges();
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ViewBag.FileStatus = "Model Invalid";
-                    return View();
-                }
-            }
-            else
-            {
-                ViewBag.FileStatus = "Invalid file format.";
-                return View();
-            }
-        }*/
-
+        /// <summary>
+        /// Allows a user to download a file out of the database
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> The file in the original format it was uploaded as</returns>
         public ActionResult Download(int? id)
         {
             Writing wr = db.Writings.Find(id);
@@ -365,67 +326,6 @@ namespace LandingPad.Controllers
 
             return View();
             }
-
-        /*
-        public ActionResult Edit(int? id)
-        {
-            Writing wr = db.Writings.Find(id);
-            return View(wr);
-        }
-
-        [HttpPost]
-        public ActionResult Edit(HttpPostedFileBase file, [Bind(Include = "ProfileID, Title, LikesOn," +
-                "CommentsOn, CritiqueOn, DescriptionText")] Writing doc)
-        {
-            String FileExt = Path.GetExtension(file.FileName).ToUpper();
-
-            if (CheckExt(FileExt))
-            {
-                if (!ModelState.IsValid)
-                {
-                    Stream str = file.InputStream;
-                    BinaryReader Br = new BinaryReader(str);
-                    Byte[] FileData = Br.ReadBytes((Int32)str.Length);
-                    //doc.Document = FileData;
-                    //doc.EditDate = DateTime.Now;
-
-                    Writing wr = doc;
-                    doc.Document = FileData;
-                    doc.EditDate = DateTime.Now;
-
-                    
-                    Writing wr = new Writing()
-                    {
-                        ProfileID = doc.ProfileID,
-                        DocType = FileExt,
-                        AddDate = doc.AddDate,
-                        EditDate = DateTime.Now,
-                        Document = FileData,
-                        Title = doc.Title,
-                        DescriptionText = doc.DescriptionText,
-                        LikesOn = doc.LikesOn,
-                        CritiqueOn = doc.CritiqueOn,
-                        CommentsOn = doc.CommentsOn
-                        //AccessPermission ac = new AccessPermission() //Later Feature
-                    };
-                    
-                    db.Entry(wr).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ViewBag.FileStatus = "Model Invalid";
-                    return View();
-                }
-            }
-            else
-            {
-                ViewBag.FileStatus = "Invalid file format.";
-                return View();
-            }
-        }
-        */
 
         /// <summary>
         /// Helper method for Upload Post
@@ -497,6 +397,11 @@ namespace LandingPad.Controllers
             return htmlText;
         }
 
+        /// <summary>
+        /// Corrects uris as they are converted to HTML
+        /// </summary>
+        /// <param name="brokenUri"></param>
+        /// <returns></returns>
         private static System.Uri FixUri(string brokenUri)
         {
             string newURI = string.Empty;
@@ -514,6 +419,10 @@ namespace LandingPad.Controllers
             return new Uri(newURI);
         }
 
+        /// <summary>
+        /// Partial view for the Upload Menu
+        /// </summary>
+        /// <returns></returns>
         [ChildActionOnly]
         public PartialViewResult _UploadMenu()
         {
@@ -523,6 +432,10 @@ namespace LandingPad.Controllers
             return PartialView();
         }
 
+        /// <summary>
+        /// Partial view for the upload edit menu
+        /// </summary>
+        /// <returns></returns>
         [ChildActionOnly]
         public PartialViewResult _UploadEditMenu()
         {
@@ -532,6 +445,10 @@ namespace LandingPad.Controllers
             return PartialView();
         }
 
+        /// <summary>
+        /// Partial view for upload confirmation
+        /// </summary>
+        /// <returns></returns>
         [ChildActionOnly]
         public PartialViewResult _UploadConfirmation()
         {
@@ -645,5 +562,4 @@ namespace LandingPad.Controllers
 
         }
     }
-
 }
