@@ -570,17 +570,18 @@ namespace LandingPad.Controllers
         /// <summary>
         /// Gets the user object from the database
         /// </summary>
-        /// <returns></returns>
+        /// <returns> ApplicationUser object of the current user </returns>
         private ApplicationUser GetUser(string id)
         {
             return UserManager.FindById(id);
         }
 
         /// <summary>
-        /// Gets the LP user
+        /// Gets the LP user object based on e-mail link
+        /// Can also be used separately for obtaining the user object
         /// </summary>
         /// <param name="email"></param>
-        /// <returns></returns>
+        /// <returns> LPUser object after ApplicationUser object</returns>
         private LPUser GetLPUser(string email)
         {
             return db.LPUsers.Find(email);
