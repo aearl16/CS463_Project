@@ -20,7 +20,8 @@ html, body {
 }
 
 .body-content, .container {
-    padding: 15px 0 15px 0;
+    padding: 15px 90px 15px 90px;
+    margin: 0;
 }
 
 .body-content {

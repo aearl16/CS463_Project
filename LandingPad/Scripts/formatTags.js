@@ -64,14 +64,18 @@ function showExplanation(explanation) {
  * @param {int[]} dependencies (SecondaryParentIDs for children of current format tag that have a secondary parent)
  * @param {int[]} mpChildren (FormatIDs for children with more than one possible parent other than id; each FormatID is listed once for each additional parent)
  * @param {int[]} altParents (FormatID for each parent other than id; indexes match mpChildren)
- * sd stands for singular dependency and md stands for multiple dependency
+ * @param {int[]} sdgfGenres (GenreIDs for genres in GenreFormats with no dependencies)
+ * @param {int[]} sdgfParents (FormatIDs for the parent formats of sdgfGenres; indexes match sdgfGenres)
  * mp stands for multiple parent; this is different than md because md REQUIRES both parents while mp can have ANY of the parents
  */
-function ftChildren(id, sdChildren, mdChildren, dependencies, mpChildren, altParents) {
+function ftChildren(id, sdChildren, mdChildren, dependencies, mpChildren, altParents, sdgfGenres, sdgfParents) {
     //if the checkbox for the format tag with a FormatID of id was checked
     if ($("#formatTagContainer span." + id + " input[type=checkbox]").is(':checked')) {
         //load all the singular dependency children and load any multi-dependency children with their other dependency checked
         loadChildren(sdChildren, mdChildren, dependencies);
+
+        //function for selecting FictionOrNonfiction in _SelectGenre based on the selected format tag
+        changeGenreFormats(id, sdgfGenres, sdgfParents);
     } 
     else { //if the checkbox was unchecked, you don't need to worry about dependencies
         //for each singular dependency child
@@ -204,3 +208,46 @@ function unloadChildren(sdChildren, mpChildren, altParents) {
         } //if this child doesn't have its checkbox checked
     } //for each child in mpChildren
 } //unloadChildren(sdChildren, mpChildren, altParents)
+
+function changeGenreFormats(fID, sdfgGenres, sdfgParents) {
+    //variable for fiction or nonfiction
+    var fictionOrNonfiction = 0;
+
+    //for each parent in sdfgParents
+    for (var i = 0; i < sdfgParents.length; i++) {
+        //if the FormatID we are working with is the same as the current item in sdfgParents
+        if (sdfgParents[i] === fID) {
+            //select the correct option in _SelectGenre and trigger onchange so the functions run
+            $("#genreTagContainer span." + sdfgGenres[i] + " input").prop(':checked', true);
+            $("#genreTagContainer span." + sdfgGenres[i] + " input").change();
+
+            //set the value of fictionOrNonfiction to the matching GenreID
+            fictionOrNonfiction = sdfgGenres[i];
+            break;
+        }
+    } //for each parent in sdfgParents
+
+    //if there was a match with a format tag that changes the genre tags
+    if (fictionOrNonfiction > 0) {
+        //for each genre in sdfgGenres
+        for (i = 0; i < sdfgGenres.length; i++) {
+            //if the GenreID of the current genre in sdfgGenres is not the same as fictionOrNonfiction
+            if (sdfgGenres[i] !== fictionOrNonfiction) {
+                //if the matching format tag is checked, uncheck it and trigger onchange so the rest of the stuff will be done
+                if ($("#formatTagContainers span." + sdfgParents[i] + " input[type=checkbox]").is(':checked')) {
+                    $("#formatTagContainer span." + sdfgParents[i] + " input[type=checkbox]").prop(':checked', false);
+                    $("#formatTagContainer span." + sdfgParents[i] + " input[type=checkbox]").change();
+                }
+                
+            } //if the GenreID of the current genre in sdfgGenres is not the same as fictionOrNonfiction
+        } //for each genre in sdfgGenres
+
+        //now we need to change the corresponding genre tag
+
+        //if the matching genre tag isn't already checked, check it and and trigger onchange so that everything will be updated properly
+        if ($("#genreTagContainer span." + fictionOrNonfiction + " input[type=radiobutton]").is(':checked') !== true) {
+            $("#genreTagContainer span." + fictionOrNonfiction + " input[type=radiobutton]").prop(':checked', true);
+            $("#genreTagContainer span." + fictionOrNonfiction + " input[type=radiobutton]").change();
+        } //if the matching genre tag isn't already checked
+    } //if there was a match with a format tag that changes the genre tags
+} //changeGenreFormats(fID, sdfgGenres, sdfgParents)

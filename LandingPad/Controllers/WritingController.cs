@@ -676,18 +676,9 @@ namespace LandingPad.Controllers
                 .ToList();
         }
 
-        public List<GenreCategory> GetChildGenresWithAltParentsAndNoDependencies()
+        public List<GenreFormat> GetGenreFormats()
         {
-            return db.GenreCategories
-                .Where(i => i.SecondaryParentID == null)
-                .ToList();
-        }
-
-        public List<GenreCategory> GetChildGenresWithSingularDependenciesAndAltParents()
-        {
-            return db.GenreCategories
-                .Where(i => i.TertiaryParentID == null)
-                .Where(i => i.SecondaryParentID != null)
+            return db.GenreFormats
                 .ToList();
         }
     }
