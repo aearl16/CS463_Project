@@ -27,5 +27,8 @@ namespace LandingPad.Models
 
         [ForeignKey("ParentFormatID")]
         public virtual FormatTag ParentFormatTag { get; set; }
+
+        [ForeignKey("ParentGenreID")]
+        public virtual FormatTag ParentGenreTag { get; set; }
     }
 }

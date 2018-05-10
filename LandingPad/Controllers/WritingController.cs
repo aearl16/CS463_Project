@@ -645,6 +645,20 @@ namespace LandingPad.Controllers
                 .ToList();
         }
 
+        public List<GenreFormat> GetFictionOnly()
+        {
+            return db.GenreFormats
+                .Where(i => i.GenreID == 1 || i.ParentGenreID == 1)
+                .ToList();
+        }
+
+        public List<GenreFormat> GetNonfictionOnly()
+        {
+            return db.GenreFormats
+                .Where(i => i.GenreID == 2 || i.ParentGenreID == 2)
+                .ToList();
+        }
+
         public List<GenreCategory> FictionOnly()
         {
             return db.GenreCategories
@@ -749,7 +763,7 @@ namespace LandingPad.Controllers
             }
         }
 
-        public List<int> GetFictionOrNonFictionForFormat(int id)
+        public List<int> GetFictionOrNonfictionForFormat(int id)
         {
             //if this format tag is fiction only
             if(db.FormatTags.Find(id).ChildGenres.Select(i => i.GenreID).ToList().Contains(1))
@@ -763,6 +777,23 @@ namespace LandingPad.Controllers
             else //if the format tag can be either fiction or nonfiction
             {
                 return new List<int>();
+            }
+        }
+
+        public List<string> GetFictionOrNonfictionForFormatNames(int id)
+        {
+            //if this format tag is fiction only
+            if (db.FormatTags.Find(id).ChildGenres.Select(i => i.GenreID).ToList().Contains(1))
+            {
+                return db.GenreFormats.Where(i => i.GenreID == 2).Select(i => i.ParentFormatTag.FormatName).ToList();
+            } //if the format tag is nonfiction only
+            else if (db.FormatTags.Find(id).ChildGenres.Select(i => i.GenreID).ToList().Contains(2))
+            {
+                return db.GenreFormats.Where(i => i.GenreID == 1).Select(i => i.ParentFormatTag.FormatName).ToList();
+            }
+            else //if the format tag can be either fiction or nonfiction
+            {
+                return new List<string>();
             }
         }
 

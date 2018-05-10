@@ -24,6 +24,16 @@ namespace LandingPad.Models
 
         public int? TertiaryParentID { get; set; }
 
+        [ForeignKey("GenreID")]
         public virtual GenreTag GenreTag { get; set; }
+
+        [ForeignKey("ParentID")]
+        public virtual GenreTag ParentGenre { get; set; }
+
+        [ForeignKey("SecondaryParentID")]
+        public virtual GenreTag SecondaryParentGenre { get; set; }
+
+        [ForeignKey("TertiaryParentID")]
+        public virtual GenreTag TertiaryParentGenre { get; set; }
     }
 }

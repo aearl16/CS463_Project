@@ -60,32 +60,67 @@ function showExplanation(explanation) {
  * 
  * @param {int} id (FormatID for current format tag from partial view)
  * @param {int[]} sdChildren (FormatIDs for children of current format tag that have no secondary parent)
+ * @param {string[]} sdcNames (Format names for sdChildren for testing purposes)
  * @param {int[]} mdChildren (FormatIDs for children of current format tag that do have a secondary parent)
+ * @param {string[]} mdcNames (Format names for mdChildren for testing purposes)
  * @param {int[]} dependencies (SecondaryParentIDs for children of current format tag that have a secondary parent)
+ * @param {string[]} dNames (Format names for the SecondaryParentIDs above for testing purposes)
  * @param {int[]} mpChildren (FormatIDs for children with more than one possible parent other than id; each FormatID is listed once for each additional parent)
+ * @param {string[]} mpcNames (Format names for mpChildren for testing purposes)
  * @param {int[]} altParents (FormatID for each parent other than id; indexes match mpChildren)
+ * @param {string[]} apNames (Format names for altParents for testing purposes)
  * @param {int[]} childGenres (GenreIDs for child genres that are either fiction or nonfiction)
+ * @param {string[]} cgNames (Genre names for childGenres for testing purposes)
+ * @param {int[]} fictionOnly (Format tags that are only fiction)
+ * @param {string[]} foNames (Format names for fictionOnly for testing purpsoes)
+ * @param {int[]} nonfictionOnly (Format tags that are only nonfiction)
+ * @param {string[]} nfoNames (Format names for nonfictionOnly for testing purposes)
  * @param {int[]} fictionOrNonfictionOnly (FormatIDs where that are fiction only if this tag is nonfiction only and vice versa)
+ * @param {string} fName (The name of the actual format tag to aid with testing)
  * mp stands for multiple parent; this is different than md because md REQUIRES both parents while mp can have ANY of the parents
  */
-function ftChildren(id, sdChildren, mdChildren, dependencies, mpChildren, altParents, childGenres, fictionOrNonfictionOnly) {
-    console.log(fictionOrNonfictionOnly);
+function ftChildren(id, sdChildren, sdcNames, mdChildren, mdcNames, dependencies, dNames, mpChildren, mpcNames, altParents, apNames, childGenres, cgNames, fictionOnly, foNames, nonfictionOnly, nfoNames, fictionOrNonfictionOnly, fName) {
+    console.log("Entering ftChildren for format tag " + fName + " (FormatID " + id + ")");
+    console.log("sdChildren: " + sdChildren);
+    console.log("sdcNames: " + sdcNames);
+    console.log("mdChildren: " + mdChildren);
+    console.log("mdcNames: " + mdcNames);
+    console.log("dependencies: " + dependencies);
+    console.log("dNames: " + dNames);
+    console.log("altParents: " + altParents);
+    console.log("childGenres: " + childGenres);
+    console.log("cgNames: " + cgNames);
+    console.log("fictionOrNonfictionOnly: " + fictionOrNonfictionOnly);
+    console.log("ficOrNonOnlyNames: " + ficOrNonOnlyNames);
+
     //if the checkbox for the format tag with a FormatID of id was checked
     if ($("#formatTagContainer span." + id + " input[type=checkbox]").is(":checked")) {
+        console.log(fName + " is checked");
         //for each child genre
         for (var i = 0; i < childGenres.length; i++) {
             //if this format tag is either explicitly fiction or explicitly nonfiction
             if (childGenres[i] === 1 || childGenres[i] === 2) {
+                console.log("Calling changeFictionOrNonfiction with child genre " + cgNames[i] + " (GenreID " + childGenres[i] + ") and the following fiction or nonfiction only formats:");
+                console.log(fictionOrNonfictionOnly);
+                console.log(ficOrNonOnlyNames);
                 //change the genre tag itself and uncheck any format tags that are no longer valid
                 changeFictionOrNonfiction(childGenres[i], fictionOrNonfictionOnly);
             }
-            else { //if the child genres are specifying other things, can the genre's change function and let it handle updating
+            else { //if the child genres are specifying other things, trigger the genre's change function and let it handle updating
+                console.log("Calling onchange function for child genre " + cgNames[i] + " (GenreID " + childGenres[i] + ")");
                 $("#genreTagContainer span." + childGenres[i] + " input").change();
             }
         }
 
+        console.log("Calling loadChildren with values");
+        console.log("sdChildren: " + sdChildren);
+        console.log("sdcNames: " + sdcNames);
+        console.log("mdChildren: " + mdChildren);
+        console.log("mdcNames: " + mdcNames);
+        console.log("dependencies: " + dependencies);
+        console.log("dNames: " + dNames);
         //load all the singular dependency children and load any multi-dependency children with their other dependency checked
-        loadChildren(sdChildren, mdChildren, dependencies);
+        loadChildren(sdChildren, sdcNames, mdChildren, mdcNames, dependencies, dNames);
     } 
     else { //if the checkbox was unchecked, you don't need to worry about dependencies
         //for each singular dependency child
