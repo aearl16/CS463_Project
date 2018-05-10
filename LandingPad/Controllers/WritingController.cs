@@ -669,6 +669,103 @@ namespace LandingPad.Controllers
                 .ToList();
         }
 
+        public List<GenreCategory> FictionOrNonfictionOnly()
+        {
+            return db.GenreCategories
+                .GroupBy(i => i.GenreID)
+                .Where(j => ((j.Select(k => k.TertiaryParentID).ToList().Contains(1) == false && j.Select(k => k.TertiaryParentID).ToList().Contains(2) == true) || (j.Select(k => k.TertiaryParentID).ToList().Contains(2) == false && j.Select(k => k.TertiaryParentID).ToList().Contains(1) == true)) || ((j.Select(k => k.SecondaryParentID).ToList().Contains(1) == false && j.Select(k => k.SecondaryParentID).ToList().Contains(2) == true) || (j.Select(k => k.SecondaryParentID).ToList().Contains(2) == false && j.Select(k => k.SecondaryParentID).ToList().Contains(1) == true)) || ((j.Select(k => k.ParentID).ToList().Contains(1) == false && j.Select(k => k.ParentID).ToList().Contains(2) == true) || (j.Select(k => k.ParentID).ToList().Contains(2) == false && j.Select(k => k.ParentID).ToList().Contains(1) == true)))
+                .SelectMany(r => r)
+                .Where(r => r.ParentID == 1 || r.ParentID == 2 || r.SecondaryParentID == 1 || r.SecondaryParentID == 2 || r.TertiaryParentID == 1 || r.TertiaryParentID == 2)
+                .ToList();
+        }
+
+        public int GetFictionOrNonfiction(int id)
+        {
+            List<GenreCategory> ForN = FictionOrNonfictionOnly();
+
+            //if the GenreID passed in is fiction or nonfiction only
+            if(ForN.Select(i => i.GenreID).ToList().Contains(id))
+            {
+                GenreCategory FicOrNon = ForN.Where(i => i.GenreID == id).First();
+
+                //if FicOrNon only has a Parent ID
+                if(FicOrNon.SecondaryParentID == null)
+                {
+                    return FicOrNon.ParentID;
+                } //if FicOrNon has a SecondaryParentID but not a TertiaryParentID
+                else if(FicOrNon.TertiaryParentID == null)
+                {
+                    return FicOrNon.SecondaryParentID.Value;
+                } //if FicOrNon has a TertiaryParentID
+                else
+                {
+                    return FicOrNon.TertiaryParentID.Value;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public List<int> GetFictionOrNonfictionForGenre(int id, string name)
+        {
+            List<GenreCategory> ForN = FictionOrNonfictionOnly();
+            
+
+            if(String.Compare(name, "genre") == 0)
+            {
+                int fnGenreID = GetFictionOrNonfiction(id);
+                if (fnGenreID != 0)
+                {
+                    if (fnGenreID == 1)
+                    {
+                        return ForN.Where(i => i.ParentID == 2 || i.SecondaryParentID == 2 || i.TertiaryParentID == 2).Select(i => i.GenreID).Distinct().ToList();
+                    }
+                    else
+                    {
+                        return ForN.Where(i => i.ParentID == 1 || i.SecondaryParentID == 1 || i.TertiaryParentID == 1).Select(i => i.GenreID).Distinct().ToList();
+                    }
+                }
+                else
+                {
+                    return new List<int>();
+                }
+            }
+            else
+            {
+                if(id == 1)
+                {
+                    return db.GenreFormats.Where(i => i.GenreID == 2).Select(i => i.ParentFormatID).ToList();
+                }
+                else if(id == 2)
+                {
+                    return db.GenreFormats.Where(i => i.GenreID == 1).Select(i => i.ParentFormatID).ToList();
+                }
+                else
+                {
+                    return new List<int>();
+                }
+            }
+        }
+
+        public List<int> GetFictionOrNonFictionForFormat(int id)
+        {
+            //if this format tag is fiction only
+            if(db.FormatTags.Find(id).ChildGenres.Select(i => i.GenreID).ToList().Contains(1))
+            {
+                return db.GenreFormats.Where(i => i.GenreID == 2).Select(i => i.ParentFormatID).ToList();
+            } //if the format tag is nonfiction only
+            else if(db.FormatTags.Find(id).ChildGenres.Select(i => i.GenreID).ToList().Contains(2))
+            {
+                return db.GenreFormats.Where(i => i.GenreID == 1).Select(i => i.ParentFormatID).ToList();
+            }
+            else //if the format tag can be either fiction or nonfiction
+            {
+                return new List<int>();
+            }
+        }
+
         public List<GenreCategory> GetChildGenresWithAltParents()
         {
             return db.GenreCategories

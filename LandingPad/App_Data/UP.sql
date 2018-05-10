@@ -1083,12 +1083,11 @@ INSERT INTO dbo.GenreFormat(GenreID, ParentFormatID, ParentGenreID) VALUES
 (71, 16, 1), --Sketch comedy, Screenplay, Fiction 32
 (72, 3, 1), --Mockumentary, Script, Fiction 33
 (72, 16, 1), --Mockumentary, Screenplay, Fiction 34
-(76, 3, 1), --Stand-up comedy, Script, Fiction 35
-(76, 3, 2), --Stand-up comedy, Script, Nonfiction 36
-(78, 3, 1), --Sitcom, Script, Fiction 37
-(78, 16, 1), --Sitcom, Screenplay, Fiction 38
-(93, 3, 2), --Documentary, Script, Nonfiction 39
-(93, 16, 2); --Documentary, Screenplay, Nonfiction 40
+(76, 3, NULL), --Stand-up comedy, Script 35
+(78, 3, 1), --Sitcom, Script, Fiction 36
+(78, 16, 1), --Sitcom, Screenplay, Fiction 37
+(93, 3, 2), --Documentary, Script, Nonfiction 38
+(93, 16, 2); --Documentary, Screenplay, Nonfiction 39
 
 INSERT INTO dbo.WritingGenre(WritingID, GenreID) VALUES
 (1, 1), --Lord of the Things, Fiction 1

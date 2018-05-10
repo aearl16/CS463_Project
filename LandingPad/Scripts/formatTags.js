@@ -64,22 +64,32 @@ function showExplanation(explanation) {
  * @param {int[]} dependencies (SecondaryParentIDs for children of current format tag that have a secondary parent)
  * @param {int[]} mpChildren (FormatIDs for children with more than one possible parent other than id; each FormatID is listed once for each additional parent)
  * @param {int[]} altParents (FormatID for each parent other than id; indexes match mpChildren)
- * @param {int[]} sdgfGenres (GenreIDs for genres in GenreFormats with no dependencies)
- * @param {int[]} sdgfParents (FormatIDs for the parent formats of sdgfGenres; indexes match sdgfGenres)
+ * @param {int[]} childGenres (GenreIDs for child genres that are either fiction or nonfiction)
+ * @param {int[]} fictionOrNonfictionOnly (FormatIDs where that are fiction only if this tag is nonfiction only and vice versa)
  * mp stands for multiple parent; this is different than md because md REQUIRES both parents while mp can have ANY of the parents
  */
-function ftChildren(id, sdChildren, mdChildren, dependencies, mpChildren, altParents, sdgfGenres, sdgfParents) {
+function ftChildren(id, sdChildren, mdChildren, dependencies, mpChildren, altParents, childGenres, fictionOrNonfictionOnly) {
+    console.log(fictionOrNonfictionOnly);
     //if the checkbox for the format tag with a FormatID of id was checked
-    if ($("#formatTagContainer span." + id + " input[type=checkbox]").is(':checked')) {
+    if ($("#formatTagContainer span." + id + " input[type=checkbox]").is(":checked")) {
+        //for each child genre
+        for (var i = 0; i < childGenres.length; i++) {
+            //if this format tag is either explicitly fiction or explicitly nonfiction
+            if (childGenres[i] === 1 || childGenres[i] === 2) {
+                //change the genre tag itself and uncheck any format tags that are no longer valid
+                changeFictionOrNonfiction(childGenres[i], fictionOrNonfictionOnly);
+            }
+            else { //if the child genres are specifying other things, can the genre's change function and let it handle updating
+                $("#genreTagContainer span." + childGenres[i] + " input").change();
+            }
+        }
+
         //load all the singular dependency children and load any multi-dependency children with their other dependency checked
         loadChildren(sdChildren, mdChildren, dependencies);
-
-        //function for selecting FictionOrNonfiction in _SelectGenre based on the selected format tag
-        changeGenreFormats(id, sdgfGenres, sdgfParents);
     } 
     else { //if the checkbox was unchecked, you don't need to worry about dependencies
         //for each singular dependency child
-        for (var i = 0; i < sdChildren.length; i++) {
+        for (i = 0; i < sdChildren.length; i++) {
             //for each singular dependency child where the child has more than one possible parent
             for (var j = 0; j < mpChildren.length; j++) {
                 //if the singular dependency child and the multiple possible parent child are the same
@@ -119,7 +129,7 @@ function loadChildren(sdChildren, mdChildren, dependencies) {
     //for each multiple dependency child
     for (i = 0; i < mdChildren.length; i++) {
         //if the other tag it's dependent on is already selected
-        if ($("#formatTagContainer span." + dependencies[i] + " input[type=checkbox]").is(':checked')) {
+        if ($("#formatTagContainer span." + dependencies[i] + " input[type=checkbox]").is(":checked")) {
             //if the multiple dependency child is currently collapsed, uncollapse it
             if ($("#formatTagContainer span." + mdChildren[i]).hasClass("collapse"))
                 $("#formatTagContainer span." + mdChildren[i]).removeClass("collapse");
@@ -160,7 +170,7 @@ function unloadChildren(sdChildren, mpChildren, altParents) {
         //if we know it isn't already checked
 
         //if this child doesn't have its checkbox checked
-        if ($("#formatTagContainer span." + mpChildren[i] + " input[type=checkbox]").is(':checked') !== true) {
+        if ($("#formatTagContainer span." + mpChildren[i] + " input[type=checkbox]").is(":checked") !== true) {
             //since some children appear in mpChildren more than once due to having more than 
             //one possible alternate parent, we need to check if the for loop will continue to 
             //run after this and, if so, if the value of mpChildren will be the same at the next
@@ -173,7 +183,7 @@ function unloadChildren(sdChildren, mpChildren, altParents) {
                 if (parentChecked !== true) {
                     //if this potential parent is checked, mark parentChecked true so that a check won't be made
                     //next iteration that might result in a false negative
-                    if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(':checked')) 
+                    if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(":checked")) 
                         parentChecked = true;
                 }
             } //if the next item in mpChildren is the same as the current item
@@ -183,7 +193,7 @@ function unloadChildren(sdChildren, mpChildren, altParents) {
                 //if one of the possible parents for this child wasn't already checked on a previous iteration
                 if (parentChecked !== true) {
                     //if the possible parent this time around isn't checked either
-                    if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(':checked') !== true) {
+                    if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(":checked") !== true) {
                         //collapse the child if it isn't arleady collapsed
                         if ($("#formatTagContainer span." + mpChildren[i]).hasClass("collapse") !== true)
                             $("#formatTagContainer span." + mpChildren[i]).addClass("collapse");
@@ -196,7 +206,7 @@ function unloadChildren(sdChildren, mpChildren, altParents) {
                 current = mpChildren[i];
 
                 //if this child has its matching parent checked, mark parentChecked as true
-                if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(':checked')) {
+                if ($("#formatTagContainer span." + altParents[i] + " input[type=checkbox]").is(":checked")) {
                     parentChecked = true;
                 } //if this potential parent isn't checked and mpChildren will not be the same child next iteration
                 else if (i + 1 === mpChildren.length || mpChildren[i + 1] !== current) {
@@ -209,45 +219,18 @@ function unloadChildren(sdChildren, mpChildren, altParents) {
     } //for each child in mpChildren
 } //unloadChildren(sdChildren, mpChildren, altParents)
 
-function changeGenreFormats(fID, sdfgGenres, sdfgParents) {
-    //variable for fiction or nonfiction
-    var fictionOrNonfiction = 0;
-
-    //for each parent in sdfgParents
-    for (var i = 0; i < sdfgParents.length; i++) {
-        //if the FormatID we are working with is the same as the current item in sdfgParents
-        if (sdfgParents[i] === fID) {
-            //select the correct option in _SelectGenre and trigger onchange so the functions run
-            $("#genreTagContainer span." + sdfgGenres[i] + " input").prop(':checked', true);
-            $("#genreTagContainer span." + sdfgGenres[i] + " input").change();
-
-            //set the value of fictionOrNonfiction to the matching GenreID
-            fictionOrNonfiction = sdfgGenres[i];
-            break;
+function changeFictionOrNonfiction(id, ftToChange) {
+    console.log(ftToChange);
+    //for each format tag that needs to be changed
+    for (var i = 0; i < ftToChange.length; i++) {
+        //if the format tag is currently checked, uncheck it and indicate it has changed so the correct functions are run
+        if ($("#formatTagContainer span." + ftToChange[i] + " input").is(":checked")) {
+            $("#formatTagContainer span." + ftToChange[i] + " input").prop("checked", false);
+            $("#formatTagContainer span." + ftToChange[i] + " input").change();
         }
-    } //for each parent in sdfgParents
+    }
 
-    //if there was a match with a format tag that changes the genre tags
-    if (fictionOrNonfiction > 0) {
-        //for each genre in sdfgGenres
-        for (i = 0; i < sdfgGenres.length; i++) {
-            //if the GenreID of the current genre in sdfgGenres is not the same as fictionOrNonfiction
-            if (sdfgGenres[i] !== fictionOrNonfiction) {
-                //if the matching format tag is checked, uncheck it and trigger onchange so the rest of the stuff will be done
-                if ($("#formatTagContainers span." + sdfgParents[i] + " input[type=checkbox]").is(':checked')) {
-                    $("#formatTagContainer span." + sdfgParents[i] + " input[type=checkbox]").prop(':checked', false);
-                    $("#formatTagContainer span." + sdfgParents[i] + " input[type=checkbox]").change();
-                }
-                
-            } //if the GenreID of the current genre in sdfgGenres is not the same as fictionOrNonfiction
-        } //for each genre in sdfgGenres
-
-        //now we need to change the corresponding genre tag
-
-        //if the matching genre tag isn't already checked, check it and and trigger onchange so that everything will be updated properly
-        if ($("#genreTagContainer span." + fictionOrNonfiction + " input[type=radiobutton]").is(':checked') !== true) {
-            $("#genreTagContainer span." + fictionOrNonfiction + " input[type=radiobutton]").prop(':checked', true);
-            $("#genreTagContainer span." + fictionOrNonfiction + " input[type=radiobutton]").change();
-        } //if the matching genre tag isn't already checked
-    } //if there was a match with a format tag that changes the genre tags
-} //changeGenreFormats(fID, sdfgGenres, sdfgParents)
+    //and update whether the genre is marked as fiction or nonfiction and call the correct function for that change
+    $("#genreTagContainer span." + id + " input").prop("checked", true).trigger("click");
+    $("#genreTagContainer span." + id + " input").change();
+}

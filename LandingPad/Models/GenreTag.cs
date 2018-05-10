@@ -35,6 +35,7 @@ namespace LandingPad.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GenreCategory> ChildGenres { get; set; }
 
+        [ForeignKey("GenreID")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GenreFormat> GenreFormats { get; set; }
 
