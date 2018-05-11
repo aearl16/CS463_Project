@@ -70,7 +70,7 @@
                 for (j = 0; j < sftCount; j++) {
                     if (selectedTags[j] === formatTags[i]) {
                         $("#formatTagContainer input." + formatTags[i]).prop("checked", true);
-                        $("#formatTagContainer input." + formatTags[i]).trigger("change");
+                        $("#formatTagContainer input." + formatTags[i]).change();
                         if ($("#formatTagContainer span." + formatTags[i]).hasClass("collapse"))
                             $("#formatTagContainer span." + formatTags[i]).removeClass("collapse");
                     }
@@ -81,8 +81,8 @@
             for (i = 0; i < genreTags.length; i++) {
                 for (j = 0; j < sgtCount; j++) {
                     if (selectedGenres[j] === genreTags[i]) {
-                        $("#genreTagContainer span." + genreTags[i] + " input").prop("checked", true);
-                        $("#genreTagContainer span." + genreTags[i] + " input").trigger("change");
+                        $("#genreTagContainer span." + genreTags[i] + " input").prop("checked", true).trigger("click");
+                        $("#genreTagContainer span." + genreTags[i] + " input").change();
                         if ($("#genreTagContainer span." + genreTags[i]).hasClass("collapse"))
                             $("#genreTagContainer span." + genreTags[i]).removeClass("collapse");
                     }

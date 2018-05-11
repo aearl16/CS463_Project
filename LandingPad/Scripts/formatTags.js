@@ -90,23 +90,43 @@ function ftChildren(id, sdChildren, sdcNames, mdChildren, mdcNames, dependencies
     console.log("altParents: " + altParents);
     console.log("childGenres: " + childGenres);
     console.log("cgNames: " + cgNames);
+    console.log("fictionOnly: " + fictionOnly);
+    console.log("foNames: " + foNames);
+    console.log("nonfictionOnly: " + nonfictionOnly);
+    console.log("nfoNames: " + nfoNames);
     console.log("fictionOrNonfictionOnly: " + fictionOrNonfictionOnly);
-    console.log("ficOrNonOnlyNames: " + ficOrNonOnlyNames);
 
     //if the checkbox for the format tag with a FormatID of id was checked
     if ($("#formatTagContainer span." + id + " input[type=checkbox]").is(":checked")) {
         console.log(fName + " is checked");
-        //for each child genre
-        for (var i = 0; i < childGenres.length; i++) {
-            //if this format tag is either explicitly fiction or explicitly nonfiction
-            if (childGenres[i] === 1 || childGenres[i] === 2) {
-                console.log("Calling changeFictionOrNonfiction with child genre " + cgNames[i] + " (GenreID " + childGenres[i] + ") and the following fiction or nonfiction only formats:");
-                console.log(fictionOrNonfictionOnly);
-                console.log(ficOrNonOnlyNames);
-                //change the genre tag itself and uncheck any format tags that are no longer valid
-                changeFictionOrNonfiction(childGenres[i], fictionOrNonfictionOnly);
+        //if the current tag is fiction only or nonfiction only
+        if (fictionOrNonfictionOnly.length > 0) {
+            //for each child genre
+            for (var i = 0; i < childGenres.length; i++) {
+                //if this format tag is either explicitly fiction or explicitly nonfiction
+                if (childGenres[i] === 1) {
+                    console.log("Calling changeFictionOrNonfiction with child genre " + cgNames[i] + " (GenreID " + childGenres[i] + ") and the following nonfiction only formats:");
+                    console.log(nonfictionOnly);
+                    console.log(nfoNames);
+                    //change the genre tag itself and uncheck any format tags that are no longer valid
+                    changeFictionOrNonfiction(childGenres[i], nonfictionOnly);
+                }
+                else if (childGenres[i] === 2) {
+                    console.log("Calling changeFictionOrNonfiction with child genre " + cgNames[i] + " (GenreID " + childGenres[i] + ") and the following fiction only formats:");
+                    console.log(fictionOnly);
+                    console.log(foNames);
+                    //change the genre tag itself and uncheck any format tags that are no longer valid
+                    changeFictionOrNonfiction(childGenres[i], fictionOnly);
+                }
+                else { //if the child genres are specifying other things, trigger the genre's change function and let it handle updating
+                    console.log("Calling onchange function for child genre " + cgNames[i] + " (GenreID " + childGenres[i] + ")");
+                    $("#genreTagContainer span." + childGenres[i] + " input").change();
+                }
             }
-            else { //if the child genres are specifying other things, trigger the genre's change function and let it handle updating
+        }
+        else {
+            //for each child genre
+            for (i = 0; i < childGenres.length; i++) {
                 console.log("Calling onchange function for child genre " + cgNames[i] + " (GenreID " + childGenres[i] + ")");
                 $("#genreTagContainer span." + childGenres[i] + " input").change();
             }
