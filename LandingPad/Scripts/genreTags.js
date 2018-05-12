@@ -88,7 +88,6 @@ function gtChildren(id, ndChildren, sdChildren, sDependencies, mdChildren, mdfDe
             var parentChecked = false;
             //for each parent format
             for (var i = 0; i < parentFormats.length; i++) {
-                console.log("Checking to see if format with id of " + parentFormats[i] + " is checked");
                 //if the current parentFormat is checked, mark it as true and exit so that it doesn't continue to run
                 if ($("#formatTagContainer span." + parentFormats[i] + " input[type=checkbox]").is(":checked")) {
                     parentChecked = true;
