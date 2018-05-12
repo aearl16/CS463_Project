@@ -491,6 +491,8 @@
     <Content Include="Views\Upload\_UploadEditMenu.cshtml" />
     <Content Include="Views\Writing\_SelectGenre.cshtml" />
     <Content Include="Views\Writing\SearchByGenreTag.cshtml" />
+    <Content Include="Views\Writing\Friends.cshtml" />
+    <Content Include="Views\Writing\Settings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

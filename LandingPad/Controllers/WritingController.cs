@@ -400,6 +400,18 @@ namespace LandingPad.Controllers
         }
 
         [HttpGet]
+        public ActionResult Friends()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Settings()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public ActionResult Create()
         {
             return View();
