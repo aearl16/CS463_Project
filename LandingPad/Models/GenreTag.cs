@@ -15,6 +15,7 @@ namespace LandingPad.Models
         {
             AltGenreNames = new HashSet<AltGenreName>();
             ChildGenres = new HashSet<GenreCategory>();
+            ParentGenres = new HashSet<GenreCategory>();
             GenreFormats = new HashSet<GenreFormat>();
             WritingGenres = new HashSet<WritingGenre>();
         }
@@ -34,6 +35,10 @@ namespace LandingPad.Models
         [ForeignKey("ParentID")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GenreCategory> ChildGenres { get; set; }
+
+        [ForeignKey("GenreID")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GenreCategory> ParentGenres { get; set; }
 
         [ForeignKey("GenreID")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

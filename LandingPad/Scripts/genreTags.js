@@ -14,13 +14,6 @@
  * @param {int[]} parentFormats (formatIDs that aren't valid based on the item that was just selected)
  */
 function fictionOrNonfiction(name, fictionOrNonfictionOnly, children, parentFormats) {
-    console.log("fictionOrNonfictionOnly: " + fictionOrNonfictionOnly);
-    console.log("parentFormats: " + parentFormats);
-    //if this is the first time either fiction or nonfiction is being selected, 
-    //remove the collapse class from the rest of the genre tags
-    if ($(".genreTagsThreePlus").hasClass("collapse")) 
-        $(".genreTagsThreePlus").removeClass("collapse");
-
     //for each of this genre's children
     for (var i = 0; i < children.length; i++) {
         //if the child is collapsed, uncollapse it
@@ -71,12 +64,25 @@ function fictionOrNonfiction(name, fictionOrNonfictionOnly, children, parentForm
  * @param {int[]} mpsdParents (array of alternate parents for mpsdChildren)
  * @param {int[]} mpsDependencies (array of dependencies for mpsdChildren)
  * @param {int[]} fictionOrNonfictionOnly (array of genres that can only be the fiction if this one is nonfiction and nonfiction if this one is fiction)
+ * @param {string} isForN (= Fiction if this is fiction only, Nonfiction if this is nonfiction only, and null if it can be either)
  * @param {int[]} parentFormats (array of formats that are parents of the current tag)
- * @param {int[]} parentNames (the actual names for the format tags that are parents)
  */
-function gtChildren(id, ndChildren, sdChildren, sDependencies, mdChildren, mdfDependencies, mdsDependencies, mpndChildren, mpndParents, mpsdChildren, mpsdParents, mpsDependencies, fictionOrNonfictionOnly, parentFormats, parentNames) {
+function gtChildren(id, ndChildren, sdChildren, sDependencies, mdChildren, mdfDependencies, mdsDependencies, mpndChildren, mpndParents, mpsdChildren, mpsdParents, mpsDependencies, fictionOrNonfictionOnly, isForN, parentFormats) {
     //if the checkbox for the genre tag with a GenreID of id was checked
     if ($("#genreTagContainer span." + id + " input").is(":checked")) {
+        //if this genre tag is fiction or nonfiction only
+        if (isForN !== null) {
+            //if this genre tag is fiction only and fiction isn't already selected, select it and call the onchange function for fiction
+            if (isForN === "Fiction" && $("#genreTagContainer span.1 input").is(":checked") === false) {
+                $("#genreTagContainer span.1 input").prop("checked", true).trigger("click");
+                $("#genreTagContainer span.1 input").change();
+            }
+            else if (isForN === "Nonfiction" && $("#genreTagContainer span.2 input").is(":checked") === false) {
+                $("#genreTagContainer span.2 input").prop("checked", true).trigger("click");
+                $("#genreTagContainer span.2 input").change();
+            }
+        }
+
         //if the current genre tag has required parent formats, you need to check to make sure that one of them is checked before loading children
         if (parentFormats.length > 0) {
             var parentChecked = false;
@@ -90,31 +96,17 @@ function gtChildren(id, ndChildren, sdChildren, sDependencies, mdChildren, mdfDe
                 }
             }
 
-            //if parentChecked is still false
+            //if parentChecked is still false, check the first parent format before loading the child tags
             if (parentChecked === false) {
-                var message = "This genre requires you to select one of the following formats:&lt;br /&gt;";
+                $("#formatTagContainer span." + parentFormats[0] + " input").prop("checked", true);
+                $("#formatTagContainer span." + parentFormats[0] + " input").change();
+            }
+        } //if the current genre tag has required parent formats
 
-                //for each of the format tags that you can select
-                for (i = 0; i < parentNames.length; i++) {
-                    message += parentNames[i];
-                    message += "&lt;br /&gt;";
-                }
-                
-                //call a function to display the error message that we created
-                showExplanationNotFT("genreTagDescription", message);
-                //then uncheck the item
-                $("#genreTagContainer span." + id + " input").prop("checked", false);
-            } //if none of the parent formats are checked
-            else { //if this is a valid selection, load the child genres
-                loadGenres(ndChildren, sdChildren, sDependencies, mdChildren, mdfDependencies, mdsDependencies);
-            } //if this is a valid selection, load the child genres
-        } //if the current genre tag has required parent formats 
-        else { //if there are no required formats, you can just call load
-            //load all no dependency children and load any single dependency children with their other dependency checked and 
-            //any multi-dependency children with their other two dependencies checked
-            loadGenres(ndChildren, sdChildren, sDependencies, mdChildren, mdfDependencies, mdsDependencies);
-        } //if there are no required formats, you can just call load
-    } //if the checkbox for the genre tag with a GenreID of id was checked
+        //load all no dependency children and load any single dependency children with their other dependency checked and 
+        //any multi-dependency children with their other two dependencies checked
+        loadGenres(ndChildren, sdChildren, sDependencies, mdChildren, mdfDependencies, mdsDependencies);
+    }
     else { //if we are unloading children, we only care about dependencies of mpsdChildren
         //for each of the tags that have the opposite genre dependency of the current genre tag
         for (i = 0; i < fictionOrNonfictionOnly.length; i++) {
@@ -209,8 +201,8 @@ function gtChildren(id, ndChildren, sdChildren, sDependencies, mdChildren, mdfDe
 
         //for each child with only one dependency
         for (i = 0; i < sdChildren.length; i++) {
-            //if the dependency for this child is checked
-            if ($("#genreTagContainer span." + sDependencies[i] + " input").is(":checked")) {
+            //if the dependency is one that involves fiction vs nonfiction and neither is checked or if the dependency for this child is checked
+            if ((sDependencies[i] === 1 && $("#genreTagContainer span.2 input").is(":checked") === false) || (sDependencies[i] === 2 && $("#genreTagContainer span.1 input").is(":checked") === false) || $("#genreTagContainer span." + sDependencies[i] + " input").is(":checked")) {
                 //if the child is currently collapsed, uncollapse it
                 if ($("#genreTagContainer span." + sdChildren[i]).hasClass("collapse"))
                     $("#genreTagContainer span." + sdChildren[i]).removeClass("collapse");
@@ -219,11 +211,14 @@ function gtChildren(id, ndChildren, sdChildren, sDependencies, mdChildren, mdfDe
 
         //for each child with two dependencies
         for (i = 0; i < mdChildren.length; i++) {
-            //if both dependencies for this child are checked 
-            if ($("#genreTagContainer span." + mdfDependencies[i] + " input").is(":checked") && $("#genreTagContainer span." + mdsDependencies[i] + " input").is(":checked")) {
-                //if the child is currently collapsed, uncollapse it
-                if ($("#genreTagContainer span." + mdChildren[i]).hasClass("collapse"))
-                    $("#genreTagContainer span." + mdChildren[i]).removeClass("collapse");
+            //if the first dependency for this child is checked 
+            if ($("#genreTagContainer span." + mdfDependencies[i] + " input").is(":checked")) {
+                //if the second dependency is one that involves fiction vs nonfiction and neither is checked or if the dependency for this child is checked
+                if ((mdsDependencies[i] === 1 && $("#genreTagContainer span.2 input").is(":checked") === false) || (mdsDependencies[i] === 2 && $("#genreTagContainer span.1 input").is(":checked") === false) || $("#genreTagContainer span." + mdsDependencies[i] + " input").is(":checked")) {
+                    //if the child is currently collapsed, uncollapse it
+                    if ($("#genreTagContainer span." + mdChildren[i]).hasClass("collapse"))
+                        $("#genreTagContainer span." + mdChildren[i]).removeClass("collapse");
+                }
             }
         }
     }

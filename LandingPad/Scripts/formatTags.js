@@ -140,7 +140,7 @@ function ftChildren(id, sdChildren, sdcNames, mdChildren, mdcNames, dependencies
         console.log("dependencies: " + dependencies);
         console.log("dNames: " + dNames);
         //load all the singular dependency children and load any multi-dependency children with their other dependency checked
-        loadChildren(sdChildren, sdcNames, mdChildren, mdcNames, dependencies, dNames);
+        loadChildren(sdChildren, mdChildren, dependencies);
     } 
     else { //if the checkbox was unchecked, you don't need to worry about dependencies
         //for each singular dependency child

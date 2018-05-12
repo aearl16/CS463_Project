@@ -697,6 +697,30 @@ namespace LandingPad.Controllers
                 .ToList();
         }
 
+        public List<GenreTag> GetTopLevelEither()
+        {
+            return db.GenreTags
+                .Where(i => i.ChildGenres.Select(j => j.ParentID).ToList().Contains(1))
+                .Where(i => i.ChildGenres.Select(j => j.ParentID).ToList().Contains(2))
+                .ToList();
+        }
+
+        public string IsFictionOrNonfictionOnlyForGenre(int id)
+        {
+            GenreTag gt = db.GenreTags.Find(id);
+
+            if ((gt.ParentGenres.Select(i => i.ParentID).ToList().Contains(1) && gt.ParentGenres.Select(i => i.ParentID).ToList().Contains(2) == false) || gt.ParentGenres.Select(i => i.SecondaryParentID).ToList().Contains(1) || gt.ParentGenres.Select(i => i.TertiaryParentID).ToList().Contains(1))
+            {
+                return "Fiction";
+            }
+            else if ((gt.ParentGenres.Select(i => i.ParentID).ToList().Contains(1) == false && gt.ParentGenres.Select(i => i.ParentID).ToList().Contains(2)) || gt.ParentGenres.Select(i => i.SecondaryParentID).ToList().Contains(2) || gt.ParentGenres.Select(i => i.TertiaryParentID).ToList().Contains(2))
+            {
+                return "Nonfiction";
+            }
+            else
+                return null;
+        }
+
         public int GetFictionOrNonfiction(int id)
         {
             List<GenreCategory> ForN = FictionOrNonfictionOnly();

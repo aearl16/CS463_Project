@@ -507,7 +507,7 @@ INSERT INTO dbo.FormatTag (FormatName, Explanation) VALUES
 ('List poetry', 'A poem made of a list of rhymed or unrhymed list of items or events.'), --37
 ('Rondeau', 'A lyric poem with ten or thirteen lines with two rhymes and an opening line that is repeated twice as a refrain. Originated in France.'), --38
 ('Sestina', 'A poem with six six-line stanzas and a three-line envoy. The final words of the first stanza get repeated in a variable order as ending lines of other stanzas and as part of the envoy.'), --39
-('Sound poetry', 'Sometimes called ''verse without words'', a sound poem uses the phonetics of human speech to form a poem. They are generally intended for performance.'), --40
+('Sound poetry', 'Sometimes called “verse without words”, a sound poem uses the phonetics of human speech to form a poem. They are generally intended for performance.'), --40
 ('Terza Rima', 'A poem made up of three-line tercets with ten or eleven syllables a line.'), --41
 ('Villanelle', 'A nineteen-line poem made from five tercets and a concluding quatrain on two rhymes. The first and third lines from the first tercet are alternately repeated as the closing refrain for the succeeding stanzas and joined as the quatrain''s final couplet.'), --42
 
@@ -714,7 +714,7 @@ INSERT INTO dbo.GenreTag (GenreName, Explanation) VALUES
 ('Pseudo-documentary', 'A film or video production that takes the form of a documentary but does not cover real events.'), --6
 ('Realistic fiction', 'Fiction covering present-day events that could actually happen in reality. Lacks supernatural or fantastic elements.'), --7
 ('Slice of life', 'A genre of fiction that covers the everyday events of the character''s lives. Slice of life narratives are generally character-driven rather than plot-driven.'), --8
-('Speculative fiction', 'Fiction with futuristic or supernatural elements or which is intended to answer a ''what if'' question such as ''What if steam-power maintained mainstream useage?'' or ''What if magic was real?'''), --9
+('Speculative fiction', 'Fiction with futuristic or supernatural elements or which is intended to answer a “what if” question such as “What if steam-power maintained mainstream useage long enough for technology to become highly advanced?” or “What if magic was real?”'), --9
 ('Thriller', 'Fiction intended to give the one consuming it heightened feelings of suspense, excitement, surprise, anticipation, and anxiety.'), --10
 
 --Immediate children of Drama, fiction ONLY
@@ -812,7 +812,7 @@ INSERT INTO dbo.GenreTag (GenreName, Explanation) VALUES
 ('Absurdist', 'A form of comedy that studies human behavior in pointless or philosophically absurb circumstances.'), --68
 ('Farce', 'A comedy with highly exaggerated, extravagant, and improbable situations.'), --69
 ('Parody', 'A work that is an imitation or spoof of another work for the purpose of commenting on, making fun of, or affectionately calling notice to aspects of the original.'), --70
-('Sketch comedy', 'A series of short comedy scenes or vignettes, known as "sketches", which commonly range from one to ten minutes each.'), --71
+('Sketch comedy', 'A series of short comedy scenes or vignettes, known as “sketches”, which commonly range from one to ten minutes each.'), --71
 
 --Immediate children of Comedy or Pseudo-documentary, fiction ONLY
 ('Mockumentary', 'A comedic work of fiction that is presented as a documentary.'), --72
@@ -1013,8 +1013,8 @@ INSERT INTO dbo.GenreCategory(GenreID, ParentID, SecondaryParentID, TertiaryPare
 (74, 73, 49, 1), --Comedy of manners, Satire, Comedy, Fiction 100
 (75, 49, NULL, NULL), --Black comedy, Comedy 101
 (76, 49, NULL, NULL), --Stand-up comedy, Comedy 102
-(77, 3, 1, NULL), --Comedy-drama, Drama, Fiction 103
-(77, 49, 1, NULL), --Comedy-drama, Comedy, Fiction 104
+(77, 3, 49, 1), --Comedy-drama, Drama, Fiction 103
+(77, 49, 3, 1), --Comedy-drama, Comedy, Fiction 104
 (78, 8, 1, NULL), --Sitcom, Slice of life, Fiction 105
 (78, 49, 1, NULL), --Sitcom, Comedy, Fiction 106
 (79, 50, 1, NULL), --Phantom thief, Crime, Fiction 107
