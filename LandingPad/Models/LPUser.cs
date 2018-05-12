@@ -18,7 +18,6 @@ namespace LandingPad.Models
         }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int UserID { get; set; }
 
         [Required]
@@ -34,7 +33,7 @@ namespace LandingPad.Models
 
         public string PhoneNumber { get; set; }
 
-        //[Required]
+        [Required]
         public string Username { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
