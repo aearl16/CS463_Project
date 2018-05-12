@@ -344,6 +344,7 @@
     <Compile Include="Models\AltGenreName.cs" />
     <Compile Include="Models\FormatCategory.cs" />
     <Compile Include="Models\FormatTag.cs" />
+    <Compile Include="Models\FriendRequest.cs" />
     <Compile Include="Models\Friendship.cs" />
     <Compile Include="Models\GenreCategory.cs" />
     <Compile Include="Models\GenreFormat.cs" />

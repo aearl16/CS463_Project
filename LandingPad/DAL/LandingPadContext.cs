@@ -32,7 +32,7 @@ namespace LandingPad.DAL
         public virtual DbSet<WritingFormat> WritingFormats { get; set; }
         public virtual DbSet<WritingGenre> WritingGenres { get; set; }
         public virtual DbSet<AccessPermission> AccessPermissions { get; set; }
-
+        public virtual DbSet<FriendRequest> FriendRequests { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

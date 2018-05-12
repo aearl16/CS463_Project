@@ -159,12 +159,39 @@ CREATE TABLE dbo.Friendship
 	REFERENCES dbo.LPProfile (ProfileID)
 	ON DELETE NO ACTION
 	ON UPDATE NO ACTION,
-	CONSTRAINT [PK_dbo.FirstPseudonymIDForFriendship] FOREIGN KEY (FirstPseudonymID)
+	CONSTRAINT [FK_dbo.FirstPseudonymIDForFriendship] FOREIGN KEY (FirstPseudonymID)
 	REFERENCES dbo.Pseudonym (PseudonymID)
 	ON DELETE NO ACTION
 	ON UPDATE NO ACTION,
-	CONSTRAINT [PK_dbo.SecondPseudonymIDForFriendship] FOREIGN KEY (SecondPseudonymID)
+	CONSTRAINT [FK_dbo.SecondPseudonymIDForFriendship] FOREIGN KEY (SecondPseudonymID)
 	REFERENCES dbo.Pseudonym (PseudonymID)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION
+);
+
+--FriendRequest Table
+CREATE TABLE dbo.FriendRequest 
+(
+	FriendRequestID INT IDENTITY(1,1) NOT NULL,
+	RequesterProfileID INT NOT NULL,
+	RequesteeProfileID INT NOT NULL,
+	RequesterPseudonymID INT,
+	RequesteePseudonymID INT,
+	CONSTRAINT [PK_dbo.FriendRequest] PRIMARY KEY (FriendRequestID),
+	CONSTRAINT [FK_dbo.RequesterProfileID] FOREIGN KEY (RequesterProfileID)
+	REFERENCES dbo.LPProfile (ProfileID)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	CONSTRAINT [FK_dbo.RequesteeProfileID] FOREIGN KEY (RequesteeProfileID)
+	REFERENCES dbo.LPProfile (ProfileID)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION,
+	CONSTRAINT [FK_dbo.RequesterPseudonymID] FOREIGN KEY (RequesterPseudonymID)
+	REFERENCES dbo.LPProfile (ProfileID)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION,
+	CONSTRAINT [FK_dbo.RequesteePseudonymID] FOREIGN KEY (RequesteePseudonymID)
+	REFERENCES dbo.LPProfile (ProfileID)
 	ON DELETE NO ACTION
 	ON UPDATE NO ACTION
 );

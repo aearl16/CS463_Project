@@ -1,7 +1,32 @@
-﻿
+﻿@model LandingPad.Models.LPProfile
 @{
-    ViewBag.Title = "Settings";
+    ViewBag.Title = "Testing Settings for Penfolio";
 }
 
-<h2>Settings</h2>
+<h2>Testing Settings for Penfolio</h2>
 
+<form method="post">
+    @if (Model.ProfileRoles.Select(i => i.RoleID).ToList().Contains(1))
+    {
+        <input type="submit" formaction="~/Writing/RemoveProfileRole/1" value="Remove Writer Profile Role from Penfolio Profile" />
+    }
+    else
+    {
+        <input type="submit" formaction="~/Writing/AddProfileRole/1" value="Add Writer Profile Role to Penfolio Profile" />
+    }
+
+    @if (Model.ProfileRoles.Select(i => i.RoleID).ToList().Contains(1))
+    {
+        <input type="submit" formaction="~/Writing/RemoveProfileRole/2" value="Remove Publisher Profile Role from Penfolio Profile" />
+    }
+    else
+    {
+        <input type="submit" formaction="~/Writing/AddProfileRole/2" value="Add Publisher Profile Role to Penfolio Profile" />
+    }
+
+    <!--Something for inputting a date of birth-->
+
+    <!--Something for inputting a given name and a surname-->
+
+    <!--Something for adding a new pseudonym-->
+</form>

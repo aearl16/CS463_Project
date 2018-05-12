@@ -3,6 +3,17 @@ IF EXISTS
 (
 	SELECT *
 	FROM sys.tables
+	WHERE tables.name = 'FriendRequest'
+
+)
+BEGIN
+	DROP TABLE dbo.FriendRequest
+END
+
+IF EXISTS
+(
+	SELECT *
+	FROM sys.tables
 	WHERE tables.name = 'Friendship'
 
 )

@@ -1,7 +1,35 @@
-﻿
+﻿@model IEnumerable<LandingPad.Models.LPProfile>
 @{
     ViewBag.Title = "Friends";
 }
 
-<h2>Friends</h2>
+<form method="post">
+    <!--Currently has a placeholder profile ID until I implement Aaron's code for getting their profile ID-->
+    <h2>Create a Friend Request</h2>
+    <div id="friendRequestContainer">
+        @foreach (var item in Model.Where(i => i.ProfileID != 1))
+        {
+            <div class="@item.ProfileID">
+                <span class="profile">@item.LPUser.Username @if (Model.Where(i => i.ProfileID == 1).Select(i => i.FriendRequestsSent).SelectMany(j => j).Select(j => j.RequesteeProfileID).ToList().Contains(item.ProfileID))
+                {
+                    <span>Friend Request Pending</span>
+                }
+                else
+                {
+                    <input type="submit" formaction="~/Writing/CreateProfileFriendRequest/@item.ProfileID" value="Send Friend Request" />
+                }</span>
+                @foreach (var subitem in item.Pseudonyms)
+                {
+                    <span class="@subitem.PseudonymID">@subitem.Pseudonym1</span>
+                }
+            </div>
+        }
+    </div>
 
+
+    <!--Currently has a placeholder profile ID until I implement Aaron's code for getting their profile ID-->
+    <h2>Friends</h2>
+    @foreach (var item in Model.Where(i => i.ProfileID == 1).Select(i => i.Friends))
+    {
+    }
+</form>

@@ -402,13 +402,89 @@ namespace LandingPad.Controllers
         [HttpGet]
         public ActionResult Friends()
         {
-            return View();
+            //placeholder for now; will replace with real thing after figuring out Aaron's code
+            ViewBag.ProfileID = 1;
+
+            return View(db.LPProfiles.ToList());
+        }
+
+        [HttpPost]
+        public ActionResult CreateProfileFriendRequest(int id)
+        {
+            //create the new database object here
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        public ActionResult CreatePseudonymFriendRequest(int id)
+        {
+            //create the new database object here
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        public ActionResult AcceptProfileFriendRequest()
+        {
+            //create the new database object here
+            //delete old database object here
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        public ActionResult AcceptPseudonymFriendRequest()
+        {
+            //create the new database object here
+            //delete old database object here
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        public ActionResult DeleteProfileFriendRequest()
+        {
+            //delete database object here
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        public ActionResult DeletePseudonymFriendRequest()
+        {
+            //delete database object here
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        public ActionResult RemoveProfileFriend()
+        {
+            //delete database object here
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        public ActionResult RemovePseudonymFriend()
+        {
+            //delete database object here
+            return RedirectToAction("Friends");
         }
 
         [HttpGet]
         public ActionResult Settings()
         {
-            return View();
+            //currently has a placeholder until I get Aaron's new code implemented
+            return View(db.LPProfiles.Find(1));
+        }
+
+        [HttpPost]
+        public ActionResult AddProfileRole(int id)
+        {
+            //create new database object here
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        public ActionResult RemoveProfileRole(int id)
+        {
+            //delete database object here
+            return RedirectToAction("Friends");
         }
 
         [HttpGet]
