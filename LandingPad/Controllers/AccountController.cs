@@ -170,20 +170,26 @@ namespace LandingPad.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
+                var lpUser = new LPUser();
+                lpUser.Email = model.Email;
+                string[] splitstring = model.Email.Split('@');
+                lpUser.Username = splitstring[0];
                 if (result.Succeeded)
                 {
+                    db.LPUsers.Add(lpUser);
+                    db.SaveChanges();
                     System.Diagnostics.Debug.WriteLine("Registered");
                     //  Comment the following line to prevent log in until the user is confirmed.
                     //  await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
                     string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
 
-                    //ViewBag.Message = "Check your email and confirm your account, you must be confirmed "
-                                    //+ "before you can log in.";
+                    ViewBag.Message = "Check your email and confirm your account, you must be confirmed "
+                                    + "before you can log in.";
 
                     //Call the ActionResult method that creates an LPUser
-                    return RedirectToAction("LPUserCreate", "Home", new { Email = model.Email });
-                    //return RedirectToAction("Index", "Home");
+                    //return RedirectToAction("LPUserCreate", "Home", new { Email = model.Email });
+                    return RedirectToAction("Info");
                 }
                 AddErrors(result);
             }
