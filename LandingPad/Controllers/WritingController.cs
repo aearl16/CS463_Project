@@ -567,8 +567,9 @@ namespace LandingPad.Controllers
                 return null;
 
             string output = Encoding.Unicode.GetString(input);
-            output = output.Replace("&lt;", "<").Replace("&gt;", ">");
-            
+            output = output.Replace("&lt;", "<").Replace("&gt;", ">").Replace("'", "&#39;").Replace('"'.ToString(), "&#34;");
+
+
             return output;
         }
 
