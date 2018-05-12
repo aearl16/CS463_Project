@@ -3,20 +3,6 @@
 @{
     ViewBag.Title = "Index";
 }
-
-<h2>Select ProfileID</h2>
-
-<!--selector for ProfileID of the user; switches which writings are visible based on the current user when the selection is changed; this will eventually go away when the database connections are there-->
-<select id="profileID" onchange='toggleProfiles([@Html.Raw(ViewBag.Profiles)])'>
-    <!--Initial value; the attributes are to make the option disappear/not be selectable after first selection is made-->
-    <option value="" selected disabled hidden>Select ProfileID</option>
-    <!--For each profile, make an option in the selector with that ProfileID-->
-    @foreach (var item in Model)
-    {
-        <option value="@item.ProfileID" class="@item.ProfileID">@item.ProfileID</option>
-    }
-</select>
-
 <h2>My Writing</h2>
 
 <!--for each profile-->
