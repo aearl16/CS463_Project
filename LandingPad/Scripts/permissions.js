@@ -71,25 +71,24 @@ function loadPseudonyms(profiles) {
  * psudonyms should be used in addition to username if there is at least
  * one pseudonym selected; removes the checkbox and unchecks it if a
  * pseudonym is unchecked when no others are already checked
+ * @param {int} id (The id of the pseudonym that was just changed)
+ * @param {int[]} pseudonyms (An array of the PseudonymIDs for all the pseudonyms in this profile)
  */
-function checkIfOnlyPseudonym() {
+function checkIfOnlyPseudonym(id, pseudonyms) {
     //get the current ProfileID
-    var id = $("#profileID").val();
+    var pID = $("#profileID").val();
 
     //if the function is being called because a pseudonym was checked
-    if ($(this).prop('checked', true)) {
+    if ($("#pseudonymContainer span." + pID + " input." + id).is(":checked")) {
         //if useUsername is collapsed, uncollapse it
         if ($("#useUsername").hasClass("collapse"))
             $("#useUsername").removeClass("collapse");
     }
     else { //if it was called by unchecking
-        //grab all of the pseudonyms related to this profile
-        var pseudonyms = $("#pseudonymContainer > span." + id + " input");
-
         //for each of the pseudonym checkboxes for this profile
         for (var i = 0; i < pseudonyms.length; i++) {
             //if at least one of them is checked, nothing more needs to be done, so return
-            if (pseudonyms[i].prop('checked', true)) 
+            if ($("#pseudonymContainer span." + pID + " input." + pseudonyms[i]).is(":checked"))
                 return;
         }
 
@@ -102,4 +101,4 @@ function checkIfOnlyPseudonym() {
         //so we don't get a false positive on submission
         $("#usePseudonymsInAdditionToUsername").prop('checked', false);
     }
-} //checkIfOnlyPseudonym()
+} //checkIfOnlyPseudonym(id, pseudonyms)

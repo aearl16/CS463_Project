@@ -17,6 +17,8 @@ namespace LandingPad.Models
             Writings = new HashSet<Writing>();
             ProfileRoles = new HashSet<ProfileRole>();
             Friends = new HashSet<Friendship>();
+            FriendRequestsSent = new HashSet<FriendRequest>();
+            FriendRequestsReceived = new HashSet<FriendRequest>();
         }
 
         [Key]
@@ -48,6 +50,14 @@ namespace LandingPad.Models
         [ForeignKey("FirstFriendID")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Friendship> Friends { get; set; }
+
+        [ForeignKey("RequesterProfileID")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<FriendRequest> FriendRequestsSent { get; set; }
+
+        [ForeignKey("RequesteeProfileID")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<FriendRequest> FriendRequestsReceived { get; set; }
 
         public virtual LPUser LPUser { get; set; }
 

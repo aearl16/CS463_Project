@@ -38,9 +38,10 @@ function loadSlide(current, next) {
  * @param {string} current (class name)
  * @param {string} next (class name)
  * @param {int[]} pseudonyms (an array of all the PseudonymIDs; from the view's Controller)
- * @param {int[]} formatTags (an array of all the FormatTagIDs; from the view's Controller)
+ * @param {int[]} formatTags (an array of all the FormatIDs; from the view's Controller)
+ * @param {int[]} genreTags (an array of all the GenreIDs; from the view's Controller)
  */
-function loadSlideAndConfirm(current, next, pseudonyms, formatTags) {
+function loadSlideAndConfirm(current, next, pseudonyms, formatTags, genreTags) {
     //collapse the current slide and uncollapse the next slide as usual
     $("div." + current).addClass("collapse");
     $("div." + next).removeClass("collapse");
@@ -90,6 +91,19 @@ function loadSlideAndConfirm(current, next, pseudonyms, formatTags) {
             $("#confirmFormats").append($("#formatTagContainer span." + formatTags[i] + " span").html());
             //append a break so everything is still legible 
             $("#confirmFormats").append("<br />");
+        }
+    }
+
+    //empty the field for genre tag confirmation
+    $("#confirmGenres").empty();
+    //for each genre tag in the database
+    for (i = 0; i < genreTags.length; i++) {
+        //if the current genre tag has been checked
+        if ($("#genreTagContainer span." + genreTags[i] + " input").is(':checked')) {
+            //append the value of the genre tag name that matches this checkbox to the confirmation field
+            $("#confirmGenres").append($("#genreTagContainer span." + genreTags[i] + " span").html());
+            //append a break so everything is still legible
+            $("#confirmGenres").append("<br />");
         }
     }
 

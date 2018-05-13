@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Web;
+
+namespace LandingPad.Models
+{
+    [Table("AltGenreName")]
+    public partial class AltGenreName
+    {
+        [Key]
+        [Required]
+        public int AltGenreNameID { get; set; }
+
+        [Required]
+        public int GenreID { get; set; }
+
+        [Required]
+        public string AltName { get; set; }
+    }
+}
