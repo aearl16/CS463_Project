@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LandingPad.Repositorys
+namespace LandingPad.Repositories
 {
     public interface IRepository<TEntity> where TEntity : class
     {

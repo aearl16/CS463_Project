@@ -10,7 +10,7 @@ using System.IO;
 using System.Text;
 using TweetSharp;
 using LandingPad.DAL;
-using LandingPad.Repositorys;
+using LandingPad.Repositories;
 using LandingPad.Models;
 using Moq;
 
@@ -23,6 +23,7 @@ namespace LandingPad.Controllers
     {
         private LandingPadContext db = new LandingPadContext();
         ITwitterRepository repository = new TwitterRepository(new LandingPadContext());
+        IWritingRepository wrepo = new WritingRepository(new LandingPadContext());
 
         [HttpGet]
         public ActionResult TwitterAuth(int id)
@@ -157,11 +158,13 @@ namespace LandingPad.Controllers
                 ViewBag.TwitterName = repository.GetTwitterTag(id.Value);
                 DateTime EndTime = repository.GetTwitterEndTime(id.Value);
                 ViewBag.EndTime = EndTime;
-                return View(db.Writings.ToList());
+                //return View(db.Writings.ToList());
+                return View(wrepo.GetAll());
             }
             catch
             {
-                return View(db.Writings.ToList());
+               // return View(db.Writings.ToList());
+                return View(wrepo.GetAll());
             }
             //}
         }
@@ -235,16 +238,16 @@ namespace LandingPad.Controllers
         //    return TestUserIdInfor(test, id, repository);
         //}
         // This is an entry point for testing.
-        public bool TestUserIdInfor(int test,  Mock<ITwitterRepository> mock)
-        {       
+        public bool TestUserIdInfor(int test, Mock<ITwitterRepository> mock)
+        {
             string name = mock.Name;
             //int tid = repository.GetTwitterId(id.Value);
-            
+
             if (test == 1)
             {
                 return true;
             }
-            else if(test == 2)
+            else if (test == 2)
             {
                 return true;
             }
