@@ -6,9 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using LandingPad.Models;
 using System.Text;
-using System.Collections.ObjectModel;
 using System.Data.Entity;
-using System.Text.RegularExpressions;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
 
@@ -45,7 +43,7 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(id);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            return View(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID));
+            return View(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).FirstOrDefault());
         }
 
         public List<Writing> OrderByNewest(List<Writing> wr)
@@ -105,7 +103,7 @@ namespace LandingPad.Controllers
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
 
-            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First());
+            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault());
 
             return PartialView(OrderByNewest(w));
         }
@@ -124,7 +122,7 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uID);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
             List<LandingPad.Models.Writing> w = GetAllWritingAvailable(pID);
             List<LandingPad.Models.Writing> uw = db.Writings.Where(i => i.ProfileID == pID).ToList();
@@ -153,7 +151,7 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uID);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
             List<LandingPad.Models.Writing> w = GetAllWritingAvailable(pID);
             List<LandingPad.Models.Writing> uw = db.Writings.Where(i => i.ProfileID == pID).ToList();
@@ -177,6 +175,20 @@ namespace LandingPad.Controllers
         [HttpGet]
         public ActionResult Edit(int? id)
         {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            //Get the LPProfile
+            LPProfile lpProfile = GetLPProfile(lpCurrentUser.UserID);
+
             if (id == null)
             {
                 return HttpNotFound();
@@ -184,9 +196,16 @@ namespace LandingPad.Controllers
 
             //grabs the writing with the proper id
             Writing wr = db.Writings.Find(id);
+
             if (wr == null)
             {
                 return HttpNotFound();
+            }
+
+            //If the ProfileIDs don't match redirect to an error page
+            if (wr.ProfileID != lpProfile.ProfileID)
+            {
+                return RedirectToAction("EditError", "Error");
             }
 
             string doc = "";
@@ -252,7 +271,7 @@ namespace LandingPad.Controllers
 
                     if (db.WritingFormats.Where(w => w.WritingID == id).Where(w => w.FormatID == item.FormatID).ToList().Count > 0 && isSelected == false)
                     {
-                        WritingFormat wf = db.WritingFormats.Where(w => w.WritingID == id).Where(w => w.FormatID == item.FormatID).First();
+                        WritingFormat wf = db.WritingFormats.Where(w => w.WritingID == id).Where(w => w.FormatID == item.FormatID).FirstOrDefault();
                         db.WritingFormats.Remove(wf);
                         db.SaveChanges();
                     }
@@ -292,7 +311,7 @@ namespace LandingPad.Controllers
 
                     if (db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == item.PseudonymID).ToList().Count > 0 && isSelected == false)
                     {
-                        WritingPseudonym wp = db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == item.PseudonymID).First();
+                        WritingPseudonym wp = db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == item.PseudonymID).FirstOrDefault();
                         db.WritingPseudonyms.Remove(wp);
                         db.SaveChanges();
                     }
@@ -329,7 +348,7 @@ namespace LandingPad.Controllers
 
                     if (db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).ToList().Count > 0 && isSelected == false)
                     {
-                        WritingGenre wg = db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).First();
+                        WritingGenre wg = db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).FirstOrDefault();
                         db.WritingGenres.Remove(wg);
                         db.SaveChanges();
                     }
@@ -365,7 +384,7 @@ namespace LandingPad.Controllers
 
                     if (db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).ToList().Count > 0 && isSelected == false)
                     {
-                        WritingGenre wg = db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).First();
+                        WritingGenre wg = db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).FirstOrDefault();
                         db.WritingGenres.Remove(wg);
                         db.SaveChanges();
                     }
@@ -403,15 +422,37 @@ namespace LandingPad.Controllers
         [HttpGet]
         public ActionResult Delete(int? id)
         {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            //Get the LPProfile
+            LPProfile lpProfile = GetLPProfile(lpCurrentUser.UserID);
+
             if (id == null)
             {
                 return HttpNotFound();
             }
             Writing wr = db.Writings.Find(id);
+
             if (wr == null)
             {
                 return HttpNotFound();
             }
+
+            //If the ProfileIDs don't match redirect to an error page
+            if (wr.ProfileID != lpProfile.ProfileID)
+            {
+                return RedirectToAction("DeleteError", "Error");
+            }
+
             return View(wr);
         }
 
@@ -425,21 +466,21 @@ namespace LandingPad.Controllers
 
             foreach(var item in wfToDelete)
             {
-                WritingFormat wf = db.WritingFormats.Where(w => w.WritingID == id).First();
+                WritingFormat wf = db.WritingFormats.Where(w => w.WritingID == id).FirstOrDefault();
                 db.WritingFormats.Remove(wf);
                 db.SaveChanges();
             }
 
             foreach (var item in wpToDelete)
             {
-                WritingPseudonym wp = db.WritingPseudonyms.Where(w => w.WritingID == id).First();
+                WritingPseudonym wp = db.WritingPseudonyms.Where(w => w.WritingID == id).FirstOrDefault();
                 db.WritingPseudonyms.Remove(wp);
                 db.SaveChanges();
             }
 
             foreach (var item in wgToDelete)
             {
-                WritingGenre wg = db.WritingGenres.Where(w => w.WritingID == id).First();
+                WritingGenre wg = db.WritingGenres.Where(w => w.WritingID == id).FirstOrDefault();
                 db.WritingGenres.Remove(wg);
                 db.SaveChanges();
             }
@@ -480,7 +521,7 @@ namespace LandingPad.Controllers
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
 
-            LPProfile pAuthor = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).First();
+            LPProfile pAuthor = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).FirstOrDefault();
 
             return PartialView(pAuthor);
         }
@@ -533,7 +574,7 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uID);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            ViewBag.ProfileID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+            ViewBag.ProfileID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
             return View(db.LPProfiles.ToList());
         }
@@ -552,7 +593,7 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uID);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
             if (Int32.Parse(form["ProfileID-" + id]) == 0)
             {
@@ -599,14 +640,14 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uID);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
             if(Int32.Parse(form["PseudonymID-" + id]) == 0)
             {
                 FriendRequest fr = new FriendRequest()
                 {
                     RequesterProfileID = pID,
-                    RequesteeProfileID = db.Pseudonyms.Where(i => i.PseudonymID == id).First().ProfileID,
+                    RequesteeProfileID = db.Pseudonyms.Where(i => i.PseudonymID == id).FirstOrDefault().ProfileID,
                     RequesterPseudonymID = null,
                     RequesteePseudonymID = id,
                     RequestDate = DateTime.Now
@@ -619,7 +660,7 @@ namespace LandingPad.Controllers
                 FriendRequest fr = new FriendRequest()
                 {
                     RequesterProfileID = pID,
-                    RequesteeProfileID = db.Pseudonyms.Where(i => i.PseudonymID == id).First().ProfileID,
+                    RequesteeProfileID = db.Pseudonyms.Where(i => i.PseudonymID == id).FirstOrDefault().ProfileID,
                     RequesterPseudonymID = Int32.Parse(form["PseudonymID-" + id]),
                     RequesteePseudonymID = id,
                     RequestDate = DateTime.Now
@@ -702,10 +743,10 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uID);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
             Friendship f1 = db.Friendships.Find(id);
-            Friendship f2 = db.Friendships.Where(i => i.FirstFriendID == f1.SecondFriendID && i.SecondFriendID == f1.FirstFriendID && i.FirstPseudonymID == f1.SecondPseudonymID && i.SecondPseudonymID == f1.FirstPseudonymID).First();
+            Friendship f2 = db.Friendships.Where(i => i.FirstFriendID == f1.SecondFriendID && i.SecondFriendID == f1.FirstFriendID && i.FirstPseudonymID == f1.SecondPseudonymID && i.SecondPseudonymID == f1.FirstPseudonymID).FirstOrDefault();
 
             db.Friendships.Remove(f1);
             db.SaveChanges();
@@ -732,7 +773,7 @@ namespace LandingPad.Controllers
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
 
-            return View(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First());
+            return View(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault());
         }
 
         [HttpPost]
@@ -749,7 +790,7 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uID);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
             ProfileRole pr = new ProfileRole()
             {
@@ -777,9 +818,9 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uID);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
-            ProfileRole pr = db.ProfileRoles.Where(i => i.ProfileID == pID && i.RoleID == 1).First();
+            ProfileRole pr = db.ProfileRoles.Where(i => i.ProfileID == pID && i.RoleID == 1).FirstOrDefault();
             db.ProfileRoles.Remove(pr);
             db.SaveChanges();
 
@@ -801,7 +842,7 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uID);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
             lpCurrentUser.Birthdate = new DateTime(long.Parse(form["Birthday"]));
             db.Entry(lpCurrentUser).State = EntityState.Modified;
@@ -824,7 +865,7 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uID);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            LPProfile lpp = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).First();
+            LPProfile lpp = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).FirstOrDefault();
 
             lpCurrentUser.GivenName = form["GivenName"];
             lpCurrentUser.Surname = form["Surname"];
@@ -852,7 +893,7 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uID);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
             AccessPermission ap = new AccessPermission()
             {
@@ -874,7 +915,7 @@ namespace LandingPad.Controllers
                 Pseudonym1 = form["Pseudonym"]
             };
 
-            ap = db.AccessPermissions.Where(i => i.AccessPermissionID == apID).First();
+            ap = db.AccessPermissions.Where(i => i.AccessPermissionID == apID).FirstOrDefault();
             ap.PseudonymID = p.PseudonymID;
             db.Entry(ap).State = EntityState.Modified;
             db.SaveChanges();
@@ -899,7 +940,7 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uID);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
             List<WritingPseudonym> wp = db.WritingPseudonyms.Where(i => i.PseudonymID == id).ToList();
 
@@ -910,7 +951,7 @@ namespace LandingPad.Controllers
                 db.WritingPseudonyms.Remove(toRemove);
                 db.SaveChanges();
                 
-                Writing wr = db.Writings.Where(i => i.WritingID == wID).First();
+                Writing wr = db.Writings.Where(i => i.WritingID == wID).FirstOrDefault();
 
                 if (wr.WritingPseudonyms.Count() == 0)
                 {
@@ -923,7 +964,7 @@ namespace LandingPad.Controllers
                 }
             }
 
-            Pseudonym p = db.Pseudonyms.Where(i => i.PseudonymID == id).First();
+            Pseudonym p = db.Pseudonyms.Where(i => i.PseudonymID == id).FirstOrDefault();
             db.Pseudonyms.Remove(p);
             db.SaveChanges();
 
@@ -1069,7 +1110,7 @@ namespace LandingPad.Controllers
 
             if(wr.WritingPseudonyms.Count > 0)
             {
-                byline = " by " + wr.WritingPseudonyms.First().Pseudonym.Pseudonym1;
+                byline = " by " + wr.WritingPseudonyms.FirstOrDefault().Pseudonym.Pseudonym1;
             }
             else if(wr.LPProfile.DisplayRealName == true && wr.LPProfile.LPUser.GivenName != null && wr.LPProfile.LPUser.Surname != null)
             {
@@ -1233,7 +1274,7 @@ namespace LandingPad.Controllers
             //if the GenreID passed in is fiction or nonfiction only
             if(ForN.Select(i => i.GenreID).ToList().Contains(id))
             {
-                GenreCategory FicOrNon = ForN.Where(i => i.GenreID == id).First();
+                GenreCategory FicOrNon = ForN.Where(i => i.GenreID == id).FirstOrDefault();
 
                 //if FicOrNon only has a Parent ID
                 if(FicOrNon.SecondaryParentID == null)
@@ -1368,7 +1409,17 @@ namespace LandingPad.Controllers
         /// <returns> LPUser object after ApplicationUser object</returns>
         private LPUser GetLPUser(string email)
         {
-            return db.LPUsers.Find(email);
+            return db.LPUsers.Where(em => em.Email == email).SingleOrDefault();
+        }
+
+        /// <summary>
+        /// Get the curent user's profile based on the LPUser id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>LPProfile object</returns>
+        private LPProfile GetLPProfile(int id)
+        {
+            return db.LPProfiles.Where(lid => lid.UserID == id).SingleOrDefault();
         }
     }
 }

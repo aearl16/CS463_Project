@@ -80,6 +80,10 @@ namespace LandingPad.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
         public object EmailAddress { get; internal set; }
+
+        [Required]
+        [Display(Name = "Username")]
+        public string Username { get; set; }
     }
 
     public class ResetPasswordViewModel

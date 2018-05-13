@@ -253,5 +253,30 @@ namespace LandingPad.Controllers
                 return false;
             }
         }
+
+        /// <summary>
+        /// Create a LPUser, email passed in from Register
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <returns> ActionResult </returns>
+        [AllowAnonymous]
+        public ActionResult LPUserCreate(string Email)
+        {
+            //Create the User
+            var lpUser = new LPUser();
+            lpUser.Email = Email;
+            //Used for testgin get Username
+            string[] splitstring = Email.Split('@');
+            lpUser.Username = splitstring[0];
+            //Add to DB
+            db.LPUsers.Add(lpUser);
+            db.SaveChanges();
+
+            //View Message from Register
+            ViewBag.Message = "Check your email and confirm your account, you must be confirmed "
+                                    + "before you can log in.";
+            //Return the Info View
+            return View("Info");
+        }
     }
 }
