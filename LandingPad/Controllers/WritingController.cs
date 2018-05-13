@@ -522,66 +522,197 @@ namespace LandingPad.Controllers
         [HttpGet]
         public ActionResult Friends()
         {
-            //placeholder for now; will replace with real thing after figuring out Aaron's code
-            ViewBag.ProfileID = 1;
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            ViewBag.ProfileID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
 
             return View(db.LPProfiles.ToList());
         }
 
         [HttpPost]
-        public ActionResult CreateProfileFriendRequest(int id)
+        public ActionResult CreateProfileFriendRequest(int id, FormCollection form)
         {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+
+            if (Int32.Parse(form["ProfileID-" + id]) == 0)
+            {
+                FriendRequest fr = new FriendRequest()
+                {
+                    RequesterProfileID = pID,
+                    RequesteeProfileID = id,
+                    RequesterPseudonymID = null,
+                    RequesteePseudonymID = null,
+                    RequestDate = DateTime.Now
+                };
+                db.FriendRequests.Add(fr);
+                db.SaveChanges();
+            }
+            else
+            {
+                FriendRequest fr = new FriendRequest()
+                {
+                    RequesterProfileID = pID,
+                    RequesteeProfileID = id,
+                    RequesterPseudonymID = Int32.Parse(form["ProfileID-" + id]),
+                    RequesteePseudonymID = null,
+                    RequestDate = DateTime.Now
+                };
+                db.FriendRequests.Add(fr);
+                db.SaveChanges();
+            }
+
             //create the new database object here
             return RedirectToAction("Friends");
         }
 
         [HttpPost]
-        public ActionResult CreatePseudonymFriendRequest(int id)
+        public ActionResult CreatePseudonymFriendRequest(int id, FormCollection form)
         {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+
+            if(Int32.Parse(form["PseudonymID-" + id]) == 0)
+            {
+                FriendRequest fr = new FriendRequest()
+                {
+                    RequesterProfileID = pID,
+                    RequesteeProfileID = db.Pseudonyms.Where(i => i.PseudonymID == id).First().ProfileID,
+                    RequesterPseudonymID = null,
+                    RequesteePseudonymID = id,
+                    RequestDate = DateTime.Now
+                };
+                db.FriendRequests.Add(fr);
+                db.SaveChanges();
+            }
+            else
+            {
+                FriendRequest fr = new FriendRequest()
+                {
+                    RequesterProfileID = pID,
+                    RequesteeProfileID = db.Pseudonyms.Where(i => i.PseudonymID == id).First().ProfileID,
+                    RequesterPseudonymID = Int32.Parse(form["PseudonymID-" + id]),
+                    RequesteePseudonymID = id,
+                    RequestDate = DateTime.Now
+                };
+                db.FriendRequests.Add(fr);
+                db.SaveChanges();
+            }
+
             //create the new database object here
             return RedirectToAction("Friends");
         }
 
         [HttpPost]
-        public ActionResult AcceptProfileFriendRequest()
+        public ActionResult AcceptFriendRequest(int id)
         {
-            //create the new database object here
-            //delete old database object here
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            FriendRequest fr = db.FriendRequests.Find(id);
+
+            Friendship f1 = new Friendship()
+            {
+                FirstFriendID = fr.RequesterProfileID,
+                SecondFriendID = fr.RequesteeProfileID,
+                FirstPseudonymID = fr.RequesterPseudonymID,
+                SecondPseudonymID = fr.RequesteePseudonymID,
+                AcceptDate = DateTime.Now
+            };
+            db.Friendships.Add(f1);
+            db.SaveChanges();
+
+            Friendship f2 = new Friendship()
+            {
+                FirstFriendID = fr.RequesteeProfileID,
+                SecondFriendID = fr.RequesterProfileID,
+                FirstPseudonymID = fr.RequesteePseudonymID,
+                SecondPseudonymID = fr.RequesterPseudonymID,
+                AcceptDate = DateTime.Now
+            };
+            db.Friendships.Add(f2);
+            db.SaveChanges();
+
+            db.FriendRequests.Remove(fr);
+            db.SaveChanges();
+
             return RedirectToAction("Friends");
         }
 
         [HttpPost]
-        public ActionResult AcceptPseudonymFriendRequest()
+        public ActionResult DeleteFriendRequest(int id)
         {
-            //create the new database object here
-            //delete old database object here
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            FriendRequest fr = db.FriendRequests.Find(id);
+
+            db.FriendRequests.Remove(fr);
+            db.SaveChanges();
+
             return RedirectToAction("Friends");
         }
 
         [HttpPost]
-        public ActionResult DeleteProfileFriendRequest()
+        public ActionResult RemoveFriend(int id)
         {
-            //delete database object here
-            return RedirectToAction("Friends");
-        }
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
 
-        [HttpPost]
-        public ActionResult DeletePseudonymFriendRequest()
-        {
-            //delete database object here
-            return RedirectToAction("Friends");
-        }
+            Friendship f1 = db.Friendships.Find(id);
+            Friendship f2 = db.Friendships.Where(i => i.FirstFriendID == f1.SecondFriendID && i.SecondFriendID == f1.FirstFriendID && i.FirstPseudonymID == f1.SecondPseudonymID && i.SecondPseudonymID == f1.FirstPseudonymID).First();
 
-        [HttpPost]
-        public ActionResult RemoveProfileFriend()
-        {
-            //delete database object here
-            return RedirectToAction("Friends");
-        }
+            db.Friendships.Remove(f1);
+            db.SaveChanges();
 
-        [HttpPost]
-        public ActionResult RemovePseudonymFriend()
-        {
+            db.Friendships.Remove(f2);
+            db.SaveChanges();
+
             //delete database object here
             return RedirectToAction("Friends");
         }
@@ -589,22 +720,214 @@ namespace LandingPad.Controllers
         [HttpGet]
         public ActionResult Settings()
         {
-            //currently has a placeholder until I get Aaron's new code implemented
-            return View(db.LPProfiles.Find(1));
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+
+            return View(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First());
         }
 
         [HttpPost]
         public ActionResult AddProfileRole(int id)
         {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+
+            ProfileRole pr = new ProfileRole()
+            {
+                ProfileID = pID,
+                RoleID = id
+            };
+            db.ProfileRoles.Add(pr);
+            db.SaveChanges();
+
             //create new database object here
-            return RedirectToAction("Friends");
+            return RedirectToAction("Settings");
         }
 
         [HttpPost]
         public ActionResult RemoveProfileRole(int id)
         {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+
+            ProfileRole pr = db.ProfileRoles.Where(i => i.ProfileID == pID && i.RoleID == 1).First();
+            db.ProfileRoles.Remove(pr);
+            db.SaveChanges();
+
             //delete database object here
-            return RedirectToAction("Friends");
+            return RedirectToAction("Settings");
+        }
+
+        [HttpPost]
+        public ActionResult ChangeDateOfBirth(FormCollection form)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+
+            lpCurrentUser.Birthdate = new DateTime(long.Parse(form["Birthday"]));
+            db.Entry(lpCurrentUser).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("Settings");
+        }
+
+        [HttpPost]
+        public ActionResult ChangeName(FormCollection form)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            LPProfile lpp = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).First();
+
+            lpCurrentUser.GivenName = form["GivenName"];
+            lpCurrentUser.Surname = form["Surname"];
+            db.Entry(lpCurrentUser).State = EntityState.Modified;
+            db.SaveChanges();
+
+            lpp.DisplayRealName = form["DisplayName"] != null ? true : false;
+            db.Entry(lpp).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("Settings");
+        }
+
+        [HttpPost]
+        public ActionResult AddPseudonym(FormCollection form)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+
+            AccessPermission ap = new AccessPermission()
+            {
+                PublicAccess = true,
+                FriendAccess = true,
+                PublisherAccess = true,
+                MinorAccess = true
+            };
+
+            int apID = ap.AccessPermissionID;
+
+            db.AccessPermissions.Add(ap);
+            db.SaveChanges();
+
+            Pseudonym p = new Pseudonym()
+            {
+                ProfileID = pID,
+                AccessPermissionID = apID,
+                Pseudonym1 = form["Pseudonym"]
+            };
+
+            ap = db.AccessPermissions.Where(i => i.AccessPermissionID == apID).First();
+            ap.PseudonymID = p.PseudonymID;
+            db.Entry(ap).State = EntityState.Modified;
+            db.SaveChanges();
+
+            db.Pseudonyms.Add(p);
+            db.SaveChanges();
+
+            return RedirectToAction("Settings");
+        }
+
+        [HttpPost]
+        public ActionResult DeletePseudonym(int id)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+
+            List<WritingPseudonym> wp = db.WritingPseudonyms.Where(i => i.PseudonymID == id).ToList();
+
+            foreach(var item in wp)
+            {
+                int wID = item.WritingID;
+                WritingPseudonym toRemove = item;
+                db.WritingPseudonyms.Remove(toRemove);
+                db.SaveChanges();
+                
+                Writing wr = db.Writings.Where(i => i.WritingID == wID).First();
+
+                if (wr.WritingPseudonyms.Count() == 0)
+                {
+                    if(wr.UsePseudonymsInAdditionToUsername == true)
+                    {
+                        wr.UsePseudonymsInAdditionToUsername = false;
+                        db.Entry(wr).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                }
+            }
+
+            Pseudonym p = db.Pseudonyms.Where(i => i.PseudonymID == id).First();
+            db.Pseudonyms.Remove(p);
+            db.SaveChanges();
+
+            return RedirectToAction("Settings");
         }
 
         [HttpGet]

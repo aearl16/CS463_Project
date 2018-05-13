@@ -23,6 +23,8 @@ namespace LandingPad.Models
 
         public int? RequesteePseudonymID { get; set; }
 
+        public DateTime RequestDate { get; set; }
+
         [ForeignKey("RequesterProfileID")]
         public LPProfile RequesterProfile;
 
@@ -30,9 +32,9 @@ namespace LandingPad.Models
         public LPProfile RequesteeProfile;
 
         [ForeignKey("RequesterPseudonymID")]
-        public LPProfile RequesterPseudonym;
+        public Pseudonym RequesterPseudonym;
 
         [ForeignKey("RequesteePseudonymID")]
-        public LPProfile RequesteePseudonym;
+        public Pseudonym RequesteePseudonym;
     }
 }
