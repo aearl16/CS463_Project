@@ -83,12 +83,33 @@ namespace LandingPad.Controllers
         [HttpGet]
         public ActionResult Edit(int? id)
         {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            LPProfile lpProfile = GetLPProfile(lpCurrentUser.UserID);
+
             if (id == null)
             {
                 return HttpNotFound();
             }
 
             Writing wr = db.Writings.Find(id);
+
+            if(wr.ProfileID != lpProfile.ProfileID)
+            {
+                return RedirectToAction("Edit Error", "Error");
+            }
+
+            if(wr.ProfileID != )
+
             if (wr == null)
             {
                 return HttpNotFound();
@@ -584,7 +605,12 @@ namespace LandingPad.Controllers
         /// <returns> LPUser object after ApplicationUser object</returns>
         private LPUser GetLPUser(string email)
         {
-            return db.LPUsers.Find(email);
+            return db.LPUsers.Where(em => em.Email == email).SingleOrDefault();
+        }
+
+        private LPProfile GetLPProfile(int id)
+        {
+            return db.LPProfiles.Where(lid => lid.UserID == id).SingleOrDefault();
         }
 
     }

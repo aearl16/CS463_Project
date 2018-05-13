@@ -327,6 +327,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LPProfilesController.cs" />
     <Compile Include="Controllers\LPUsersController.cs" />
@@ -480,9 +481,9 @@
     <Content Include="Views\Upload\_UploadConfirmation.cshtml" />
     <Content Include="Views\Upload\_UploadEditMenu.cshtml" />
     <Content Include="Views\Home\LPUserCreate.cshtml" />
+    <Content Include="Views\Error\EditError.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Access\" />
     <Folder Include="App_Data\App_LocalResources\" />
   </ItemGroup>
   <ItemGroup>

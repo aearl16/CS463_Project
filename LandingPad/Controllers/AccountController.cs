@@ -181,7 +181,7 @@ namespace LandingPad.Controllers
                     CreateProfile(model.Email);
                     System.Diagnostics.Debug.WriteLine("Registered");
                     //  Comment the following line to prevent log in until the user is confirmed.
-                    //  await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
                     string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
 
