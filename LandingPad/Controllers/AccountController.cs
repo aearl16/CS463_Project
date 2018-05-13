@@ -172,8 +172,10 @@ namespace LandingPad.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 var lpUser = new LPUser();
                 lpUser.Email = model.Email;
-                string[] splitstring = model.Email.Split('@');
-                lpUser.Username = splitstring[0];
+                lpUser.Username = model.Username;
+                //Used for testing
+                //string[] splitstring = model.Email.Split('@');
+                //lpUser.Username = splitstring[0];
                 if (result.Succeeded)
                 {
                     db.LPUsers.Add(lpUser);
