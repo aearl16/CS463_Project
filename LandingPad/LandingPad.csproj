@@ -328,12 +328,14 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Repositories\IWritingRepository.cs" />
     <Compile Include="Controllers\LPProfilesController.cs" />
     <Compile Include="Controllers\LPUsersController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TwittersController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Controllers\WritingController.cs" />
+    <Compile Include="Repositories\WritingRepository.cs" />
     <Compile Include="DAL\LandingPadContext.cs" />
     <Compile Include="Models\AccessPermission.cs" />
     <Compile Include="Models\AltFormatName.cs" />
@@ -359,9 +361,11 @@
     <Compile Include="Models\WritingFormat.cs" />
     <Compile Include="Models\WritingPseudonym.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ILProfilesRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\ITwitterRepository.cs" />
     <Compile Include="Repositories\IUnitOfWork.cs" />
+    <Compile Include="Repositories\LProfilesRepository.cs" />
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\TwitterRepository.cs" />
     <Compile Include="Repositories\UnitOfWork.cs" />

@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Data.Entity;
 using LandingPad.DAL;
 
-namespace LandingPad.Repositorys
+namespace LandingPad.Repositories
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {

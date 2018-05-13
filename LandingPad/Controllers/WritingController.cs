@@ -586,6 +586,5 @@ namespace LandingPad.Controllers
         {
             return db.LPUsers.Find(email);
         }
-
     }
 }
