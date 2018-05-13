@@ -23,6 +23,7 @@ namespace LandingPad
             routes.MapRoute(name: "signin-orchid", url: "signin-orchid", defaults: new { controller = "Account", action = "LoginCallback" });
             routes.MapRoute(name: "signin-deviantart", url: "signin-deviantart", defaults: new { controller = "Account", action = "LoginCallback" });
             routes.MapRoute(name: "signin-dropbox", url: "signin-dropbox", defaults: new { controller = "Account", action = "LoginCallback" });
+            routes.MapRoute(name: "login-twitter", url:"signin-twitter", defaults: new { controller = "Home", action = "TwitterCallback" });
         }
     }
 }
