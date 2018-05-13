@@ -190,7 +190,7 @@ namespace LandingPad.Controllers
 
                     //Call the ActionResult method that creates an LPUser
                     //return RedirectToAction("LPUserCreate", "Home", new { Email = model.Email });
-                    return RedirectToAction("Info");
+                    return View("Info");
                 }
                 AddErrors(result);
             }
@@ -218,7 +218,7 @@ namespace LandingPad.Controllers
             //Create new LPProfile object
             LPProfile lpProfile = new LPProfile();
             //Get LPUser
-            LPUser lpUser = db.LPUsers.Find(email);
+            LPUser lpUser = db.LPUsers.Where(em => em.Email == email).SingleOrDefault();
             //Set Profile UserID
             lpProfile.UserID = lpUser.UserID;
             //Add AcessPermission obj
@@ -236,7 +236,7 @@ namespace LandingPad.Controllers
         /// <param name="uid"></param>
         public void CreateProfileRole(int uid)
         {
-            LPProfile lp = db.LPProfiles.Find(uid);
+            LPProfile lp = db.LPProfiles.Where(id => id.UserID == uid).SingleOrDefault();
             ProfileRole pr = new ProfileRole();
             pr.RoleID = 1;
             pr.ProfileID = lp.ProfileID;
