@@ -18,7 +18,6 @@ namespace LandingPad.Models
         }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int UserID { get; set; }
 
         [Required]

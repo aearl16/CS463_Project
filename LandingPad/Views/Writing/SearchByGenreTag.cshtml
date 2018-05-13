@@ -1,0 +1,11 @@
+﻿@model IEnumerable<LandingPad.Models.Writing>
+@{
+    ViewBag.Title = "Search";
+}
+
+<h2>Search Results</h2>
+
+@foreach (var item in Model)
+{
+    @Html.Partial("_WritingPreview", item)
+}

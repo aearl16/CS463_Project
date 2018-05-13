@@ -6,9 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using LandingPad.Models;
 using System.Text;
-using System.Collections.ObjectModel;
 using System.Data.Entity;
-using System.Text.RegularExpressions;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
 
@@ -32,7 +30,6 @@ namespace LandingPad.Controllers
             }
         }
 
-        // GET: Pseudonym
         public ActionResult Index()
         {
             //Check if logged in ==> Should be caught by [Authorize] but just in case
@@ -46,72 +43,196 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(id);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            //This operation didn't change ==> just gets the LPProfile with LPUser's ID
-            ViewBag.Profiles = String.Join(",", db.LPProfiles.Find(lpCurrentUser.UserID));
-            return View(db.LPProfiles.ToList());
+            return View(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).FirstOrDefault());
         }
 
-        public ActionResult AllWriting(int? id)
+        public List<Writing> OrderByNewest(List<Writing> wr)
         {
-            if(id == null)
+            List<Writing> ordered = new List<Writing>();
+            List<DateTime> comparable = new List<DateTime>();
+
+            foreach(var item in wr)
             {
-                return HttpNotFound();
+                if (item.EditDate != null)
+                {
+                    comparable.Add(item.EditDate.Value);
+                }
+                else
+                {
+                    comparable.Add(item.AddDate);
+                }
             }
 
-            LPProfile p = db.LPProfiles.Find(id);
-            if(p == null)
+            comparable = comparable.OrderByDescending(i => i).ToList();
+
+            foreach(var item in comparable)
             {
-                return HttpNotFound();
+                List<Writing> wCopy = wr;
+
+                foreach(var wItem in wCopy)
+                {
+                    if(wItem.EditDate != null)
+                    {
+                        if(wItem.EditDate.Value == item)
+                        {
+                            ordered.Add(wItem);
+                            wr.Remove(wItem);
+                            break;
+                        }
+                    }
+                    else if(wItem.AddDate == item)
+                    {
+                        ordered.Add(wItem);
+                        wr.Remove(wItem);
+                        break;
+                    }
+                }
             }
 
-            return View(GetAllWritingAvailable(id.GetValueOrDefault()));
+            return ordered;
         }
 
+        //Gets all writing that the user with a ProfileID of id has access to
         [ChildActionOnly]
-        public PartialViewResult _GetPermissionWritings(int id)
+        public PartialViewResult _GetPermissionWritings()
         {
-            LPProfile lpProfile = db.LPProfiles.Find(id);
+            //Get the user's ID
+            string id = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(id);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
 
-            return PartialView(GetAllWritingAvailable(id));
+            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault());
+
+            return PartialView(OrderByNewest(w));
         }
 
+        //Displays writings that have the format tag with a FormatID of id
         public ActionResult SearchByFormatTag(int id)
         {
-            return View(db.Writings.Where(i => i.WritingFormats.Select(j => j.FormatTag.FormatID).ToList().Contains(id)).ToList());
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(pID);
+            List<LandingPad.Models.Writing> uw = db.Writings.Where(i => i.ProfileID == pID).ToList();
+
+            foreach(var item in uw)
+            {
+                w.Add(item);
+            }
+
+            w = OrderByNewest(w);
+
+            return View(w.Where(i => i.WritingFormats.Select(j => j.FormatTag.FormatID).ToList().Contains(id)).ToList());
         }
 
+        //Displays writings that have the genre tag with a GenreID of id
+        public ActionResult SearchByGenreTag(int id)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(pID);
+            List<LandingPad.Models.Writing> uw = db.Writings.Where(i => i.ProfileID == pID).ToList();
+
+            foreach (var item in uw)
+            {
+                w.Add(item);
+            }
+            
+            w = OrderByNewest(w);
+
+            return View(w.Where(i => i.WritingGenres.Select(j => j.GenreTag.GenreID).ToList().Contains(id)).ToList());
+        }
+
+        public ActionResult TestView()
+        {
+            return View(OrderByNewest(db.Writings.ToList()));
+        }
+
+        //The view for editing existing writing; uses the id to edit the correct writing
         [HttpGet]
         public ActionResult Edit(int? id)
         {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            //Get the LPProfile
+            LPProfile lpProfile = GetLPProfile(lpCurrentUser.UserID);
+
             if (id == null)
             {
                 return HttpNotFound();
             }
 
+            //grabs the writing with the proper id
             Writing wr = db.Writings.Find(id);
+
             if (wr == null)
             {
                 return HttpNotFound();
             }
 
+            //If the ProfileIDs don't match redirect to an error page
+            if (wr.ProfileID != lpProfile.ProfileID)
+            {
+                return RedirectToAction("EditError", "Error");
+            }
+
             string doc = "";
 
+            //if its DocType is HTML, set doc equal to the value of Document converted to an HTML string
             if (wr.DocType == ".HTML")
             {
                 doc = HTMLByteArrayToString(wr.Document);
             }
 
+            //puts doc in a form the view can access
             ViewBag.Document = doc;
 
+            //passes an array of all the pseudonyms for this writing's author to the view
             ViewBag.Pseudonyms = String.Join(",", db.Pseudonyms.Where(i => i.ProfileID == wr.ProfileID).Select(j => j.PseudonymID));
 
+            //passes an array of all the format tags to the view
             ViewBag.FormatTags = String.Join(",", db.FormatTags.Select(i => i.FormatID));
+
+            //passes an array of all the genre tags to the view
+            ViewBag.GenreTags = String.Join(",", db.GenreTags.Select(i => i.GenreID));
 
             return View(wr);
         }
 
         [HttpPost]
-        public ActionResult Edit(string[] FormatTags, string[] Pseudonyms, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
+        public ActionResult Edit(string[] FormatTags, string[] Pseudonyms, string[] FictionOrNonfiction, string[] GenreTags, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
                 "CommentsOn, CritiqueOn, DescriptionText")] Writing ed)
         {
             if (!ModelState.IsValid)
@@ -150,7 +271,7 @@ namespace LandingPad.Controllers
 
                     if (db.WritingFormats.Where(w => w.WritingID == id).Where(w => w.FormatID == item.FormatID).ToList().Count > 0 && isSelected == false)
                     {
-                        WritingFormat wf = db.WritingFormats.Where(w => w.WritingID == id).Where(w => w.FormatID == item.FormatID).First();
+                        WritingFormat wf = db.WritingFormats.Where(w => w.WritingID == id).Where(w => w.FormatID == item.FormatID).FirstOrDefault();
                         db.WritingFormats.Remove(wf);
                         db.SaveChanges();
                     }
@@ -190,7 +311,7 @@ namespace LandingPad.Controllers
 
                     if (db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == item.PseudonymID).ToList().Count > 0 && isSelected == false)
                     {
-                        WritingPseudonym wp = db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == item.PseudonymID).First();
+                        WritingPseudonym wp = db.WritingPseudonyms.Where(w => w.WritingID == id).Where(w => w.PseudonymID == item.PseudonymID).FirstOrDefault();
                         db.WritingPseudonyms.Remove(wp);
                         db.SaveChanges();
                     }
@@ -214,7 +335,80 @@ namespace LandingPad.Controllers
                         }
                     }
                 }
-                
+
+                ICollection<GenreTag> allGT = db.GenreTags.ToList();
+                foreach (var item in allGT)
+                {
+                    bool isSelected = false;
+                    for (int i = 0; i < FictionOrNonfiction.Length; i++)
+                    {
+                        if (item.GenreID == Int32.Parse(FictionOrNonfiction[i]))
+                            isSelected = true;
+                    }
+
+                    if (db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).ToList().Count > 0 && isSelected == false)
+                    {
+                        WritingGenre wg = db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).FirstOrDefault();
+                        db.WritingGenres.Remove(wg);
+                        db.SaveChanges();
+                    }
+                }
+
+                //add any genre tags that don't already exist
+                if (FictionOrNonfiction != null)
+                {
+                    foreach (var selection in FictionOrNonfiction)
+                    {
+                        int selected = Int32.Parse(selection);
+                        if (db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == selected).ToList().Count == 0)
+                        {
+                            WritingGenre wg = new WritingGenre()
+                            {
+                                WritingID = id,
+                                GenreID = selected
+                            };
+                            db.WritingGenres.Add(wg);
+                            db.SaveChanges();
+                        }
+                    }
+                }
+
+                foreach (var item in allGT)
+                {
+                    bool isSelected = false;
+                    for (int i = 0; i < GenreTags.Length; i++)
+                    {
+                        if (item.GenreID == Int32.Parse(GenreTags[i]))
+                            isSelected = true;
+                    }
+
+                    if (db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).ToList().Count > 0 && isSelected == false)
+                    {
+                        WritingGenre wg = db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == item.GenreID).FirstOrDefault();
+                        db.WritingGenres.Remove(wg);
+                        db.SaveChanges();
+                    }
+                }
+
+                //add any genre tags that don't already exist
+                if (GenreTags != null)
+                {
+                    foreach (var selection in GenreTags)
+                    {
+                        int selected = Int32.Parse(selection);
+                        if (db.WritingGenres.Where(w => w.WritingID == id).Where(w => w.GenreID == selected).ToList().Count == 0)
+                        {
+                            WritingGenre wg = new WritingGenre()
+                            {
+                                WritingID = id,
+                                GenreID = selected
+                            };
+                            db.WritingGenres.Add(wg);
+                            db.SaveChanges();
+                        }
+                    }
+                }
+
 
                 return RedirectToAction("ViewWriting", "Writing", new { @id = id });
             }
@@ -228,15 +422,37 @@ namespace LandingPad.Controllers
         [HttpGet]
         public ActionResult Delete(int? id)
         {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            //Get the LPProfile
+            LPProfile lpProfile = GetLPProfile(lpCurrentUser.UserID);
+
             if (id == null)
             {
                 return HttpNotFound();
             }
             Writing wr = db.Writings.Find(id);
+
             if (wr == null)
             {
                 return HttpNotFound();
             }
+
+            //If the ProfileIDs don't match redirect to an error page
+            if (wr.ProfileID != lpProfile.ProfileID)
+            {
+                return RedirectToAction("DeleteError", "Error");
+            }
+
             return View(wr);
         }
 
@@ -246,18 +462,26 @@ namespace LandingPad.Controllers
         {
             ICollection<WritingFormat> wfToDelete = db.WritingFormats.Where(w => w.WritingID == id).ToList();
             ICollection<WritingPseudonym> wpToDelete = db.WritingPseudonyms.Where(w => w.WritingID == id).ToList();
+            ICollection<WritingGenre> wgToDelete = db.WritingGenres.Where(w => w.WritingID == id).ToList();
 
             foreach(var item in wfToDelete)
             {
-                WritingFormat wf = db.WritingFormats.Where(w => w.WritingID == id).First();
+                WritingFormat wf = db.WritingFormats.Where(w => w.WritingID == id).FirstOrDefault();
                 db.WritingFormats.Remove(wf);
                 db.SaveChanges();
             }
 
             foreach (var item in wpToDelete)
             {
-                WritingPseudonym wp = db.WritingPseudonyms.Where(w => w.WritingID == id).First();
+                WritingPseudonym wp = db.WritingPseudonyms.Where(w => w.WritingID == id).FirstOrDefault();
                 db.WritingPseudonyms.Remove(wp);
+                db.SaveChanges();
+            }
+
+            foreach (var item in wgToDelete)
+            {
+                WritingGenre wg = db.WritingGenres.Where(w => w.WritingID == id).FirstOrDefault();
+                db.WritingGenres.Remove(wg);
                 db.SaveChanges();
             }
 
@@ -290,7 +514,15 @@ namespace LandingPad.Controllers
         [ChildActionOnly]
         public PartialViewResult _SelectAuthor()
         {
-            List<LPProfile> pAuthor = db.LPProfiles.Where(i => i.ProfileRoles.Select(j => j.RoleID).ToList().Contains(1)).ToList();
+            //Get the user's ID
+            string id = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(id);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+
+            LPProfile pAuthor = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).FirstOrDefault();
+
             return PartialView(pAuthor);
         }
 
@@ -298,6 +530,12 @@ namespace LandingPad.Controllers
         public PartialViewResult _SelectFormat()
         {
             return PartialView(db.FormatTags.ToList());
+        }
+
+        [ChildActionOnly]
+        public PartialViewResult _SelectGenre()
+        {
+            return PartialView(db.GenreTags.ToList());
         }
 
         [ChildActionOnly]
@@ -317,8 +555,420 @@ namespace LandingPad.Controllers
         {
             ViewBag.Pseudonyms = String.Join(",", db.Pseudonyms.Select(i => i.PseudonymID));
             ViewBag.FormatTags = String.Join(",", db.FormatTags.Select(i => i.FormatID));
+            ViewBag.GenreTags = String.Join(",", db.GenreTags.Select(i => i.GenreID));
 
             return PartialView();
+        }
+
+        [HttpGet]
+        public ActionResult Friends()
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            ViewBag.ProfileID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            return View(db.LPProfiles.ToList());
+        }
+
+        [HttpPost]
+        public ActionResult CreateProfileFriendRequest(int id, FormCollection form)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            if (Int32.Parse(form["ProfileID-" + id]) == 0)
+            {
+                FriendRequest fr = new FriendRequest()
+                {
+                    RequesterProfileID = pID,
+                    RequesteeProfileID = id,
+                    RequesterPseudonymID = null,
+                    RequesteePseudonymID = null,
+                    RequestDate = DateTime.Now
+                };
+                db.FriendRequests.Add(fr);
+                db.SaveChanges();
+            }
+            else
+            {
+                FriendRequest fr = new FriendRequest()
+                {
+                    RequesterProfileID = pID,
+                    RequesteeProfileID = id,
+                    RequesterPseudonymID = Int32.Parse(form["ProfileID-" + id]),
+                    RequesteePseudonymID = null,
+                    RequestDate = DateTime.Now
+                };
+                db.FriendRequests.Add(fr);
+                db.SaveChanges();
+            }
+
+            //create the new database object here
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        public ActionResult CreatePseudonymFriendRequest(int id, FormCollection form)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            if(Int32.Parse(form["PseudonymID-" + id]) == 0)
+            {
+                FriendRequest fr = new FriendRequest()
+                {
+                    RequesterProfileID = pID,
+                    RequesteeProfileID = db.Pseudonyms.Where(i => i.PseudonymID == id).FirstOrDefault().ProfileID,
+                    RequesterPseudonymID = null,
+                    RequesteePseudonymID = id,
+                    RequestDate = DateTime.Now
+                };
+                db.FriendRequests.Add(fr);
+                db.SaveChanges();
+            }
+            else
+            {
+                FriendRequest fr = new FriendRequest()
+                {
+                    RequesterProfileID = pID,
+                    RequesteeProfileID = db.Pseudonyms.Where(i => i.PseudonymID == id).FirstOrDefault().ProfileID,
+                    RequesterPseudonymID = Int32.Parse(form["PseudonymID-" + id]),
+                    RequesteePseudonymID = id,
+                    RequestDate = DateTime.Now
+                };
+                db.FriendRequests.Add(fr);
+                db.SaveChanges();
+            }
+
+            //create the new database object here
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        public ActionResult AcceptFriendRequest(int id)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            FriendRequest fr = db.FriendRequests.Find(id);
+
+            Friendship f1 = new Friendship()
+            {
+                FirstFriendID = fr.RequesterProfileID,
+                SecondFriendID = fr.RequesteeProfileID,
+                FirstPseudonymID = fr.RequesterPseudonymID,
+                SecondPseudonymID = fr.RequesteePseudonymID,
+                AcceptDate = DateTime.Now
+            };
+            db.Friendships.Add(f1);
+            db.SaveChanges();
+
+            Friendship f2 = new Friendship()
+            {
+                FirstFriendID = fr.RequesteeProfileID,
+                SecondFriendID = fr.RequesterProfileID,
+                FirstPseudonymID = fr.RequesteePseudonymID,
+                SecondPseudonymID = fr.RequesterPseudonymID,
+                AcceptDate = DateTime.Now
+            };
+            db.Friendships.Add(f2);
+            db.SaveChanges();
+
+            db.FriendRequests.Remove(fr);
+            db.SaveChanges();
+
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        public ActionResult DeleteFriendRequest(int id)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            FriendRequest fr = db.FriendRequests.Find(id);
+
+            db.FriendRequests.Remove(fr);
+            db.SaveChanges();
+
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        public ActionResult RemoveFriend(int id)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            Friendship f1 = db.Friendships.Find(id);
+            Friendship f2 = db.Friendships.Where(i => i.FirstFriendID == f1.SecondFriendID && i.SecondFriendID == f1.FirstFriendID && i.FirstPseudonymID == f1.SecondPseudonymID && i.SecondPseudonymID == f1.FirstPseudonymID).FirstOrDefault();
+
+            db.Friendships.Remove(f1);
+            db.SaveChanges();
+
+            db.Friendships.Remove(f2);
+            db.SaveChanges();
+
+            //delete database object here
+            return RedirectToAction("Friends");
+        }
+
+        [HttpGet]
+        public ActionResult Settings()
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+
+            return View(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault());
+        }
+
+        [HttpPost]
+        public ActionResult AddProfileRole(int id)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            ProfileRole pr = new ProfileRole()
+            {
+                ProfileID = pID,
+                RoleID = id
+            };
+            db.ProfileRoles.Add(pr);
+            db.SaveChanges();
+
+            //create new database object here
+            return RedirectToAction("Settings");
+        }
+
+        [HttpPost]
+        public ActionResult RemoveProfileRole(int id)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            ProfileRole pr = db.ProfileRoles.Where(i => i.ProfileID == pID && i.RoleID == 1).FirstOrDefault();
+            db.ProfileRoles.Remove(pr);
+            db.SaveChanges();
+
+            //delete database object here
+            return RedirectToAction("Settings");
+        }
+
+        [HttpPost]
+        public ActionResult ChangeDateOfBirth(FormCollection form)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            lpCurrentUser.Birthdate = new DateTime(long.Parse(form["Birthday"]));
+            db.Entry(lpCurrentUser).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("Settings");
+        }
+
+        [HttpPost]
+        public ActionResult ChangeName(FormCollection form)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            LPProfile lpp = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).FirstOrDefault();
+
+            lpCurrentUser.GivenName = form["GivenName"];
+            lpCurrentUser.Surname = form["Surname"];
+            db.Entry(lpCurrentUser).State = EntityState.Modified;
+            db.SaveChanges();
+
+            lpp.DisplayRealName = form["DisplayName"] != null ? true : false;
+            db.Entry(lpp).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("Settings");
+        }
+
+        [HttpPost]
+        public ActionResult AddPseudonym(FormCollection form)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            AccessPermission ap = new AccessPermission()
+            {
+                PublicAccess = true,
+                FriendAccess = true,
+                PublisherAccess = true,
+                MinorAccess = true
+            };
+
+            int apID = ap.AccessPermissionID;
+
+            db.AccessPermissions.Add(ap);
+            db.SaveChanges();
+
+            Pseudonym p = new Pseudonym()
+            {
+                ProfileID = pID,
+                AccessPermissionID = apID,
+                Pseudonym1 = form["Pseudonym"]
+            };
+
+            ap = db.AccessPermissions.Where(i => i.AccessPermissionID == apID).FirstOrDefault();
+            ap.PseudonymID = p.PseudonymID;
+            db.Entry(ap).State = EntityState.Modified;
+            db.SaveChanges();
+
+            db.Pseudonyms.Add(p);
+            db.SaveChanges();
+
+            return RedirectToAction("Settings");
+        }
+
+        [HttpPost]
+        public ActionResult DeletePseudonym(int id)
+        {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            List<WritingPseudonym> wp = db.WritingPseudonyms.Where(i => i.PseudonymID == id).ToList();
+
+            foreach(var item in wp)
+            {
+                int wID = item.WritingID;
+                WritingPseudonym toRemove = item;
+                db.WritingPseudonyms.Remove(toRemove);
+                db.SaveChanges();
+                
+                Writing wr = db.Writings.Where(i => i.WritingID == wID).FirstOrDefault();
+
+                if (wr.WritingPseudonyms.Count() == 0)
+                {
+                    if(wr.UsePseudonymsInAdditionToUsername == true)
+                    {
+                        wr.UsePseudonymsInAdditionToUsername = false;
+                        db.Entry(wr).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                }
+            }
+
+            Pseudonym p = db.Pseudonyms.Where(i => i.PseudonymID == id).FirstOrDefault();
+            db.Pseudonyms.Remove(p);
+            db.SaveChanges();
+
+            return RedirectToAction("Settings");
         }
 
         [HttpGet]
@@ -328,7 +978,7 @@ namespace LandingPad.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(string[] FormatTags, string[] Pseudonyms, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
+        public ActionResult Create(string[] FormatTags, string[] Pseudonyms, string[] FictionOrNonfiction, string[] GenreTags, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
                 "CommentsOn, CritiqueOn, DescriptionText")] Writing ed)
         {
             if (!ModelState.IsValid)
@@ -397,6 +1047,34 @@ namespace LandingPad.Controllers
                     }
                 }
 
+                if(FictionOrNonfiction != null)
+                {
+                    foreach (var selection in FictionOrNonfiction)
+                    {
+                        WritingGenre wg = new WritingGenre()
+                        {
+                            WritingID = id,
+                            GenreID = Int32.Parse(selection)
+                        };
+                        db.WritingGenres.Add(wg);
+                        db.SaveChanges();
+                    }
+                }
+
+                if (GenreTags != null)
+                {
+                    foreach (var selection in GenreTags)
+                    {
+                        WritingGenre wg = new WritingGenre()
+                        {
+                            WritingID = id,
+                            GenreID = Int32.Parse(selection)
+                        };
+                        db.WritingGenres.Add(wg);
+                        db.SaveChanges();
+                    }
+                }
+
                 return RedirectToAction("ViewWriting", "Writing", new { @id = id });
             }
             else
@@ -432,7 +1110,7 @@ namespace LandingPad.Controllers
 
             if(wr.WritingPseudonyms.Count > 0)
             {
-                byline = " by " + wr.WritingPseudonyms.First().Pseudonym.Pseudonym1;
+                byline = " by " + wr.WritingPseudonyms.FirstOrDefault().Pseudonym.Pseudonym1;
             }
             else if(wr.LPProfile.DisplayRealName == true && wr.LPProfile.LPUser.GivenName != null && wr.LPProfile.LPUser.Surname != null)
             {
@@ -460,7 +1138,11 @@ namespace LandingPad.Controllers
             if (input == null)
                 return null;
 
-            return Encoding.Unicode.GetString(input);
+            string output = Encoding.Unicode.GetString(input);
+            output = output.Replace("&lt;", "<").Replace("&gt;", ">").Replace("'", "&#39;").Replace('"'.ToString(), "&#34;");
+
+
+            return output;
         }
 
         public List<Writing> GetAllWritingAvailable(int id)
@@ -532,10 +1214,153 @@ namespace LandingPad.Controllers
             return true;
         }
 
+        //in use
         public List<FormatCategory> GetChildrenWithAltParents()
         {
             return db.FormatCategories
                 .Where(i => i.SecondaryParentID == null)
+                .ToList();
+        }
+
+        //in use
+        public List<GenreFormat> GetFictionOnly()
+        {
+            return db.GenreFormats
+                .Where(i => i.GenreID == 1 || i.ParentGenreID == 1)
+                .ToList();
+        }
+
+        //in use
+        public List<GenreFormat> GetNonfictionOnly()
+        {
+            return db.GenreFormats
+                .Where(i => i.GenreID == 2 || i.ParentGenreID == 2)
+                .ToList();
+        }
+
+        //in use
+        public List<GenreCategory> FictionOrNonfictionOnly()
+        {
+            return db.GenreCategories
+                .GroupBy(i => i.GenreID)
+                .Where(j => ((j.Select(k => k.TertiaryParentID).ToList().Contains(1) == false && j.Select(k => k.TertiaryParentID).ToList().Contains(2) == true) || (j.Select(k => k.TertiaryParentID).ToList().Contains(2) == false && j.Select(k => k.TertiaryParentID).ToList().Contains(1) == true)) || ((j.Select(k => k.SecondaryParentID).ToList().Contains(1) == false && j.Select(k => k.SecondaryParentID).ToList().Contains(2) == true) || (j.Select(k => k.SecondaryParentID).ToList().Contains(2) == false && j.Select(k => k.SecondaryParentID).ToList().Contains(1) == true)) || ((j.Select(k => k.ParentID).ToList().Contains(1) == false && j.Select(k => k.ParentID).ToList().Contains(2) == true) || (j.Select(k => k.ParentID).ToList().Contains(2) == false && j.Select(k => k.ParentID).ToList().Contains(1) == true)))
+                .SelectMany(r => r)
+                .Where(r => r.ParentID == 1 || r.ParentID == 2 || r.SecondaryParentID == 1 || r.SecondaryParentID == 2 || r.TertiaryParentID == 1 || r.TertiaryParentID == 2)
+                .ToList();
+        }
+
+        //in use
+        public string IsFictionOrNonfictionOnlyForGenre(int id)
+        {
+            GenreTag gt = db.GenreTags.Find(id);
+
+            if ((gt.ParentGenres.Select(i => i.ParentID).ToList().Contains(1) && gt.ParentGenres.Select(i => i.ParentID).ToList().Contains(2) == false) || gt.ParentGenres.Select(i => i.SecondaryParentID).ToList().Contains(1) || gt.ParentGenres.Select(i => i.TertiaryParentID).ToList().Contains(1))
+            {
+                return "Fiction";
+            }
+            else if ((gt.ParentGenres.Select(i => i.ParentID).ToList().Contains(1) == false && gt.ParentGenres.Select(i => i.ParentID).ToList().Contains(2)) || gt.ParentGenres.Select(i => i.SecondaryParentID).ToList().Contains(2) || gt.ParentGenres.Select(i => i.TertiaryParentID).ToList().Contains(2))
+            {
+                return "Nonfiction";
+            }
+            else
+                return null;
+        }
+
+        //in use
+        public int GetFictionOrNonfiction(int id)
+        {
+            List<GenreCategory> ForN = FictionOrNonfictionOnly();
+
+            //if the GenreID passed in is fiction or nonfiction only
+            if(ForN.Select(i => i.GenreID).ToList().Contains(id))
+            {
+                GenreCategory FicOrNon = ForN.Where(i => i.GenreID == id).FirstOrDefault();
+
+                //if FicOrNon only has a Parent ID
+                if(FicOrNon.SecondaryParentID == null)
+                {
+                    return FicOrNon.ParentID;
+                } //if FicOrNon has a SecondaryParentID but not a TertiaryParentID
+                else if(FicOrNon.TertiaryParentID == null)
+                {
+                    return FicOrNon.SecondaryParentID.Value;
+                } //if FicOrNon has a TertiaryParentID
+                else
+                {
+                    return FicOrNon.TertiaryParentID.Value;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        //in use
+        public List<int> GetFictionOrNonfictionForGenre(int id, string name)
+        {
+            List<GenreCategory> ForN = FictionOrNonfictionOnly();
+            
+
+            if(String.Compare(name, "genre") == 0)
+            {
+                int fnGenreID = GetFictionOrNonfiction(id);
+                if (fnGenreID != 0)
+                {
+                    if (fnGenreID == 1)
+                    {
+                        return ForN.Where(i => i.ParentID == 2 || i.SecondaryParentID == 2 || i.TertiaryParentID == 2).Select(i => i.GenreID).Distinct().ToList();
+                    }
+                    else
+                    {
+                        return ForN.Where(i => i.ParentID == 1 || i.SecondaryParentID == 1 || i.TertiaryParentID == 1).Select(i => i.GenreID).Distinct().ToList();
+                    }
+                }
+                else
+                {
+                    return new List<int>();
+                }
+            }
+            else
+            {
+                if(id == 1)
+                {
+                    return db.GenreFormats.Where(i => i.GenreID == 2).Select(i => i.ParentFormatID).ToList();
+                }
+                else if(id == 2)
+                {
+                    return db.GenreFormats.Where(i => i.GenreID == 1).Select(i => i.ParentFormatID).ToList();
+                }
+                else
+                {
+                    return new List<int>();
+                }
+            }
+        }
+
+        //in use
+        public List<int> GetFictionOrNonfictionForFormat(int id)
+        {
+            //if this format tag is fiction only
+            if(db.FormatTags.Find(id).ChildGenres.Select(i => i.GenreID).ToList().Contains(1))
+            {
+                return db.GenreFormats.Where(i => i.GenreID == 2).Select(i => i.ParentFormatID).ToList();
+            } //if the format tag is nonfiction only
+            else if(db.FormatTags.Find(id).ChildGenres.Select(i => i.GenreID).ToList().Contains(2))
+            {
+                return db.GenreFormats.Where(i => i.GenreID == 1).Select(i => i.ParentFormatID).ToList();
+            }
+            else //if the format tag can be either fiction or nonfiction
+            {
+                return new List<int>();
+            }
+        }
+
+        //in use
+        public List<GenreCategory> GetChildGenresWithAltParents()
+        {
+            return db.GenreCategories
+                .Where(i => i.TertiaryParentID == null)
                 .ToList();
         }
 
@@ -584,7 +1409,17 @@ namespace LandingPad.Controllers
         /// <returns> LPUser object after ApplicationUser object</returns>
         private LPUser GetLPUser(string email)
         {
-            return db.LPUsers.Find(email);
+            return db.LPUsers.Where(em => em.Email == email).SingleOrDefault();
+        }
+
+        /// <summary>
+        /// Get the curent user's profile based on the LPUser id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>LPProfile object</returns>
+        private LPProfile GetLPProfile(int id)
+        {
+            return db.LPProfiles.Where(lid => lid.UserID == id).SingleOrDefault();
         }
     }
 }

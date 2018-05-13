@@ -19,6 +19,7 @@ namespace LandingPad.Models
         {
             WritingPseudonyms = new HashSet<WritingPseudonym>();
             WritingFormats = new HashSet<WritingFormat>();
+            WritingGenres = new HashSet<WritingGenre>();
         }
 
         public int WritingID { get; set; }
@@ -36,7 +37,7 @@ namespace LandingPad.Models
         [DisplayFormat(DataFormatString = "{0:MMMM d, yyyy h:mm tt}")]
         public DateTime AddDate { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:MMMM d, yyyy h:mm tt")]
+        [DisplayFormat(DataFormatString = "{0:MMMM d, yyyy h:mm tt}")]
         public DateTime? EditDate { get; set; }
 
         public bool LikesOn { get; set; }
@@ -61,6 +62,9 @@ namespace LandingPad.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WritingFormat> WritingFormats { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WritingGenre> WritingGenres { get; set; }
 
         public virtual LPProfile LPProfile { get; set; }
         

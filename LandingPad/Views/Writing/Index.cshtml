@@ -1,50 +1,47 @@
-﻿@model IEnumerable<LandingPad.Models.LPProfile>
+﻿@model LandingPad.Models.LPProfile
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Penfolio";
+
+    var controller = new LandingPad.Controllers.WritingController();
 }
 
-<h2>My Writing</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-
-@foreach (var item in Model)
-{
-    <div class="loadedWritings @item.ProfileID collapse myWriting">
-        @foreach (var wItem in item.Writings)
-        {
-            @Html.Partial("_WritingPreview", wItem)
-        }
-    </div>
-}
+<!--create a div to hold the loaded writings; the myWriting class is for the purpose of specifying this area so that the collapse for the edit and delete links can be removed-->
+<div class="loadedWritings myWriting">
+    <h2>My Writing</h2>
+    <!--if the current profile belongs to a writer, add a link to create a new piece of writing-->
+    @if (Model.ProfileRoles.Select(i => i.RoleID).ToList().Contains(1))
+    {
+        <p>
+            @Html.ActionLink("Create New", "Create")
+        </p>
+    }
+    <!--for each writing for this profile, return a partial view-->
+    @foreach (var item in controller.OrderByNewest(Model.Writings.ToList()))
+    {
+        @Html.Partial("_WritingPreview", item)
+    }
+</div> <!--loadedWritings-->
 
 <h2>Other People's Writing</h2>
 
-@foreach (var item in Model)
-{
-    <div class="loadedWritings @item.ProfileID collapse">
-        @Html.Action("_GetPermissionWritings", new { id = item.ProfileID })
-    </div>
-}
+<!--create a div to hold all of the writings the user with this profile is allowed to view-->
+<div class="loadedWritings">
+    @Html.Action("_GetPermissionWritings", new { id = Model.ProfileID })
+</div>
 
 @section scripts {
     <script>
-        function toggleProfiles(profiles) {
-            var id = $("#profileID").val();
-
-            for (var i = 0; i < profiles.length; i++) {
-                if ($("div.loadedWritings." + profiles[i]).hasClass("collapse") !== true)
-                    $("div.loadedWritings." + profiles[i]).addClass("collapse");
-            }
-
-            $("div.loadedWritings." + id).removeClass("collapse");
-        }
-
         (function () {
+            //when the document has fully loaded, uncollapse the edit and delete links on the writing previews that are under the My Writing heading
             $(document).ready(function () {
-                $(".myWriting .forUserWriting").removeClass("collapse");
+                //if this user doesn't have the writer role
+                if (@Model.ProfileRoles.Select(i => i.RoleID).ToList().Contains(1) !== true) {
+                    $(".myWriting").addClass("collapse");
+                }
+                else {
+                    $(".myWriting .forUserWriting").removeClass("collapse");
+                }
             });
         })();
     </script>
