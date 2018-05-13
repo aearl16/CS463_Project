@@ -481,7 +481,10 @@
     <Content Include="Views\Upload\_UploadEditMenu.cshtml" />
     <Content Include="Views\Home\LPUserCreate.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Access\" />
+    <Folder Include="App_Data\App_LocalResources\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
   </ItemGroup>

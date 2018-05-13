@@ -278,91 +278,92 @@ CREATE TABLE dbo.WritingFormat
 	ON UPDATE CASCADE
 );
 
-INSERT INTO dbo.LPUser ( Email, Birthdate, GivenName, Surname, PhoneNumber, Username) VALUES
-('dude@dude.com', '2010-04-12 12:00', 'Dude', 'Crush', '555-555-5555', 'RandomDude01'), --1
-( 'saltshaker@oldnsalty.net', '1999-09-09 12:00','Phil', 'Forrest', '555-555-5555', '100%Salt'), --2
-( 'thestanza@gc.org','1978-06-09 12:00', 'George', 'Castanzna', '', 'TheBubbleBoy'), --3
-('jsmith@penguin.com', '1966-03-14 12:00', 'Joe', 'Smith', '555-555-5555', 'PublisherJoeSmith'), --4
-('agent@literary.com', '2000-02-21 12:00', 'Lilah', 'Agent', '', 'LiteraryAgentLilahAgent'); --5
 
-INSERT INTO dbo.AccessPermission (WritingID, ProfileID, PseudonymID, PublicAccess, FriendAccess, PublisherAccess, MinorAccess) VALUES
-(NULL, 1, NULL, 0, 1, 1, 1), --dude@dude.com 1 
-(NULL, 2, NULL, 0, 0, 1, 0), --saltshaker@oldnsalty.net 2
-(NULL, 3, NULL, 1, 1, 1, 1), --thestanza@gc.org 3
-(1, NULL, NULL, 0, 0, 1, 1), --Lord of the Things 4
-(2, NULL, NULL, 1, 1, 1, 1), --Ballad of the Trees 5
-(3, NULL, NULL, 0, 1, 1, 0), --Hokey Folk Tales 6
-(NULL, 4, NULL, 1, 1, 1, 1), --jsmith@penguin.com 7
-(NULL, 5, NULL, 1, 1, 1, 0), --literary@agent.com 8
-(4, NULL, NULL, 0, 1, 0, 1), --The Test Song 9
-(NULL, NULL, 1, 1, 1, 1, 1), --ComedyClubbed 10
-(NULL, NULL, 2, 1, 1, 1, 1), --FunnyMan 11
-(NULL, NULL, 3, 1, 1, 1, 1), --DoomsDayDumb 12
-(NULL, NULL, 4, 1, 1, 1, 1), --CrustyCrab 13
-(NULL, NULL, 5, 1, 1, 1, 1), --RustyRed 14
-(NULL, NULL, 6, 1, 1, 1, 1), --Treed 15
-(NULL, NULL, 7, 1, 1, 1, 1), --JustGeorge 16
-(NULL, NULL, 8, 1, 1, 1, 1), --NoPirates 17
-(NULL, NULL, 9, 1, 1, 1, 1); --FestivusFreak 18
+--INSERT INTO dbo.LPUser ( Email, Birthdate, GivenName, Surname, PhoneNumber, Username) VALUES
+--('dude@dude.com', '2010-04-12 12:00', 'Dude', 'Crush', '555-555-5555', 'RandomDude01'), --1
+--( 'saltshaker@oldnsalty.net', '1999-09-09 12:00','Phil', 'Forrest', '555-555-5555', '100%Salt'), --2
+--( 'thestanza@gc.org','1978-06-09 12:00', 'George', 'Castanzna', '', 'TheBubbleBoy'), --3
+--('jsmith@penguin.com', '1966-03-14 12:00', 'Joe', 'Smith', '555-555-5555', 'PublisherJoeSmith'), --4
+--('agent@literary.com', '2000-02-21 12:00', 'Lilah', 'Agent', '', 'LiteraryAgentLilahAgent'); --5
 
-INSERT INTO dbo.LPProfile(UserID, AccessPermissionID, LPDescription, ProfilePhoto, DisplayRealName) VALUES
-(1, 1, 'I like to ride bikes', NULL, 0), --dude@dude.com 1
-(2, 2, 'I dont like to ride bikes', NULL, 0), --saltshaker@oldnsalty.net 2
-(3, 3, '', NULL, 1), --thestanza@gc.org 3
-(4, 7, 'I am a publisher at Penguin Books.', NULL, 1), --jsmith@penguin.com 4
-(5, 8, 'My name is Lilah Agent and I''m a literary agent.', NULL, 1); --literary@agent.com 5
+--INSERT INTO dbo.AccessPermission (WritingID, ProfileID, PseudonymID, PublicAccess, FriendAccess, PublisherAccess, MinorAccess) VALUES
+--(NULL, 1, NULL, 0, 1, 1, 1), --dude@dude.com 1 
+--(NULL, 2, NULL, 0, 0, 1, 0), --saltshaker@oldnsalty.net 2
+--(NULL, 3, NULL, 1, 1, 1, 1), --thestanza@gc.org 3
+--(1, NULL, NULL, 0, 0, 1, 1), --Lord of the Things 4
+--(2, NULL, NULL, 1, 1, 1, 1), --Ballad of the Trees 5
+--(3, NULL, NULL, 0, 1, 1, 0), --Hokey Folk Tales 6
+--(NULL, 4, NULL, 1, 1, 1, 1), --jsmith@penguin.com 7
+--(NULL, 5, NULL, 1, 1, 1, 0), --literary@agent.com 8
+--(4, NULL, NULL, 0, 1, 0, 1), --The Test Song 9
+--(NULL, NULL, 1, 1, 1, 1, 1), --ComedyClubbed 10
+--(NULL, NULL, 2, 1, 1, 1, 1), --FunnyMan 11
+--(NULL, NULL, 3, 1, 1, 1, 1), --DoomsDayDumb 12
+--(NULL, NULL, 4, 1, 1, 1, 1), --CrustyCrab 13
+--(NULL, NULL, 5, 1, 1, 1, 1), --RustyRed 14
+--(NULL, NULL, 6, 1, 1, 1, 1), --Treed 15
+--(NULL, NULL, 7, 1, 1, 1, 1), --JustGeorge 16
+--(NULL, NULL, 8, 1, 1, 1, 1), --NoPirates 17
+--(NULL, NULL, 9, 1, 1, 1, 1); --FestivusFreak 18
 
-INSERT INTO dbo.IndividualAccessGrant (AccessPermissionID, GranteeID) VALUES
-(4, 2); --Lord of the Things saltshaker@oldnsalty.net 1
+--INSERT INTO dbo.LPProfile(UserID, AccessPermissionID, LPDescription, ProfilePhoto, DisplayRealName) VALUES
+--(1, 1, 'I like to ride bikes', NULL, 0), --dude@dude.com 1
+--(2, 2, 'I dont like to ride bikes', NULL, 0), --saltshaker@oldnsalty.net 2
+--(3, 3, '', NULL, 1), --thestanza@gc.org 3
+--(4, 7, 'I am a publisher at Penguin Books.', NULL, 1), --jsmith@penguin.com 4
+--(5, 8, 'My name is Lilah Agent and I''m a literary agent.', NULL, 1); --literary@agent.com 5
 
-INSERT INTO dbo.IndividualAccessRevoke (AccessPermissionID, RevokeeID) VALUES
-(4, 4), --Lord of the Things jsmith@penguin.com 1
-(5, 1); --Ballad of the Trees dude@dude.com 2
+--INSERT INTO dbo.IndividualAccessGrant (AccessPermissionID, GranteeID) VALUES
+--(4, 2); --Lord of the Things saltshaker@oldnsalty.net 1
+
+--INSERT INTO dbo.IndividualAccessRevoke (AccessPermissionID, RevokeeID) VALUES
+--(4, 4), --Lord of the Things jsmith@penguin.com 1
+--(5, 1); --Ballad of the Trees dude@dude.com 2
 
 INSERT INTO dbo.LPRole(RoleName, SecondaryRoleName) VALUES
 ('Writer', ''), --Writer 1
 ('Publisher', 'Literary Agent'); --Publisher or Literary Agent 2
 
-INSERT INTO dbo.ProfileRole(ProfileID, RoleID, UseSecondaryRoleName) VALUES
-(1, 1, 0), --dude@dude.com Writer 1
-(2, 1, 0), --saltshaker@oldnsalty.net Writer 2
-(3, 1, 0), --thestanza@gc.org Writer 3
-(4, 2, 0), --jmsmith@penguin.com Publisher 4
-(5, 2, 1); --agent@literary.com Literary Agent 5
+--INSERT INTO dbo.ProfileRole(ProfileID, RoleID, UseSecondaryRoleName) VALUES
+--(1, 1, 0), --dude@dude.com Writer 1
+--(2, 1, 0), --saltshaker@oldnsalty.net Writer 2
+--(3, 1, 0), --thestanza@gc.org Writer 3
+--(4, 2, 0), --jmsmith@penguin.com Publisher 4
+--(5, 2, 1); --agent@literary.com Literary Agent 5
 
-INSERT INTO dbo.Friendship(FirstFriendID, SecondFriendID, FirstPseudonymID, SecondPseudonymID) VALUES
-(1, 3, NULL, NULL), --dude@dude.com thestanza@gc.org 1
-(3, 1, NULL, NULL), --thestanza@gc.org dude@dude.com 2
-(1, 4, NULL, NULL), --dude@dude.com jsmith@penguin.com 3
-(4, 1, NULL, NULL), --jsmith@penguin.com dude@dude.com 4
-(2, 4, NULL, NULL), --saltshaker@oldnsalty.net jsmith@penguin.com 5
-(4, 2, NULL, NULL), --jsmith@penguin.com saltshaker@oldnsalty.net 6
-(2, 5, NULL, NULL), --saltshaker@oldnsalty.net agent@literary.com 7
-(5, 2, NULL, NULL); --agent@literary.com saltshaker@oldnsalty.net 8
+--INSERT INTO dbo.Friendship(FirstFriendID, SecondFriendID, FirstPseudonymID, SecondPseudonymID) VALUES
+--(1, 3, NULL, NULL), --dude@dude.com thestanza@gc.org 1
+--(3, 1, NULL, NULL), --thestanza@gc.org dude@dude.com 2
+--(1, 4, NULL, NULL), --dude@dude.com jsmith@penguin.com 3
+--(4, 1, NULL, NULL), --jsmith@penguin.com dude@dude.com 4
+--(2, 4, NULL, NULL), --saltshaker@oldnsalty.net jsmith@penguin.com 5
+--(4, 2, NULL, NULL), --jsmith@penguin.com saltshaker@oldnsalty.net 6
+--(2, 5, NULL, NULL), --saltshaker@oldnsalty.net agent@literary.com 7
+--(5, 2, NULL, NULL); --agent@literary.com saltshaker@oldnsalty.net 8
 
-INSERT INTO dbo.Writing (ProfileID, AccessPermissionID, Title, Document, AddDate, EditDate, LikesOn, CommentsOn, CritiqueOn, UsePseudonymsInAdditionToUsername, DocType, DescriptionText, WritingFileName) VALUES
-(1, 4, 'Lord of the Things', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 0, 0, 0, '.DOCX', 'A humorous play on lord of the rings', 'Lord_of_the_Things'), --dude@dude.com 1
-(2, 5, 'Ballad of The Trees', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 1, 1, 0, '.RTF', 'Ballad About Trees', 'balladofthetrees'), --saltshaker@oldnsalty.net 2
-(3, 6, 'Hokey Folk Tales', CONVERT(VARBINARY(MAX), 'ABCD'), '1991-04-10', GETDATE(), 1, 1, 1, 1, '.ODT', 'A collection of old forgotten tales: second edition', 'forgottentales'), --thestanza@gc.org 3
-(1, 9, 'The Test Song', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 1, 0, 0, 0, '.HTML', 'I love tests; I love every kind of test.', 'everydayimtesting'); --dude@dude.com 4
+--INSERT INTO dbo.Writing (ProfileID, AccessPermissionID, Title, Document, AddDate, EditDate, LikesOn, CommentsOn, CritiqueOn, UsePseudonymsInAdditionToUsername, DocType, DescriptionText, WritingFileName) VALUES
+--(1, 4, 'Lord of the Things', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 0, 0, 0, '.DOCX', 'A humorous play on lord of the rings', 'Lord_of_the_Things'), --dude@dude.com 1
+--(2, 5, 'Ballad of The Trees', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 0, 1, 1, 0, '.RTF', 'Ballad About Trees', 'balladofthetrees'), --saltshaker@oldnsalty.net 2
+--(3, 6, 'Hokey Folk Tales', CONVERT(VARBINARY(MAX), 'ABCD'), '1991-04-10', GETDATE(), 1, 1, 1, 1, '.ODT', 'A collection of old forgotten tales: second edition', 'forgottentales'), --thestanza@gc.org 3
+--(1, 9, 'The Test Song', CONVERT(VARBINARY(MAX), 'ABCD'), GETDATE(), NULL, 1, 0, 0, 0, '.HTML', 'I love tests; I love every kind of test.', 'everydayimtesting'); --dude@dude.com 4
 
-INSERT INTO dbo.Pseudonym (ProfileID, AccessPermissionID, Pseudonym) VALUES
-(1, 10, 'ComedyClubbed'), --dude@dude.com 1
-(1, 11, 'FunnyMan'), --dude@dude.com 2
-(1, 12, 'DoomsDayDumb'), --dude@dude.com 3
-(2, 13, 'CrustyCrab'), --saltshaker@oldnsalty.net 4
-(2, 14, 'RustyRed'), --saltshaker@oldnsalty.net 5
-(3, 15, 'Treed'), --thestanza@gc.org 6
-(3, 16, 'JustGeorge'), --thestanza@gc.org 7
-(3, 17, 'NoPirates'), --thestanza@gc.org 8
-(3, 18, 'FestivusFreak'); --thestanza@gc.org 9
+--INSERT INTO dbo.Pseudonym (ProfileID, AccessPermissionID, Pseudonym) VALUES
+--(1, 10, 'ComedyClubbed'), --dude@dude.com 1
+--(1, 11, 'FunnyMan'), --dude@dude.com 2
+--(1, 12, 'DoomsDayDumb'), --dude@dude.com 3
+--(2, 13, 'CrustyCrab'), --saltshaker@oldnsalty.net 4
+--(2, 14, 'RustyRed'), --saltshaker@oldnsalty.net 5
+--(3, 15, 'Treed'), --thestanza@gc.org 6
+--(3, 16, 'JustGeorge'), --thestanza@gc.org 7
+--(3, 17, 'NoPirates'), --thestanza@gc.org 8
+--(3, 18, 'FestivusFreak'); --thestanza@gc.org 9
 
-INSERT INTO dbo.WritingPseudonym (WritingID, PseudonymID) VALUES
-(1, 1), --Lord of the Things, ComedyClubbed 1
-(1, 2), --Lord of the Things, FunnyMan 2
-(2, 5), --Ballad of the Trees, RustyRed 3
-(3, 6), --Hokey Folk Tales, Treed 4
-(3, 7); --Hokey Folk Tales, JustGeorge 5
+--INSERT INTO dbo.WritingPseudonym (WritingID, PseudonymID) VALUES
+--(1, 1), --Lord of the Things, ComedyClubbed 1
+--(1, 2), --Lord of the Things, FunnyMan 2
+--(2, 5), --Ballad of the Trees, RustyRed 3
+--(3, 6), --Hokey Folk Tales, Treed 4
+--(3, 7); --Hokey Folk Tales, JustGeorge 5
 
 INSERT INTO dbo.FormatTag (FormatName, Explanation) VALUES
 --Top category
