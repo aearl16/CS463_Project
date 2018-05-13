@@ -386,10 +386,6 @@
     <Content Include="App_Data\DOWN.sql" />
     <Content Include="App_Data\SECDOWN.sql" />
     <Content Include="App_Data\SECUP.sql" />
-    <Content Include="App_Data\test.mdf" />
-    <Content Include="App_Data\test_log.ldf">
-      <DependentUpon>test.mdf</DependentUpon>
-    </Content>
     <Content Include="App_Data\UP.sql" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
