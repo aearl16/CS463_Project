@@ -297,11 +297,32 @@ namespace LandingPad.Controllers
         /// <returns> The file in the original format it was uploaded as</returns>
         public ActionResult Download(int? id)
         {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            //Get the LPProfile
+            LPProfile lpProfile = GetLPProfile(lpCurrentUser.UserID);
+
             Writing wr = db.Writings.Find(id);
             if (wr == null)
             {
                 return HttpNotFound();
             }
+
+            //If the ProfileIDs don't match redirect to an error page
+            if (wr.ProfileID != lpProfile.ProfileID)
+            {
+                return RedirectToAction("DownloadError", "Error");
+            }
+
             UTF8Encoding encoding = new UTF8Encoding();
             byte[] contentAsBytes = wr.Document;
 

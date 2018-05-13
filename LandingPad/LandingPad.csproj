@@ -382,6 +382,10 @@
     <Content Include="App_Data\DOWN.sql" />
     <Content Include="App_Data\SECDOWN.sql" />
     <Content Include="App_Data\SECUP.sql" />
+    <Content Include="App_Data\test.mdf" />
+    <Content Include="App_Data\test_log.ldf">
+      <DependentUpon>test.mdf</DependentUpon>
+    </Content>
     <Content Include="App_Data\UP.sql" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -493,9 +497,9 @@
     <Content Include="Views\Home\LPUserCreate.cshtml" />
     <Content Include="Views\Error\EditError.cshtml" />
     <Content Include="Views\Error\DeleteError.cshtml" />
+    <Content Include="Views\Error\DownloadError.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\App_LocalResources\" />
     <Content Include="Views\Writing\_SelectGenre.cshtml" />
     <Content Include="Views\Writing\SearchByGenreTag.cshtml" />
     <Content Include="Views\Writing\Friends.cshtml" />
@@ -521,7 +525,9 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\App_LocalResources\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

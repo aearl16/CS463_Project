@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Net;
-using System.IO;
-using System.Text;
 using TweetSharp;
 using LandingPad.DAL;
 using LandingPad.Repositorys;
