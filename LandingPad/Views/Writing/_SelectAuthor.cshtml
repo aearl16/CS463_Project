@@ -1,35 +1,16 @@
-﻿@model IEnumerable<LandingPad.Models.LPProfile>
+﻿@model LandingPad.Models.LPProfile
 
 <div class="pseudonymSelector">
     <h3>Select Pseudonyms for Writing</h3>
-    <div class="formItem">
-        <!--ProfileID selector; calls loadPseudonyms when value is changed-->
-        ProfileID <select id="profileID" name="ProfileID" onchange='loadPseudonyms([@Html.Raw(String.Join(",", Model.Select(i => i.ProfileID)))])'>
-            <!--Initial value; the attributes are to make the option disappear/not be selectable after first selection is made-->
-            <option value="" selected disabled hidden>Select ProfileID</option> 
-            <!--For each profile, make an option in the selector with that ProfileID-->
-            @foreach (var item in Model)
-            {
-                <option value="@item.ProfileID" class="@item.ProfileID">@item.ProfileID</option>
-            }
-        </select>
-    </div> <!--formItem for ProfileID selector-->
-
-    <!--Pseudonyms-->
+    <input type="hidden" id="profileID" name="ProfileID" value="@Model.ProfileID" />
     <div class="formItem">
         <div id="pseudonymContainer">
-            <!--For each profile, create a span with all of that profile's pseudonyms-->
-            @foreach (var item in Model)
+            <!--For each pseudonym connected to the current profile, create a checkbox for that pseudonym-->
+            @foreach (var item in Model.Pseudonyms)
             {
-                <!--A span to surround all of the pseudonyms for each profile; collapsed until the corresponding ProfileID is selected-->
-                <span class="@item.ProfileID collapse">
-                    <!--For each pseudonym connected to the current profile, create a checkbox for that pseudonym-->
-                    @foreach (var subitem in item.Pseudonyms)
-                    {
-                        <span class="checkItem2">
-                            <input type="checkbox" value="@subitem.PseudonymID" name="Pseudonyms" class="@subitem.PseudonymID" onchange='checkIfOnlyPseudonym()' /> <span class="pseudonymName @subitem.PseudonymID">@subitem.Pseudonym1</span>
-                        </span>
-                    }
+                <span class="checkItem2">
+                    <!--on change: if the checkbox was unchecked and no other pseudonyms are checked, collapses the option to use pseudonyms in addition to the username; if checkbox was checked, uncollapses the same-->
+                    <input type="checkbox" value="@item.PseudonymID" name="Pseudonyms" class="@item.PseudonymID" onchange='checkIfOnlyPseudonym(@item.PseudonymID, [@Html.Raw(String.Join(",", Model.Pseudonyms.Select(i => i.PseudonymID)))])' /> <span class="pseudonymName @item.PseudonymID">@item.Pseudonym1</span>
                 </span>
             }
         </div> <!--pseudonymContainer-->

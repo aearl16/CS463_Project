@@ -6,7 +6,6 @@ using System.Data.Entity.Spatial;
 
 namespace LandingPad.Models
 {
-
     [Table("FormatCategory")]
     public partial class FormatCategory
     {
@@ -22,6 +21,13 @@ namespace LandingPad.Models
 
         public int? SecondaryParentID { get; set; }
 
+        [ForeignKey("FormatID")]
         public virtual FormatTag FormatTag { get; set; }
+
+        [ForeignKey("ParentID")]
+        public virtual FormatTag ParentFormat { get; set; }
+
+        [ForeignKey("SecondaryParentID")]
+        public virtual FormatTag SecondaryParentFormat { get; set; }
     }
 }

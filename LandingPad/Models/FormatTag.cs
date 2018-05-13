@@ -15,6 +15,7 @@ namespace LandingPad.Models
         {
             AltFormatNames = new HashSet<AltFormatName>();
             ChildFormats = new HashSet<FormatCategory>();
+            ChildGenres = new HashSet<GenreFormat>();
             WritingFormats = new HashSet<WritingFormat>();
         }
 
@@ -33,6 +34,10 @@ namespace LandingPad.Models
         [ForeignKey("ParentID")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FormatCategory> ChildFormats { get; set; }
+
+        [ForeignKey("ParentFormatID")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GenreFormat> ChildGenres { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WritingFormat> WritingFormats { get; set; }

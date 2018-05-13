@@ -22,10 +22,13 @@
             var True = true, False = false;
             var pseudonyms = [@Html.Raw(ViewBag.Pseudonyms)];
             var formatTags = [@Html.Raw(ViewBag.FormatTags)];
+            var genreTags = [@Html.Raw(ViewBag.GenreTags)];
             var selectedPseudonyms = [@Html.Raw(String.Join(",", Model.WritingPseudonyms.Select(i => i.PseudonymID)))];
             var spCount = @Model.WritingPseudonyms.Select(i => i.PseudonymID).Count();
             var selectedTags = [@Html.Raw(String.Join(",", Model.WritingFormats.Select(i => i.FormatID)))];
             var sftCount = @Model.WritingFormats.Select(i => i.FormatID).Count();
+            var selectedGenres = [@Html.Raw(String.Join(",", Model.WritingGenres.Select(i => i.GenreID)))];
+            var sgtCount = @Model.WritingGenres.Select(i => i.GenreID).Count();
 
             //mark the writing id for easy access from controller on save
             $("#writingID").val(@Model.WritingID);
@@ -63,13 +66,25 @@
             $("#usePseudonymsInAdditionToUsername").prop("checked", @Model.UsePseudonymsInAdditionToUsername);
 
             //check the format tags that are currently connected to the writing
-            for (var i = 0; i < formatTags.length; i++) {
-                for (var j = 0; j < sftCount; j++) {
+            for (i = 0; i < formatTags.length; i++) {
+                for (j = 0; j < sftCount; j++) {
                     if (selectedTags[j] === formatTags[i]) {
                         $("#formatTagContainer input." + formatTags[i]).prop("checked", true);
-                        $("#formatTagContainer input." + formatTags[i]).trigger("change");
+                        $("#formatTagContainer input." + formatTags[i]).change();
                         if ($("#formatTagContainer span." + formatTags[i]).hasClass("collapse"))
                             $("#formatTagContainer span." + formatTags[i]).removeClass("collapse");
+                    }
+                }
+            }
+
+            //check the genre tags that are currently connected to the writing
+            for (i = 0; i < genreTags.length; i++) {
+                for (j = 0; j < sgtCount; j++) {
+                    if (selectedGenres[j] === genreTags[i]) {
+                        $("#genreTagContainer span." + genreTags[i] + " input").prop("checked", true).trigger("click");
+                        $("#genreTagContainer span." + genreTags[i] + " input").change();
+                        if ($("#genreTagContainer span." + genreTags[i]).hasClass("collapse"))
+                            $("#genreTagContainer span." + genreTags[i]).removeClass("collapse");
                     }
                 }
             }

@@ -10,11 +10,12 @@
     <link href="https://fonts.googleapis.com/css?family=Homemade+Apple|Love+Ya+Like+A+Sister|La+Belle+Aurore" rel="stylesheet" />
     <!-- Include Quill stylesheet -->
     <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet" />
-    <!-- Penfolio layout -->
+    <!-- Penfolio layout styling -->
     <link href="~/Content/penfolio.css" rel="stylesheet" />
 </head>
 <body>
     @Html.Partial("_NavBar")
+    <!--div to hold the background images that are displayed on the right and left sides of the layout-->
     <div class="sideBars">
         <div class="container body-content">
             @RenderBody()
@@ -26,6 +27,7 @@
     </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
     @RenderSection("scripts", required: false)
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" type="text/javascript"></script>
@@ -38,6 +40,8 @@
     <script src="~/Scripts/slides.js" type="text/javascript"></script>
     <!-- Script for Loading Format Tags Based on Selected Tags in Create and Edit -->
     <script src="~/Scripts/formatTags.js" type="text/javascript"></script>
+    <!-- Script for Loading Genre Tags Based on Selected Tags in Create and Edit -->
+    <script src="~/Scripts/genreTags.js" type="text/javascript"></script>
     <!-- Script for Dynamic Permissions Change and Pseudonym Loading in Create and Edit -->
     <script src="~/Scripts/permissions.js" type="text/javascript"></script>
 </body>

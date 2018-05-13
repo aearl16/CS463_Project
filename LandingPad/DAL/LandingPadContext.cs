@@ -24,10 +24,18 @@ namespace LandingPad.DAL
         public virtual DbSet<FormatTag> FormatTags { get; set; }
         public virtual DbSet<AltFormatName> AltFormatNames { get; set; }
         public virtual DbSet<FormatCategory> FormatCategories { get; set; }
+        public virtual DbSet<GenreTag> GenreTags { get; set; }
+        public virtual DbSet<AltGenreName> AltGenreNames { get; set; }
+        public virtual DbSet<GenreCategory> GenreCategories { get; set; }
+        public virtual DbSet<GenreFormat> GenreFormats { get; set; }
         public virtual DbSet<Twitter> Twitters { get; set; }
         public virtual DbSet<WritingFormat> WritingFormats { get; set; }
+        public virtual DbSet<WritingGenre> WritingGenres { get; set; }
         public virtual DbSet<AccessPermission> AccessPermissions { get; set; }
-
+        public virtual DbSet<FriendRequest> FriendRequests { get; set; }
+        public virtual DbSet<Friendship> Friendships { get; set; }
+        public virtual DbSet<IndividualAccessGrant> IndividualAccessGrants { get; set; }
+        public virtual DbSet<IndividualAccessRevoke> IndividualAccessRevokes { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

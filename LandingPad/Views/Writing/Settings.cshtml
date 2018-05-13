@@ -1,0 +1,84 @@
+﻿@model LandingPad.Models.LPProfile
+@{
+    ViewBag.Title = "Testing Settings for Penfolio";
+}
+
+<h2>Testing Settings for Penfolio</h2>
+
+<form method="post">
+    <h3>Profile Roles</h3>
+    @if (Model.ProfileRoles.Select(i => i.RoleID).ToList().Contains(1))
+    {
+        <input type="submit" formaction="~/Writing/RemoveProfileRole/1" value="Remove Writer Profile Role from Penfolio Profile" />
+    }
+    else
+    {
+        <input type="submit" formaction="~/Writing/AddProfileRole/1" value="Add Writer Profile Role to Penfolio Profile" />
+    }
+
+    @if (Model.ProfileRoles.Select(i => i.RoleID).ToList().Contains(1))
+    {
+        <input type="submit" formaction="~/Writing/RemoveProfileRole/2" value="Remove Publisher Profile Role from Penfolio Profile" />
+    }
+    else
+    {
+        <input type="submit" formaction="~/Writing/AddProfileRole/2" value="Add Publisher Profile Role to Penfolio Profile" />
+    }
+
+    <!--Something for inputting a date of birth-->
+    @if (Model.LPUser.Birthdate == null)
+    {
+        <h3>Add a Date of Birth</h3>
+    }
+    else
+    {
+        <h3>Change Your Date of Birth</h3>
+    }
+    <input type="date" id="DoB" name="Birthday" />
+    <input type="submit" formaction="~/Writing/ChangeDateOfBirth" value="Submit Birthday" />
+
+    <!--Something for inputting a given name and a surname-->
+    @if (Model.LPUser.GivenName == null && Model.LPUser.Surname == null)
+    {
+        <h3>Add a Given Name and Surname</h3>
+    }
+    else
+    {
+        <h3>Change Your Given Name and Surname</h3>
+    }
+    Given Name <input type="text" id="givenName" name="GivenName" /><br />
+    Surname <input type="text" id="surname" name="Surname" /><br />
+    Allow full name to be displayed on writings? <input type="checkbox" id="displayName" name="DisplayName" /><br />
+    <input type="submit" formaction="~/Writing/ChangeName" value="Submit Name Preferences" />
+
+    <h3>Current Writing Pseudonyms</h3>
+    @foreach(var item in Model.Pseudonyms)
+    {
+        <span>@item.Pseudonym1</span> <input type="submit" formaction="~/Writing/DeletePseudonym/@item.PseudonymID" value="Delete Pseudonym" /><br />
+    }
+
+    <!--Something for adding a new pseudonym-->
+    <h3>Add a New Pseudonym for Writing</h3>
+    <input type="text" name="Pseudonym" /><br />
+    <input type="submit" formaction="~/Writing/AddPseudonym" value="Add Pseudonym" />
+</form>
+
+@section editScripts {
+    <script>
+        $(document).ready(function () {
+            if (@Model.LPUser.Birthdate !== null) {
+                $("#DoB").val(@Model.LPUser.Birthdate);
+            }
+
+            if (@Model.LPUser.GivenName !== null) {
+                $("#givenName").val(@Model.LPUser.GivenName);
+            }
+
+            if (@Model.LPUser.Surname !== null) {
+                $("#surname").val(@Model.LPUser.Surname);
+            }
+
+            $("#displayName").prop("checked", @Model.DisplayRealName);
+        });
+    </script>
+}

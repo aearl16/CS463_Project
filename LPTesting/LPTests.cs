@@ -11,8 +11,9 @@ namespace LPTesting
         byte[] testByteArrayLengthOne = new byte[] { 0x6C, 0x00 };
         byte[] testByteArrayWithConversion = new byte[] { 0x26, 0x00, 0x6C, 0x00, 0x74, 0x00, 0x3B, 0x00 };
         byte[] testByteArrayLengthOneLowerCase = new byte[] { 0x6c, 0x00 };
-        string expectedStringResultForFullArray = "&lt;p&gt;&lt;span class=\"ql-font-times\"&gt;	&lt;/span&gt;&lt;spa";
+        string expectedStringResultForFullArray = "<p><span class=\"ql-font-times\">	</span><spa";
         string expectedStringResultForByteArrayWithLengthOne = "l";
+        string expectedStringResultForByteArrayWithConversion = "<";
         WritingController wr = new WritingController();
 
         [Test]
@@ -31,6 +32,12 @@ namespace LPTesting
         public void TestHTMLByteArrayToString_ByteArrayWithLengthOfOneWithLower_Returns_CorrectResult()
         {
             StringAssert.AreEqualIgnoringCase(expectedStringResultForByteArrayWithLengthOne, wr.HTMLByteArrayToString(testByteArrayLengthOneLowerCase));
+        }
+
+        [Test]
+        public void TestHTMLByteArrayToString_HTMLEscapeCharacter_Returns_CharacterInPlainText()
+        {
+            StringAssert.AreEqualIgnoringCase(expectedStringResultForByteArrayWithConversion, wr.HTMLByteArrayToString(testByteArrayWithConversion));
         }
 
         [Test]
