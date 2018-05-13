@@ -178,6 +178,7 @@ namespace LandingPad.Controllers
                 {
                     db.LPUsers.Add(lpUser);
                     db.SaveChanges();
+                    CreateProfile(model.Email);
                     System.Diagnostics.Debug.WriteLine("Registered");
                     //  Comment the following line to prevent log in until the user is confirmed.
                     //  await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
@@ -196,6 +197,51 @@ namespace LandingPad.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        /// <summary>
+        /// Creates a profile during user creation phase
+        /// </summary>
+        /// <param name="email"></param>
+        private void CreateProfile(string email)
+        {
+            //Create and Access Permission
+            AccessPermission ap = new AccessPermission()
+            {
+                PublicAccess = true,
+                FriendAccess = true,
+                PublisherAccess = true,
+                MinorAccess = true
+            };
+            db.AccessPermissions.Add(ap);
+            db.SaveChanges();
+            //Create new LPProfile object
+            LPProfile lpProfile = new LPProfile();
+            //Get LPUser
+            LPUser lpUser = db.LPUsers.Find(email);
+            //Set Profile UserID
+            lpProfile.UserID = lpUser.UserID;
+            //Add AcessPermission obj
+            lpProfile.AccessPermission = ap;
+            //Add to db
+            db.LPProfiles.Add(lpProfile);
+            db.SaveChanges();
+            //Proceed to next phase
+            CreateProfileRole(lpUser.UserID);
+        }
+
+        /// <summary>
+        /// Creates a role for a user after user and profile are created
+        /// </summary>
+        /// <param name="uid"></param>
+        public void CreateProfileRole(int uid)
+        {
+            LPProfile lp = db.LPProfiles.Find(uid);
+            ProfileRole pr = new ProfileRole();
+            pr.RoleID = 1;
+            pr.ProfileID = lp.ProfileID;
+            db.ProfileRoles.Add(pr);
+            db.SaveChanges();
         }
 
         //
