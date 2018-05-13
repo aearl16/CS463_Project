@@ -264,8 +264,8 @@ CREATE TABLE dbo.AltFormatName
 	CONSTRAINT [PK_dbo.AltFormatName] PRIMARY KEY (AltFormatNameID),
 	CONSTRAINT [FK_dbo.FormatTagID] FOREIGN KEY (FormatID)
 	REFERENCES dbo.FormatTag (FormatID)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION
 );
 
 --FormatCategory Table
@@ -278,8 +278,8 @@ CREATE TABLE dbo.FormatCategory
 	CONSTRAINT [PK_dbo.FormatCategory] PRIMARY KEY (FormatCategoryID),
 	CONSTRAINT [FK_dbo.FormatIDforCategory] FOREIGN KEY (FormatID)
 	REFERENCES dbo.FormatTag (FormatID)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION,
 	CONSTRAINT [FK_dbo.ParentIDforFormat] FOREIGN KEY (ParentID)
 	REFERENCES dbo.FormatTag (FormatID)
 	ON DELETE NO ACTION
