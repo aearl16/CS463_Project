@@ -94,6 +94,7 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uid);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            //Get the LPProfile
             LPProfile lpProfile = GetLPProfile(lpCurrentUser.UserID);
 
             if (id == null)
@@ -103,12 +104,11 @@ namespace LandingPad.Controllers
 
             Writing wr = db.Writings.Find(id);
 
+            //If the ProfileIDs don't match redirect to an error page
             if(wr.ProfileID != lpProfile.ProfileID)
             {
-                return RedirectToAction("Edit Error", "Error");
+                return RedirectToAction("EditError", "Error");
             }
-
-            if(wr.ProfileID != )
 
             if (wr == null)
             {
@@ -608,6 +608,11 @@ namespace LandingPad.Controllers
             return db.LPUsers.Where(em => em.Email == email).SingleOrDefault();
         }
 
+        /// <summary>
+        /// Get the curent user's profile based on the LPUser id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>LPProfile object</returns>
         private LPProfile GetLPProfile(int id)
         {
             return db.LPProfiles.Where(lid => lid.UserID == id).SingleOrDefault();
