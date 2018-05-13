@@ -482,6 +482,7 @@
     <Content Include="Views\Upload\_UploadEditMenu.cshtml" />
     <Content Include="Views\Home\LPUserCreate.cshtml" />
     <Content Include="Views\Error\EditError.cshtml" />
+    <Content Include="Views\Error\DeleteError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\App_LocalResources\" />

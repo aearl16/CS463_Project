@@ -15,5 +15,11 @@ namespace LandingPad.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public ActionResult DeleteError()
+        {
+            return View();
+        }
     }
 }
