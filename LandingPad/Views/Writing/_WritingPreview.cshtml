@@ -29,11 +29,19 @@
     //tagCollapse is always placed with the tag scroller's classes,
     //but because its value is decided based on whether or not there
     //are any tags, the tag scroller will only collapse if it is empty
+
 }
 
 <!--A partial view for displaying a summary of a piece of writing; designed to be self contained so that it can easily be used for search results or LandingPad feeds-->
 <div class="writingPreview">
-    <div class="addDateTime">Posted @Html.DisplayFor(model => model.AddDate)</div>
+    @if(Model.EditDate != null)
+    {
+        <div class="addDateTime">Edited @Html.DisplayFor(model => model.EditDate.Value, "DateTime")</div>
+    }
+    else
+    {
+        <div class="addDateTime">Posted @Html.DisplayFor(model => model.AddDate)</div>
+    }
     <h3>@Model.Title</h3>
     <h4>By @author</h4>
     <div class="writingDescription">

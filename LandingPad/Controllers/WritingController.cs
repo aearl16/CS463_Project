@@ -32,7 +32,6 @@ namespace LandingPad.Controllers
             }
         }
 
-        // View displays a dropdown of ProfileIDs that changes the writings displayed to the ones written by/viewable by that profile
         public ActionResult Index()
         {
             //Check if logged in ==> Should be caught by [Authorize] but just in case
@@ -46,45 +45,132 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(id);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            //This operation didn't change ==> just gets the LPProfile with LPUser's ID
-            ViewBag.Profiles = String.Join(",", db.LPProfiles.Find(lpCurrentUser.UserID));
-            return View(db.LPProfiles.ToList());
+            return View(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID));
         }
 
-        //View displays all the writing that the user with a ProfileID == id has access to
-        public ActionResult AllWriting(int? id)
+        public List<Writing> OrderByNewest(List<Writing> wr)
         {
-            if(id == null)
+            List<Writing> ordered = new List<Writing>();
+            List<DateTime> comparable = new List<DateTime>();
+
+            foreach(var item in wr)
             {
-                return HttpNotFound();
+                if (item.EditDate != null)
+                {
+                    comparable.Add(item.EditDate.Value);
+                }
+                else
+                {
+                    comparable.Add(item.AddDate);
+                }
             }
 
-            LPProfile p = db.LPProfiles.Find(id);
-            if(p == null)
+            comparable = comparable.OrderByDescending(i => i).ToList();
+
+            foreach(var item in comparable)
             {
-                return HttpNotFound();
+                List<Writing> wCopy = wr;
+
+                foreach(var wItem in wCopy)
+                {
+                    if(wItem.EditDate != null)
+                    {
+                        if(wItem.EditDate.Value == item)
+                        {
+                            ordered.Add(wItem);
+                            wr.Remove(wItem);
+                            break;
+                        }
+                    }
+                    else if(wItem.AddDate == item)
+                    {
+                        ordered.Add(wItem);
+                        wr.Remove(wItem);
+                        break;
+                    }
+                }
             }
 
-            return View(GetAllWritingAvailable(id.GetValueOrDefault()));
+            return ordered;
         }
 
         //Gets all writing that the user with a ProfileID of id has access to
         [ChildActionOnly]
-        public PartialViewResult _GetPermissionWritings(int id)
+        public PartialViewResult _GetPermissionWritings()
         {
-            return PartialView(GetAllWritingAvailable(id));
+            //Get the user's ID
+            string id = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(id);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+
+            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First());
+
+            return PartialView(OrderByNewest(w));
         }
 
         //Displays writings that have the format tag with a FormatID of id
         public ActionResult SearchByFormatTag(int id)
         {
-            return View(db.Writings.Where(i => i.WritingFormats.Select(j => j.FormatTag.FormatID).ToList().Contains(id)).ToList());
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+
+            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(pID);
+            List<LandingPad.Models.Writing> uw = db.Writings.Where(i => i.ProfileID == pID).ToList();
+
+            foreach(var item in uw)
+            {
+                w.Add(item);
+            }
+
+            w = OrderByNewest(w);
+
+            return View(w.Where(i => i.WritingFormats.Select(j => j.FormatTag.FormatID).ToList().Contains(id)).ToList());
         }
 
         //Displays writings that have the genre tag with a GenreID of id
         public ActionResult SearchByGenreTag(int id)
         {
-            return View(db.Writings.Where(i => i.WritingGenres.Select(j => j.GenreTag.GenreID).ToList().Contains(id)).ToList());
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uID = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uID);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).First();
+
+            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(pID);
+            List<LandingPad.Models.Writing> uw = db.Writings.Where(i => i.ProfileID == pID).ToList();
+
+            foreach (var item in uw)
+            {
+                w.Add(item);
+            }
+            
+            w = OrderByNewest(w);
+
+            return View(w.Where(i => i.WritingGenres.Select(j => j.GenreTag.GenreID).ToList().Contains(id)).ToList());
+        }
+
+        public ActionResult TestView()
+        {
+            return View(OrderByNewest(db.Writings.ToList()));
         }
 
         //The view for editing existing writing; uses the id to edit the correct writing
@@ -387,7 +473,15 @@ namespace LandingPad.Controllers
         [ChildActionOnly]
         public PartialViewResult _SelectAuthor()
         {
-            List<LPProfile> pAuthor = db.LPProfiles.Where(i => i.ProfileRoles.Select(j => j.RoleID).ToList().Contains(1)).ToList();
+            //Get the user's ID
+            string id = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(id);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+
+            LPProfile pAuthor = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).First();
+
             return PartialView(pAuthor);
         }
 

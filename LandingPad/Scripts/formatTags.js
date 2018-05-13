@@ -86,7 +86,7 @@ function ftChildren(id, sdChildren, mdChildren, dependencies, mpChildren, altPar
                     //change the genre tag itself and uncheck any format tags that are no longer valid
                     changeFictionOrNonfiction(childGenres[i], fictionOnly);
                 }
-                else { //if the child genres are specifying other things, trigger the genre's change function and let it handle updating
+                else  //if the child genres are specifying other things, trigger the genre's change function and let it handle updating
                     $("#genreTagContainer span." + childGenres[i] + " input").change();
             }
         }

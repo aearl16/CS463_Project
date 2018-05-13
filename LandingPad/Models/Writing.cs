@@ -37,7 +37,7 @@ namespace LandingPad.Models
         [DisplayFormat(DataFormatString = "{0:MMMM d, yyyy h:mm tt}")]
         public DateTime AddDate { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:MMMM d, yyyy h:mm tt")]
+        [DisplayFormat(DataFormatString = "{0:MMMM d, yyyy h:mm tt}")]
         public DateTime? EditDate { get; set; }
 
         public bool LikesOn { get; set; }

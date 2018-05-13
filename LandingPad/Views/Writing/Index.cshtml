@@ -1,66 +1,47 @@
-﻿@model IEnumerable<LandingPad.Models.LPProfile>
+﻿@model LandingPad.Models.LPProfile
 
 @{
-    ViewBag.Title = "Index";
-}
-<h2>My Writing</h2>
+    ViewBag.Title = "Penfolio";
 
-<!--for each profile-->
-@foreach (var item in Model)
-{
-    <!--create a div to hold the loaded writings; make collapsed initially; the myWriting class is for the purpose of specifying this area so that the collapse for the edit and delete links can be removed-->
-    <div class="loadedWritings @item.ProfileID collapse myWriting">
-        <!--if the current profile belongs to a writer, add a link to create a new piece of writing-->
-        @if(item.ProfileRoles.Select(i => i.RoleID).ToList().Contains(1))
-        {
-            <p>
-                @Html.ActionLink("Create New", "Create")
-            </p>
-        }
-        <!--for each writing for this profile, return a partial view-->
-        @foreach (var wItem in item.Writings)
-        {
-            @Html.Partial("_WritingPreview", wItem)
-        }
-    </div> <!--loadedWritings-->
+    var controller = new LandingPad.Controllers.WritingController();
 }
+
+<!--create a div to hold the loaded writings; the myWriting class is for the purpose of specifying this area so that the collapse for the edit and delete links can be removed-->
+<div class="loadedWritings myWriting">
+    <h2>My Writing</h2>
+    <!--if the current profile belongs to a writer, add a link to create a new piece of writing-->
+    @if (Model.ProfileRoles.Select(i => i.RoleID).ToList().Contains(1))
+    {
+        <p>
+            @Html.ActionLink("Create New", "Create")
+        </p>
+    }
+    <!--for each writing for this profile, return a partial view-->
+    @foreach (var item in controller.OrderByNewest(Model.Writings.ToList()))
+    {
+        @Html.Partial("_WritingPreview", item)
+    }
+</div> <!--loadedWritings-->
 
 <h2>Other People's Writing</h2>
 
-<!--for each profile-->
-@foreach (var item in Model)
-{
-    <!--create a div to hold all of the writings the user with this profile is allowed to view-->
-    <div class="loadedWritings @item.ProfileID collapse">
-        @Html.Action("_GetPermissionWritings", new { id = item.ProfileID })
-    </div>
-}
+<!--create a div to hold all of the writings the user with this profile is allowed to view-->
+<div class="loadedWritings">
+    @Html.Action("_GetPermissionWritings", new { id = Model.ProfileID })
+</div>
 
 @section scripts {
     <script>
-        /**
-         * A function to unload previous writings and load the correct writings for the selected profile
-         * @@param {int[]} profiles (the ProfileIDs for all of the profiles)
-         */
-        function toggleProfiles(profiles) {
-            //get the current ProfileID
-            var id = $("#profileID").val();
-
-            //for each profile
-            for (var i = 0; i < profiles.length; i++) {
-                //collapse the associated writings if they aren't already collapsed
-                if ($("div.loadedWritings." + profiles[i]).hasClass("collapse") !== true)
-                    $("div.loadedWritings." + profiles[i]).addClass("collapse");
-            }
-
-            //uncollapse the writings for the current ProfileID
-            $("div.loadedWritings." + id).removeClass("collapse");
-        }
-
         (function () {
             //when the document has fully loaded, uncollapse the edit and delete links on the writing previews that are under the My Writing heading
             $(document).ready(function () {
-                $(".myWriting .forUserWriting").removeClass("collapse");
+                //if this user doesn't have the writer role
+                if (@Model.ProfileRoles.Select(i => i.RoleID).ToList().Contains(1) !== true) {
+                    $(".myWriting").addClass("collapse");
+                }
+                else {
+                    $(".myWriting .forUserWriting").removeClass("collapse");
+                }
             });
         })();
     </script>
