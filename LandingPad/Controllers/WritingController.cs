@@ -6,9 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using LandingPad.Models;
 using System.Text;
-using System.Collections.ObjectModel;
 using System.Data.Entity;
-using System.Text.RegularExpressions;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
 
