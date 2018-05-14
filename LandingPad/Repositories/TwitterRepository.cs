@@ -19,14 +19,12 @@ namespace LandingPad.Repositories
 
         public bool FindTwitter(int id)
         {
-            int alreadyExists = LandingPadContext.Twitters.Where(u => u.TwitterID == id).SingleOrDefault().TwitterID;
+            int Exists = LandingPadContext.Twitters.Where(u => u.UserID == id).SingleOrDefault().UserID;
 
-            if (alreadyExists == id)
+            if (Exists == id)
             {
                 return true;
-            }
-            else
-            {
+            }else{
                 return false;
             }
         }
