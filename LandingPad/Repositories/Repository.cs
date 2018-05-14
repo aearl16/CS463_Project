@@ -56,5 +56,15 @@ namespace LandingPad.Repositories
         {
             return Context.Set<TEntity>().SingleOrDefault(predicate);
         }
+
+        public void SaveChanges()
+        {
+            Context.SaveChanges();
+        }
+
+        public void SetModified(object entity)
+        {
+            Context.Entry(entity).State = EntityState.Modified;
+        }
     }
 }
