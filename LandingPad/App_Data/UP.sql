@@ -55,7 +55,7 @@ CREATE TABLE dbo.LPProfile
 	CONSTRAINT [PK_dbo.LPProfile] PRIMARY KEY (ProfileID),
 	CONSTRAINT [FK_dbo.AccessPermissionForProfile] FOREIGN KEY (AccessPermissionID)
 	REFERENCES dbo.AccessPermission (AccessPermissionID)
-	ON DELETE CASCADE
+	ON DELETE NO ACTION
 	ON UPDATE CASCADE,
 	CONSTRAINT [FK_dbo.LPUser] FOREIGN KEY (UserID)
 	REFERENCES dbo.LPUser (UserID)
