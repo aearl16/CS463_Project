@@ -1,7 +1,6 @@
 ﻿using LandingPad.DAL;
 using LandingPad.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -12,6 +11,8 @@ using OpenXmlPowerTools;
 using DocumentFormat.OpenXml.Packaging;
 using System.Drawing.Imaging;
 using System.Xml.Linq;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace LandingPad.Controllers
 {
@@ -19,14 +20,40 @@ namespace LandingPad.Controllers
     [Authorize]
     public class UploadController : Controller
     {
+        //LandingPad Context
         private LandingPadContext db = new LandingPadContext();
+        private ApplicationUserManager _userManager;
 
+        /// <summary>
+        /// Used to get the user manager for helper methods
+        /// </summary>
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+        }
+
+        /// <summary>
+        /// Gets upload edit page, contains partial views that build it
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult UploadEdit()
         {
             return View();
         }
 
+        /// <summary>
+        /// User can upload a file given a specific type constraint, and it will be converted to html for use in our editor
+        /// </summary>
+        /// <param name="FormatTags"></param>
+        /// <param name="Pseudonyms"></param>
+        /// <param name="file"></param>
+        /// <param name="form"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult UploadEdit(string[] FormatTags, string[] Pseudonyms, HttpPostedFileBase file, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
                 "CommentsOn, CritiqueOn, DescriptionText")] Writing doc)
@@ -34,7 +61,7 @@ namespace LandingPad.Controllers
 
             String FileExt = Path.GetExtension(file.FileName).ToUpper();
 
-            if (CheckExt(FileExt))
+            if (CheckExtEdit(FileExt))
             {
                 AccessPermission ap = new AccessPermission()
                 {
@@ -136,7 +163,7 @@ namespace LandingPad.Controllers
                 }
                 else
                 {
-                    ViewBag.FileStatus = "Model Invalid";
+                    ViewBag.FileStatus = "File Type Not valid: Valid file type for edit is currently .PDF";
                     return View();
                 }
             }
@@ -148,13 +175,25 @@ namespace LandingPad.Controllers
 
         }
 
-
+        /// <summary>
+        /// Returns the Store view, built from partial views
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult Store()
         {
             return View();
         }
 
+        /// <summary>
+        /// User can upload a file and store it in the original format
+        /// </summary>
+        /// <param name="FormatTags"></param>
+        /// <param name="Pseudonyms"></param>
+        /// <param name="file"></param>
+        /// <param name="form"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Store(string[] FormatTags, string[] Pseudonyms, HttpPostedFileBase file, FormCollection form, [Bind(Include = "ProfileID, Title, LikesOn," +
                 "CommentsOn, CritiqueOn, DescriptionText")] Writing doc)
@@ -251,83 +290,39 @@ namespace LandingPad.Controllers
 
         }
 
-        /*
-        public ActionResult UploadEdit(HttpPostedFileBase file, [Bind(Include = "ProfileID, Title, LikesOn," +
-                "CommentsOn, CritiqueOn, DescriptionText")] Writing doc)
-        {
-            
-            String FileExt = Path.GetExtension(file.FileName).ToUpper();
-
-            if (CheckExt(FileExt))
-            {
-                if (!ModelState.IsValid)
-                {
-                    Stream str = file.InputStream;
-                    BinaryReader Br = new BinaryReader(str);
-                    Byte[] FileData = Br.ReadBytes((Int32)str.Length);
-                    string html = string.Empty;
-
-                    if (FileExt == ".PDF" || FileExt == "PDF")
-                    {
-
-                        SautinSoft.PdfFocus f = new SautinSoft.PdfFocus();
-                        f.OpenPdf(FileData);
-
-                        if (f.PageCount > 0)
-                        {
-                            f.HtmlOptions.IncludeImageInHtml = true;
-                            f.HtmlOptions.Title = "Simple text";
-                            html = f.ToHtml();
-                        }
-                    }
-                    else if (FileExt == ".DOCX" || FileExt == "DOCX" || FileExt == ".DOC" || FileExt == "DOC")
-                    {
-                        html = ConvertToHtml(Path.GetFullPath(file.FileName));
-                    }
-                    else
-                    {
-                        ViewBag.FileStatus = "Model Invalid";
-                        return View();
-                    }
-
-                    Writing wr = new Writing()
-                    {
-                        ProfileID = doc.ProfileID,
-                        DocType = ".HTML",
-                        AddDate = DateTime.Now,
-                        EditDate = DateTime.Now,
-                        Document = Encoding.Unicode.GetBytes(html),
-                        Title = doc.Title,
-                        DescriptionText = doc.DescriptionText,
-                        LikesOn = doc.LikesOn,
-                        CritiqueOn = doc.CritiqueOn,
-                        CommentsOn = doc.CommentsOn 
-                        //AccessPermission ac = new AccessPermission() //Later Feature
-                    };
-                    db.Writings.Add(wr);
-                    db.SaveChanges();
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ViewBag.FileStatus = "Model Invalid";
-                    return View();
-                }
-            }
-            else
-            {
-                ViewBag.FileStatus = "Invalid file format.";
-                return View();
-            }
-        }*/
-
+        /// <summary>
+        /// Allows a user to download a file out of the database
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> The file in the original format it was uploaded as</returns>
         public ActionResult Download(int? id)
         {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            //Get the LPProfile
+            LPProfile lpProfile = GetLPProfile(lpCurrentUser.UserID);
+
             Writing wr = db.Writings.Find(id);
             if (wr == null)
             {
                 return HttpNotFound();
             }
+
+            //If the ProfileIDs don't match redirect to an error page
+            if (wr.ProfileID != lpProfile.ProfileID)
+            {
+                return RedirectToAction("DownloadError", "Error");
+            }
+
             UTF8Encoding encoding = new UTF8Encoding();
             byte[] contentAsBytes = wr.Document;
 
@@ -366,67 +361,6 @@ namespace LandingPad.Controllers
             return View();
             }
 
-        /*
-        public ActionResult Edit(int? id)
-        {
-            Writing wr = db.Writings.Find(id);
-            return View(wr);
-        }
-
-        [HttpPost]
-        public ActionResult Edit(HttpPostedFileBase file, [Bind(Include = "ProfileID, Title, LikesOn," +
-                "CommentsOn, CritiqueOn, DescriptionText")] Writing doc)
-        {
-            String FileExt = Path.GetExtension(file.FileName).ToUpper();
-
-            if (CheckExt(FileExt))
-            {
-                if (!ModelState.IsValid)
-                {
-                    Stream str = file.InputStream;
-                    BinaryReader Br = new BinaryReader(str);
-                    Byte[] FileData = Br.ReadBytes((Int32)str.Length);
-                    //doc.Document = FileData;
-                    //doc.EditDate = DateTime.Now;
-
-                    Writing wr = doc;
-                    doc.Document = FileData;
-                    doc.EditDate = DateTime.Now;
-
-                    
-                    Writing wr = new Writing()
-                    {
-                        ProfileID = doc.ProfileID,
-                        DocType = FileExt,
-                        AddDate = doc.AddDate,
-                        EditDate = DateTime.Now,
-                        Document = FileData,
-                        Title = doc.Title,
-                        DescriptionText = doc.DescriptionText,
-                        LikesOn = doc.LikesOn,
-                        CritiqueOn = doc.CritiqueOn,
-                        CommentsOn = doc.CommentsOn
-                        //AccessPermission ac = new AccessPermission() //Later Feature
-                    };
-                    
-                    db.Entry(wr).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ViewBag.FileStatus = "Model Invalid";
-                    return View();
-                }
-            }
-            else
-            {
-                ViewBag.FileStatus = "Invalid file format.";
-                return View();
-            }
-        }
-        */
-
         /// <summary>
         /// Helper method for Upload Post
         /// </summary>
@@ -455,6 +389,41 @@ namespace LandingPad.Controllers
             else if(ext == ".HTML" || ext == "HTML")
             {
                 return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Helper method for Upload Post
+        /// </summary>
+        public bool CheckExtEdit(String ext)
+        {
+            if (ext == ".DOCX" || ext == ".DOC")
+            {
+                return false;
+            }
+            else if (ext == ".PDF" || ext == "PDF")
+            {
+                return true;
+            }
+            else if (ext == ".ODT" || ext == "ODT")
+            {
+                return false;
+            }
+            else if (ext == ".RTF" || ext == "RTF")
+            {
+                return false;
+            }
+            else if (ext == ".TXT" || ext == "TXT")
+            {
+                return false;
+            }
+            else if (ext == ".HTML" || ext == "HTML")
+            {
+                return false;
             }
             else
             {
@@ -497,6 +466,11 @@ namespace LandingPad.Controllers
             return htmlText;
         }
 
+        /// <summary>
+        /// Corrects uris as they are converted to HTML
+        /// </summary>
+        /// <param name="brokenUri"></param>
+        /// <returns></returns>
         private static System.Uri FixUri(string brokenUri)
         {
             string newURI = string.Empty;
@@ -514,6 +488,10 @@ namespace LandingPad.Controllers
             return new Uri(newURI);
         }
 
+        /// <summary>
+        /// Partial view for the Upload Menu
+        /// </summary>
+        /// <returns></returns>
         [ChildActionOnly]
         public PartialViewResult _UploadMenu()
         {
@@ -523,6 +501,10 @@ namespace LandingPad.Controllers
             return PartialView();
         }
 
+        /// <summary>
+        /// Partial view for the upload edit menu
+        /// </summary>
+        /// <returns></returns>
         [ChildActionOnly]
         public PartialViewResult _UploadEditMenu()
         {
@@ -532,6 +514,10 @@ namespace LandingPad.Controllers
             return PartialView();
         }
 
+        /// <summary>
+        /// Partial view for upload confirmation
+        /// </summary>
+        /// <returns></returns>
         [ChildActionOnly]
         public PartialViewResult _UploadConfirmation()
         {
@@ -644,6 +630,63 @@ namespace LandingPad.Controllers
             }
 
         }
-    }
 
+        /*
+         * Begin Helper method section
+         */
+        /// <summary>
+        /// Helper method that checks if a user is logged in
+        /// </summary>
+        /// <returns> tf if the user is logged in</returns>
+        private bool CheckLogin()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the currently logged in user's ID
+        /// </summary>
+        /// <returns> string id of the current user</returns>
+        private string GetUserID()
+        {
+            return User.Identity.GetUserId();
+        }
+
+        /// <summary>
+        /// Gets the user object from the database
+        /// </summary>
+        /// <returns> ApplicationUser object of the current user </returns>
+        private ApplicationUser GetUser(string id)
+        {
+            return UserManager.FindById(id);
+        }
+
+        /// <summary>
+        /// Gets the LP user object based on e-mail link
+        /// Can also be used separately for obtaining the user object
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns> LPUser object after ApplicationUser object</returns>
+        private LPUser GetLPUser(string email)
+        {
+            return db.LPUsers.Where(em => em.Email == email).SingleOrDefault();
+        }
+
+        /// <summary>
+        /// Get the curent user's profile based on the LPUser id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>LPProfile object</returns>
+        private LPProfile GetLPProfile(int id)
+        {
+            return db.LPProfiles.Where(lid => lid.UserID == id).SingleOrDefault();
+        }
+    }
 }

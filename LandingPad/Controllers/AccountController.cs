@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -9,8 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using LandingPad.Models;
-using System.Net.Mail;
-using SendGrid.Helpers.Mail;
+using LandingPad.DAL;
 
 namespace LandingPad.Controllers
 {
@@ -19,6 +15,8 @@ namespace LandingPad.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        //LandingPad Context
+        private LandingPadContext db = new LandingPadContext();
 
         public AccountController()
         {
@@ -172,25 +170,80 @@ namespace LandingPad.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
+                var lpUser = new LPUser();
+                lpUser.Email = model.Email;
+                lpUser.Username = model.Username;
+                //Used for testing
+                //string[] splitstring = model.Email.Split('@');
+                //lpUser.Username = splitstring[0];
                 if (result.Succeeded)
                 {
+                    db.LPUsers.Add(lpUser);
+                    db.SaveChanges();
+                    CreateProfile(model.Email);
                     System.Diagnostics.Debug.WriteLine("Registered");
                     //  Comment the following line to prevent log in until the user is confirmed.
-                    //  await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
                     string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
 
                     ViewBag.Message = "Check your email and confirm your account, you must be confirmed "
                                     + "before you can log in.";
 
+                    //Call the ActionResult method that creates an LPUser
+                    //return RedirectToAction("LPUserCreate", "Home", new { Email = model.Email });
                     return View("Info");
-                    //return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        /// <summary>
+        /// Creates a profile during user creation phase
+        /// </summary>
+        /// <param name="email"></param>
+        private void CreateProfile(string email)
+        {
+            //Create and Access Permission
+            AccessPermission ap = new AccessPermission()
+            {
+                PublicAccess = true,
+                FriendAccess = true,
+                PublisherAccess = true,
+                MinorAccess = true
+            };
+            db.AccessPermissions.Add(ap);
+            db.SaveChanges();
+            //Create new LPProfile object
+            LPProfile lpProfile = new LPProfile();
+            //Get LPUser
+            LPUser lpUser = db.LPUsers.Where(em => em.Email == email).SingleOrDefault();
+            //Set Profile UserID
+            lpProfile.UserID = lpUser.UserID;
+            //Add AcessPermission obj
+            lpProfile.AccessPermission = ap;
+            //Add to db
+            db.LPProfiles.Add(lpProfile);
+            db.SaveChanges();
+            //Proceed to next phase
+            CreateProfileRole(lpUser.UserID);
+        }
+
+        /// <summary>
+        /// Creates a role for a user after user and profile are created
+        /// </summary>
+        /// <param name="uid"></param>
+        public void CreateProfileRole(int uid)
+        {
+            LPProfile lp = db.LPProfiles.Where(id => id.UserID == uid).SingleOrDefault();
+            ProfileRole pr = new ProfileRole();
+            pr.RoleID = 1;
+            pr.ProfileID = lp.ProfileID;
+            db.ProfileRoles.Add(pr);
+            db.SaveChanges();
         }
 
         //

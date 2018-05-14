@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Net;
-using System.IO;
-using System.Text;
 using TweetSharp;
 using LandingPad.DAL;
-using LandingPad.Repositorys;
+using LandingPad.Repositories;
 using LandingPad.Models;
 using Moq;
 
@@ -23,6 +18,7 @@ namespace LandingPad.Controllers
     {
         private LandingPadContext db = new LandingPadContext();
         ITwitterRepository repository = new TwitterRepository(new LandingPadContext());
+        IWritingRepository wrepo = new WritingRepository(new LandingPadContext());
 
         [HttpGet]
         public ActionResult TwitterAuth(int id)
@@ -157,11 +153,13 @@ namespace LandingPad.Controllers
                 ViewBag.TwitterName = repository.GetTwitterTag(id.Value);
                 DateTime EndTime = repository.GetTwitterEndTime(id.Value);
                 ViewBag.EndTime = EndTime;
-                return View(db.Writings.ToList());
+                //return View(db.Writings.ToList());
+                return View(wrepo.GetAll());
             }
             catch
             {
-                return View(db.Writings.ToList());
+               // return View(db.Writings.ToList());
+                return View(wrepo.GetAll());
             }
             //}
         }
@@ -235,16 +233,16 @@ namespace LandingPad.Controllers
         //    return TestUserIdInfor(test, id, repository);
         //}
         // This is an entry point for testing.
-        public bool TestUserIdInfor(int test,  Mock<ITwitterRepository> mock)
-        {       
+        public bool TestUserIdInfor(int test, Mock<ITwitterRepository> mock)
+        {
             string name = mock.Name;
             //int tid = repository.GetTwitterId(id.Value);
-            
+
             if (test == 1)
             {
                 return true;
             }
-            else if(test == 2)
+            else if (test == 2)
             {
                 return true;
             }
@@ -252,6 +250,31 @@ namespace LandingPad.Controllers
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Create a LPUser, email passed in from Register
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <returns> ActionResult </returns>
+        [AllowAnonymous]
+        public ActionResult LPUserCreate(string Email)
+        {
+            //Create the User
+            var lpUser = new LPUser();
+            lpUser.Email = Email;
+            //Used for testgin get Username
+            string[] splitstring = Email.Split('@');
+            lpUser.Username = splitstring[0];
+            //Add to DB
+            db.LPUsers.Add(lpUser);
+            db.SaveChanges();
+
+            //View Message from Register
+            ViewBag.Message = "Check your email and confirm your account, you must be confirmed "
+                                    + "before you can log in.";
+            //Return the Info View
+            return View("Info");
         }
     }
 }

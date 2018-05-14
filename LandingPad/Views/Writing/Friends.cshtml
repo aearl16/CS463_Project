@@ -1,0 +1,102 @@
+﻿@model IEnumerable<LandingPad.Models.LPProfile>
+@{
+    ViewBag.Title = "Friends";
+}
+
+<form method="post">
+    <!--Currently has a placeholder profile ID until I implement Aaron's code for getting their profile ID-->
+    <h2>Create a Friend Request</h2>
+    <div id="friendRequestContainer">
+        @foreach (var item in Model.Where(i => i.ProfileID != ViewBag.ProfileID))
+        {
+            <div class="profile @item.ProfileID">
+                @if(item.Friends.Where(i => i.SecondPseudonymID == null).Select(i => i.SecondFriendID).ToList().Contains(ViewBag.ProfileID) != true)
+                {
+                    @item.LPUser.Username if(item.FriendRequestsReceived.Where(i => i.RequesteePseudonymID == null).Select(i => i.RequesterProfileID).ToList().Contains(ViewBag.ProfileID))
+                    {
+                        <span>Friend Request as @if (item.FriendRequestsReceived.Where(i => i.RequesteePseudonymID == null && i.RequesteeProfileID == ViewBag.ProfileID).Select(i => i.RequesterPseudonymID) == null) {
+                            @item.FriendRequestsReceived.Where(i => i.RequesteePseudonymID == null && i.RequesteeProfileID == ViewBag.ProfileID).Select(i => i.RequesterProfile).First().LPUser.Username
+                        }
+                        else
+                        {
+                            @item.FriendRequestsReceived.Where(i => i.RequesteePseudonymID == null && i.RequesteeProfileID == ViewBag.ProfileID).Select(i => i.RequesterPseudonym).First().Pseudonym1
+                        } Pending</span>
+                    }
+                }
+                else
+                {
+                    <span>Send Friend Request As:</span> <select name="ProfileID-@item.ProfileID">
+                            <option value="0">@Model.Where(i => i.ProfileID == ViewBag.ProfileID).First().LPUser.Username</option>
+                            @foreach (var pseudonym in Model.Where(i => i.ProfileID == ViewBag.ProfileID).Select(i => i.Pseudonyms))
+                            {
+                                <option value="@pseudonym.First().PseudonymID">@pseudonym.First().Pseudonym1</option>
+                            }
+                        </select> <input type="submit" formaction="~/Writing/CreateProfileFriendRequest/@item.ProfileID" value="Send" />
+                }</div>
+            <div class="pseudonym">
+                @foreach (var subitem in item.Pseudonyms)
+                {
+                    <span class="@subitem.PseudonymID">
+                        @subitem.Pseudonym1 @if (Model.Where(i => i.ProfileID == ViewBag.ProfileID).Select(i => i.FriendRequestsSent).SelectMany(j => j).Select(j => j.RequesteePseudonymID).ToList().Contains(subitem.PseudonymID))
+                        {
+                            <span>Friend Request @if (item.FriendRequestsReceived.Where(i => i.RequesteePseudonymID == null && i.RequesteeProfileID == ViewBag.ProfileID).Select(i => i.RequesterPseudonymID) == null) {
+                                @item.FriendRequestsReceived.Where(i => i.RequesteePseudonymID == null && i.RequesteeProfileID == ViewBag.ProfileID).Select(i => i.RequesterProfile).First().LPUser.Username
+                            }
+                            else
+                            {
+                                @item.FriendRequestsReceived.Where(i => i.RequesteePseudonymID == null && i.RequesteeProfileID == ViewBag.ProfileID).Select(i => i.RequesterPseudonym).First().Pseudonym1
+                            } Pending</span>
+                        }
+                        else
+                        {
+                            <span>Send Friend Request As:</span> <select name="PseudonymID-@subitem.PseudonymID">
+                                <option value="0">@Model.Where(i => i.ProfileID == ViewBag.ProfileID).First().LPUser.Username</option>
+                                @foreach (var pseudonym in Model.Where(i => i.ProfileID == ViewBag.ProfileID).Select(i => i.Pseudonyms))
+                                {
+                                    <option value="@pseudonym.First().PseudonymID">@pseudonym.First().Pseudonym1</option>
+                                }
+                            </select> <input type="submit" formaction="~/Writing/CreatePseudonymFriendRequest/@subitem.PseudonymID" value="Send" />
+                        }
+                    </span><br />
+                }
+            </div>
+        }
+    </div>
+
+    <h3>Pending Friend Requests</h3>
+    <div class="pendingFriendRequests">
+        @foreach (var item in Model.Where(i => i.ProfileID == ViewBag.ProfileID).First().FriendRequestsReceived)
+        {
+            if (item.RequesteePseudonymID == null)
+            {
+                <span>@item.RequesteeProfile.LPUser.Username <input type="submit" formaction="~/Writing/AcceptFriendRequest/@item.FriendRequestID" value="Accept" /> <input type="submit" formaction="~/Writing/DeleteFriendRequest/@item.FriendRequestID" value="Decline" /></span><br />
+            }
+            else
+            {
+                <span>@item.RequesteePseudonym.Pseudonym1 <input type="submit" formaction="~/Writing/AcceptFriendRequest/@item.FriendRequestID" value="Accept" /> <input type="submit" formaction="~/Writing/DeleteFriendRequest/@item.FriendRequestID" value="Decline" /></span><br />
+            }
+        }
+    </div>
+
+
+    <h2>Friends</h2>
+    @foreach (var item in Model.Where(i => i.ProfileID == ViewBag.ProfileID).First().Friends)
+    {
+        if (item.SecondPseudonymID == null && item.FirstPseudonymID == null)
+        {
+            <span>You are friends with @item.SecondFriend.LPUser.Username as @item.FirstFriend.LPUser.Username <input type="submit" formaction="~/Writing/RemoveFriend/@item.FriendshipID" value="Unfriend" /></span><br />
+        }
+        else if (item.SecondPseudonymID == null && item.FirstPseudonymID != null)
+        {
+            <span>You are friends with @item.SecondFriend.LPUser.Username as @item.FirstPseudonym.Pseudonym1 <input type="submit" formaction="~/Writing/RemoveFriend/@item.FriendshipID" value="Unfriend" /></span><br />
+        }
+        else if (item.SecondPseudonymID != null && item.FirstPseudonymID == null)
+        {
+            <span>You are friends with @item.SecondPseudonym.Pseudonym1 as @item.FirstFriend.LPUser.Username <input type="submit" formaction="~/Writing/RemoveFriend/@item.FriendshipID" value="Unfriend" /></span><br />
+        }
+        else
+        {
+            <span>You are friends with @item.SecondPseudonym.Pseudonym1 as @item.FirstPseudonym.Pseudonym1 <input type="submit" formaction="~/Writing/RemoveFriend/@item.FriendshipID" value="Unfriend" /></span><br />
+        }
+    }
+</form>

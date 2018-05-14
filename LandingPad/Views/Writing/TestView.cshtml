@@ -1,12 +1,9 @@
 ﻿@model IEnumerable<LandingPad.Models.Writing>
-
 @{
-    ViewBag.Title = "AllWriting";
-    Layout = "~/Views/Shared/_PenfolioLayout.cshtml";
+    ViewBag.Title = "TestView";
 }
 
-<h2>Browse Writing</h2>
-
+<h2>TestView</h2>
 @foreach(var item in Model)
 {
     @Html.Partial("_WritingPreview", item)

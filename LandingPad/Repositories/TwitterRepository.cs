@@ -1,13 +1,13 @@
 ﻿using LandingPad.DAL;
 using LandingPad.Models;
 using System;
-using LandingPad.Repositorys;
+using LandingPad.Repositories;
 using System.Data.Entity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace LandingPad.Repositorys
+namespace LandingPad.Repositories
 {
     public class TwitterRepository : Repository<Twitter>, ITwitterRepository
     {
@@ -15,6 +15,20 @@ namespace LandingPad.Repositorys
         public TwitterRepository(LandingPadContext context) : base(context)
         {
 
+        }
+
+        public bool FindTwitter(int id)
+        {
+            int alreadyExists = LandingPadContext.Twitters.Where(u => u.TwitterID == id).SingleOrDefault().TwitterID;
+
+            if (alreadyExists == id)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public int GetTwitterId(int id)

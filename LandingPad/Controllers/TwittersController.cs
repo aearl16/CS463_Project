@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using LandingPad.DAL;
 using LandingPad.Models;
+using LandingPad.Repositories;
 
 namespace LandingPad.Controllers
 {
@@ -16,6 +17,36 @@ namespace LandingPad.Controllers
     public class TwittersController : Controller
     {
         private LandingPadContext db = new LandingPadContext();
+        private ITwitterRepository twitterRepo;
+
+        public TwittersController(ITwitterRepository twitterRepository)
+        {
+            this.twitterRepo = twitterRepository;
+        }
+
+        public bool CreatedMoq()
+        {
+            if(this.twitterRepo.GetAll().Count() < 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public bool CheckSquareOne(int id)
+        {
+           if(this.twitterRepo.GetTwitterId(id) == id)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         // GET: Twitters
         public ActionResult Index()
