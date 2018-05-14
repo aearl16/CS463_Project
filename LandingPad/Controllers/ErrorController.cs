@@ -21,5 +21,11 @@ namespace LandingPad.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public ActionResult DownloadErorr()
+        {
+            return View();
+        }
     }
 }

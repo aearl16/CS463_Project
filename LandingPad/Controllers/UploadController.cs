@@ -12,6 +12,7 @@ using DocumentFormat.OpenXml.Packaging;
 using System.Drawing.Imaging;
 using System.Xml.Linq;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace LandingPad.Controllers
 {
@@ -21,6 +22,18 @@ namespace LandingPad.Controllers
     {
         //LandingPad Context
         private LandingPadContext db = new LandingPadContext();
+        private ApplicationUserManager _userManager;
+
+        /// <summary>
+        /// Used to get the user manager for helper methods
+        /// </summary>
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+        }
 
         /// <summary>
         /// Gets upload edit page, contains partial views that build it
@@ -48,7 +61,7 @@ namespace LandingPad.Controllers
 
             String FileExt = Path.GetExtension(file.FileName).ToUpper();
 
-            if (CheckExt(FileExt))
+            if (CheckExtEdit(FileExt))
             {
                 AccessPermission ap = new AccessPermission()
                 {
@@ -150,7 +163,7 @@ namespace LandingPad.Controllers
                 }
                 else
                 {
-                    ViewBag.FileStatus = "Model Invalid";
+                    ViewBag.FileStatus = "File Type Not valid: Valid file type for edit is currently .PDF";
                     return View();
                 }
             }
@@ -284,11 +297,32 @@ namespace LandingPad.Controllers
         /// <returns> The file in the original format it was uploaded as</returns>
         public ActionResult Download(int? id)
         {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            //Get the LPProfile
+            LPProfile lpProfile = GetLPProfile(lpCurrentUser.UserID);
+
             Writing wr = db.Writings.Find(id);
             if (wr == null)
             {
                 return HttpNotFound();
             }
+
+            //If the ProfileIDs don't match redirect to an error page
+            if (wr.ProfileID != lpProfile.ProfileID)
+            {
+                return RedirectToAction("DownloadError", "Error");
+            }
+
             UTF8Encoding encoding = new UTF8Encoding();
             byte[] contentAsBytes = wr.Document;
 
@@ -355,6 +389,41 @@ namespace LandingPad.Controllers
             else if(ext == ".HTML" || ext == "HTML")
             {
                 return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Helper method for Upload Post
+        /// </summary>
+        public bool CheckExtEdit(String ext)
+        {
+            if (ext == ".DOCX" || ext == ".DOC")
+            {
+                return false;
+            }
+            else if (ext == ".PDF" || ext == "PDF")
+            {
+                return true;
+            }
+            else if (ext == ".ODT" || ext == "ODT")
+            {
+                return false;
+            }
+            else if (ext == ".RTF" || ext == "RTF")
+            {
+                return false;
+            }
+            else if (ext == ".TXT" || ext == "TXT")
+            {
+                return false;
+            }
+            else if (ext == ".HTML" || ext == "HTML")
+            {
+                return false;
             }
             else
             {
@@ -560,6 +629,64 @@ namespace LandingPad.Controllers
                 return "File contains corrupt data";
             }
 
+        }
+
+        /*
+         * Begin Helper method section
+         */
+        /// <summary>
+        /// Helper method that checks if a user is logged in
+        /// </summary>
+        /// <returns> tf if the user is logged in</returns>
+        private bool CheckLogin()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the currently logged in user's ID
+        /// </summary>
+        /// <returns> string id of the current user</returns>
+        private string GetUserID()
+        {
+            return User.Identity.GetUserId();
+        }
+
+        /// <summary>
+        /// Gets the user object from the database
+        /// </summary>
+        /// <returns> ApplicationUser object of the current user </returns>
+        private ApplicationUser GetUser(string id)
+        {
+            return UserManager.FindById(id);
+        }
+
+        /// <summary>
+        /// Gets the LP user object based on e-mail link
+        /// Can also be used separately for obtaining the user object
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns> LPUser object after ApplicationUser object</returns>
+        private LPUser GetLPUser(string email)
+        {
+            return db.LPUsers.Where(em => em.Email == email).SingleOrDefault();
+        }
+
+        /// <summary>
+        /// Get the curent user's profile based on the LPUser id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>LPProfile object</returns>
+        private LPProfile GetLPProfile(int id)
+        {
+            return db.LPProfiles.Where(lid => lid.UserID == id).SingleOrDefault();
         }
     }
 }
