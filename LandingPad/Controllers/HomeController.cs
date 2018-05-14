@@ -13,7 +13,8 @@ using LandingPad.DAL;
 using LandingPad.Repositories;
 using LandingPad.Models;
 using Moq;
-
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.Identity;
 
 namespace LandingPad.Controllers
 {
@@ -25,25 +26,48 @@ namespace LandingPad.Controllers
         ITwitterRepository repository = new TwitterRepository(new LandingPadContext());
         IWritingRepository wrepo = new WritingRepository(new LandingPadContext());
 
-        [HttpGet]
-        public ActionResult TwitterAuth(int id)
+        private ApplicationUserManager _userManager;
+
+        /// <summary>
+        /// Used to get the user manager for helper methods
+        /// </summary>
+        public ApplicationUserManager UserManager
         {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+        }
+
+        [HttpGet]
+        public ActionResult TwitterAuth()
+        {
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
             try
             {
-                //Twitter twitterData = repository.GetTwitterId(id);
-                //db.Twitters.Where(u => u.UserID == id).FirstOrDefault();
-                //db.Twitters.Remove(twitterData);
-                repository.Remove(id);
+                repository.Remove(lpCurrentUser.UserID);
                 repository.Save();
             }
             catch (Exception e)
             {
                 //do nothing
             }
+
+            String sid = lpCurrentUser.UserID.ToString();
+
             string Key = System.Configuration.ConfigurationManager.AppSettings["twKey"];
             string Secret = System.Configuration.ConfigurationManager.AppSettings["twSecret"];
             TwitterService service = new TwitterService(Key, Secret);
-            OAuthRequestToken requestToken = service.GetRequestToken("https://localhost:44315/Home/TwitterCallback" + "?id=" + Convert.ToString(id));
+            OAuthRequestToken requestToken = service.GetRequestToken("https://localhost:44315/Home/TwitterCallback" + "?id=" + sid);
             Uri uri = service.GetAuthenticationUrl(requestToken);
             if (CheckToken(Key))
             {
@@ -66,14 +90,26 @@ namespace LandingPad.Controllers
 
         }
 
-        public ActionResult TwitterCallback(string oauth_token, string oauth_verifier, int id)
+        public ActionResult TwitterCallback(string oauth_token, string oauth_verifier)
         {
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+
+
             var requestToken = new OAuthRequestToken { Token = oauth_token };
             string Key = System.Configuration.ConfigurationManager.AppSettings["twKey"];
             string Secret = System.Configuration.ConfigurationManager.AppSettings["twSecret"];
             Twitter twitterUser = new Twitter { };
-            try
-            {
+            //try
+            //{
                 TwitterService service = new TwitterService(Key, Secret);
                 OAuthAccessToken accessToken = service.GetAccessToken(requestToken, oauth_verifier);
                 service.AuthenticateWith(accessToken.Token, accessToken.TokenSecret);
@@ -86,77 +122,48 @@ namespace LandingPad.Controllers
                 TempData["Name"] = user.Name;
                 TempData["Userpic"] = user.ProfileImageUrl;
 
-                int TwID = id;
+                int TwID = lpCurrentUser.UserID;
                 var Token = oauth_token;
                 var VToken = oauth_verifier;
                 String TwName = user.ScreenName;
                 String TagName = user.Name;
-                twitterUser.UserID = id;
+                twitterUser.UserID = lpCurrentUser.UserID;
                 twitterUser.TwName = TwName;
                 twitterUser.TwTag = TagName;
                 twitterUser.TwOauth = Token;
                 twitterUser.TwVOauth = VToken;
                 twitterUser.Date = DateTime.Now;
                 twitterUser.EndDate = DateTime.Now.AddMinutes(60);
-                //db.Twitters.Add(twitterUser);
                 repository.Add(twitterUser);
                 repository.Save();
-                //db.SaveChanges();
-                return RedirectToAction("Settings/" + id);
-                //return View();
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        // GET: Twitters/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Twitter twitter = db.Twitters.Find(id);
-            if (twitter == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", twitter.UserID);
-            return View(twitter);
-        }
-
-        // POST: Twitters/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "TwitterID,UserID,TwName,TwTag,TwOauth,TwVOauth")] Twitter twitter)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(twitter).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", twitter.UserID);
-            return View(twitter);
-        }
-
-        public ActionResult Index(int? id)
-        {
-            // if (id == null)
+                return RedirectToAction("Settings/" + lpCurrentUser.UserID);
+        //}
+            //catch
             //{
-            //  return RedirectToAction("Login", "Account");
+            //    throw new System.InvalidOperationException("Twitter didnt like it");
             //}
-            // else
-            //{
+        }
+
+        public ActionResult Index()
+        {
+
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+
             try
             {
                 //ViewBag.TwitterName = UnitOfWork.Twitter.GetTwitterEndTime(id);
-                ViewBag.TwitterName = repository.GetTwitterTag(id.Value);
-                DateTime EndTime = repository.GetTwitterEndTime(id.Value);
+                ViewBag.TwitterName = repository.GetTwitterTag(lpCurrentUser.UserID);
+                DateTime EndTime = repository.GetTwitterEndTime(lpCurrentUser.UserID);
                 ViewBag.EndTime = EndTime;
                 //return View(db.Writings.ToList());
                 return View(wrepo.GetAll());
@@ -175,17 +182,23 @@ namespace LandingPad.Controllers
             return View();
         }
 
-        public ActionResult Settings(int? id)
+        public ActionResult Settings()
         {
-            //if(id == null)
-            //{
-            //    return RedirectToAction("Login", "Account");
-            //}
-            //else {
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+
             try
             {
-                ViewBag.TwitterName = repository.GetTwitterTag(id.Value);
-                DateTime EndTime = repository.GetTwitterEndTime(id.Value);
+                ViewBag.TwitterName = repository.GetTwitterTag(lpCurrentUser.UserID);
+                DateTime EndTime = repository.GetTwitterEndTime(lpCurrentUser.UserID);
                 ViewBag.EndTime = EndTime;
                 return View();
             }
@@ -280,6 +293,63 @@ namespace LandingPad.Controllers
                                     + "before you can log in.";
             //Return the Info View
             return View("Info");
+        }
+        /*
+  * Begin Helper method section
+  */
+        /// <summary>
+        /// Helper method that checks if a user is logged in
+        /// </summary>
+        /// <returns> tf if the user is logged in</returns>
+        private bool CheckLogin()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the currently logged in user's ID
+        /// </summary>
+        /// <returns> string id of the current user</returns>
+        private string GetUserID()
+        {
+            return User.Identity.GetUserId();
+        }
+
+        /// <summary>
+        /// Gets the user object from the database
+        /// </summary>
+        /// <returns> ApplicationUser object of the current user </returns>
+        private ApplicationUser GetUser(string id)
+        {
+            return UserManager.FindById(id);
+        }
+
+        /// <summary>
+        /// Gets the LP user object based on e-mail link
+        /// Can also be used separately for obtaining the user object
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns> LPUser object after ApplicationUser object</returns>
+        private LPUser GetLPUser(string email)
+        {
+            return db.LPUsers.Where(em => em.Email == email).SingleOrDefault();
+        }
+
+        /// <summary>
+        /// Get the curent user's profile based on the LPUser id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>LPProfile object</returns>
+        private LPProfile GetLPProfile(int id)
+        {
+            return db.LPProfiles.Where(lid => lid.UserID == id).SingleOrDefault();
         }
     }
 }
