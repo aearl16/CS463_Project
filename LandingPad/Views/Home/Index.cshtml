@@ -30,15 +30,15 @@
         @*?ref_src=twsrc%5Etfw*@
 
         @*Testing to see if this works*@
-        @*@if (Convert.ToDateTime(@ViewBag.EndTime) > DateTime.Now)
+        @if (Convert.ToDateTime(@ViewBag.EndTime) > DateTime.Now)
         {
            // <a class="twitter-timeline" data-width="600" data-height="300" data-theme="dark" data-link-color="#19CF86" href="https://twitter.com/@ViewBag.TwitterName">Tweets by @ViewBag.TwitterName</a>
             <a class="twitter-timeline" data-width="600" data-height="300" data-link-color="#19CF86" href="https://twitter.com/@ViewBag.TwitterName?ref_src=twsrc%5Etfw">Tweets by @ViewBag.TwitterName</a>
            // <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-        }*@
+        }
 
-        <blockquote class="twitter-tweet" data-width="550" data-link-color="#19CF86"><p lang="en" dir="ltr">here we are again</p>&mdash; SquareOne (SquareOne2018) <a href="https://twitter.com/SquareOne2018/status/991415441225531392?ref_src=twsrc%5Etfw">May 1, 2018</a></blockquote>
+        @*<blockquote class="twitter-tweet" data-width="550" data-link-color="#19CF86"><p lang="en" dir="ltr">here we are again</p>&mdash; SquareOne (SquareOne2018) <a href="https://twitter.com/SquareOne2018/status/991415441225531392?ref_src=twsrc%5Etfw">May 1, 2018</a></blockquote>*@
 
         <div class="lower_menu">
             <div class="center">

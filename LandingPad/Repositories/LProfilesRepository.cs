@@ -27,14 +27,14 @@ namespace LandingPad.Repositories
             get { return Context as LandingPadContext; }
         }
 
-        public void Remove(int id)
-        {
-            Context.LPProfiles.Remove(LandingPadContext.LPProfiles.Where(u => u.UserID == id).SingleOrDefault());
-        }
-
         public void Save()
         {
             Context.SaveChanges();
+        }
+
+        public void Remove(int id)
+        {
+            Context.LPProfiles.Remove(LandingPadContext.LPProfiles.Where(u => u.UserID == id).SingleOrDefault());
         }
     }
 }
