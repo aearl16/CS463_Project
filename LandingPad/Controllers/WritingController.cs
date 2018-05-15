@@ -42,7 +42,7 @@ namespace LandingPad.Controllers
             //Get ASP.NET User Object
             ApplicationUser currentUser = GetUser(id);
             //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
             return View(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).FirstOrDefault());
         }
 
