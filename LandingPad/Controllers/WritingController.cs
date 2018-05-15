@@ -1,4 +1,4 @@
-﻿using LandingPad.DAL;
+using LandingPad.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +33,7 @@ namespace LandingPad.Controllers
         public ActionResult Index()
         {
             //Check if logged in ==> Should be caught by [Authorize] but just in case
-            if(!CheckLogin())
+            if (!CheckLogin())
             {
                 return RedirectToAction("Login", "Account");
             }
@@ -42,7 +42,7 @@ namespace LandingPad.Controllers
             //Get ASP.NET User Object
             ApplicationUser currentUser = GetUser(id);
             //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
             return View(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).FirstOrDefault());
         }
 
@@ -51,7 +51,7 @@ namespace LandingPad.Controllers
             List<Writing> ordered = new List<Writing>();
             List<DateTime> comparable = new List<DateTime>();
 
-            foreach(var item in wr)
+            foreach (var item in wr)
             {
                 if (item.EditDate != null)
                 {
@@ -65,22 +65,22 @@ namespace LandingPad.Controllers
 
             comparable = comparable.OrderByDescending(i => i).ToList();
 
-            foreach(var item in comparable)
+            foreach (var item in comparable)
             {
                 List<Writing> wCopy = wr;
 
-                foreach(var wItem in wCopy)
+                foreach (var wItem in wCopy)
                 {
-                    if(wItem.EditDate != null)
+                    if (wItem.EditDate != null)
                     {
-                        if(wItem.EditDate.Value == item)
+                        if (wItem.EditDate.Value == item)
                         {
                             ordered.Add(wItem);
                             wr.Remove(wItem);
                             break;
                         }
                     }
-                    else if(wItem.AddDate == item)
+                    else if (wItem.AddDate == item)
                     {
                         ordered.Add(wItem);
                         wr.Remove(wItem);
@@ -127,7 +127,7 @@ namespace LandingPad.Controllers
             List<LandingPad.Models.Writing> w = GetAllWritingAvailable(pID);
             List<LandingPad.Models.Writing> uw = db.Writings.Where(i => i.ProfileID == pID).ToList();
 
-            foreach(var item in uw)
+            foreach (var item in uw)
             {
                 w.Add(item);
             }
@@ -160,7 +160,7 @@ namespace LandingPad.Controllers
             {
                 w.Add(item);
             }
-            
+
             w = OrderByNewest(w);
 
             return View(w.Where(i => i.WritingGenres.Select(j => j.GenreTag.GenreID).ToList().Contains(id)).ToList());
@@ -238,7 +238,7 @@ namespace LandingPad.Controllers
             if (!ModelState.IsValid)
             {
                 int id = Int32.Parse(form["WritingID"]);
-               
+
                 Writing wr = db.Writings.Find(id);
                 wr.Title = form["Title"];
                 wr.EditDate = DateTime.Now;
@@ -263,7 +263,7 @@ namespace LandingPad.Controllers
                 foreach (var item in allFT)
                 {
                     bool isSelected = false;
-                    for(int i = 0; i < FormatTags.Length; i++)
+                    for (int i = 0; i < FormatTags.Length; i++)
                     {
                         if (item.FormatID == Int32.Parse(FormatTags[i]))
                             isSelected = true;
@@ -278,7 +278,7 @@ namespace LandingPad.Controllers
                 }
 
                 //add any format tags that don't already exist
-                if(FormatTags != null)
+                if (FormatTags != null)
                 {
                     foreach (var selection in FormatTags)
                     {
@@ -300,7 +300,7 @@ namespace LandingPad.Controllers
                 foreach (var item in allPseudonyms)
                 {
                     bool isSelected = false;
-                    if(Pseudonyms != null)
+                    if (Pseudonyms != null)
                     {
                         for (int i = 0; i < Pseudonyms.Length; i++)
                         {
@@ -318,7 +318,7 @@ namespace LandingPad.Controllers
                 }
 
                 //add any pseudonyms that don't already exist
-                if(Pseudonyms != null)
+                if (Pseudonyms != null)
                 {
                     foreach (var selection in Pseudonyms)
                     {
@@ -464,7 +464,7 @@ namespace LandingPad.Controllers
             ICollection<WritingPseudonym> wpToDelete = db.WritingPseudonyms.Where(w => w.WritingID == id).ToList();
             ICollection<WritingGenre> wgToDelete = db.WritingGenres.Where(w => w.WritingID == id).ToList();
 
-            foreach(var item in wfToDelete)
+            foreach (var item in wfToDelete)
             {
                 WritingFormat wf = db.WritingFormats.Where(w => w.WritingID == id).FirstOrDefault();
                 db.WritingFormats.Remove(wf);
@@ -549,7 +549,7 @@ namespace LandingPad.Controllers
         {
             return PartialView();
         }
-        
+
         [ChildActionOnly]
         public PartialViewResult _Menu()
         {
@@ -642,7 +642,7 @@ namespace LandingPad.Controllers
             LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
             int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
-            if(Int32.Parse(form["PseudonymID-" + id]) == 0)
+            if (Int32.Parse(form["PseudonymID-" + id]) == 0)
             {
                 FriendRequest fr = new FriendRequest()
                 {
@@ -944,18 +944,18 @@ namespace LandingPad.Controllers
 
             List<WritingPseudonym> wp = db.WritingPseudonyms.Where(i => i.PseudonymID == id).ToList();
 
-            foreach(var item in wp)
+            foreach (var item in wp)
             {
                 int wID = item.WritingID;
                 WritingPseudonym toRemove = item;
                 db.WritingPseudonyms.Remove(toRemove);
                 db.SaveChanges();
-                
+
                 Writing wr = db.Writings.Where(i => i.WritingID == wID).FirstOrDefault();
 
                 if (wr.WritingPseudonyms.Count() == 0)
                 {
-                    if(wr.UsePseudonymsInAdditionToUsername == true)
+                    if (wr.UsePseudonymsInAdditionToUsername == true)
                     {
                         wr.UsePseudonymsInAdditionToUsername = false;
                         db.Entry(wr).State = EntityState.Modified;
@@ -1019,7 +1019,7 @@ namespace LandingPad.Controllers
                 db.Entry(ap).State = EntityState.Modified;
                 db.SaveChanges();
 
-                if(FormatTags != null)
+                if (FormatTags != null)
                 {
                     foreach (var selection in FormatTags)
                     {
@@ -1033,7 +1033,7 @@ namespace LandingPad.Controllers
                     }
                 }
 
-                if(Pseudonyms != null)
+                if (Pseudonyms != null)
                 {
                     foreach (var selection in Pseudonyms)
                     {
@@ -1047,7 +1047,7 @@ namespace LandingPad.Controllers
                     }
                 }
 
-                if(FictionOrNonfiction != null)
+                if (FictionOrNonfiction != null)
                 {
                     foreach (var selection in FictionOrNonfiction)
                     {
@@ -1108,11 +1108,11 @@ namespace LandingPad.Controllers
 
             string byline = "";
 
-            if(wr.WritingPseudonyms.Count > 0)
+            if (wr.WritingPseudonyms.Count > 0)
             {
                 byline = " by " + wr.WritingPseudonyms.FirstOrDefault().Pseudonym.Pseudonym1;
             }
-            else if(wr.LPProfile.DisplayRealName == true && wr.LPProfile.LPUser.GivenName != null && wr.LPProfile.LPUser.Surname != null)
+            else if (wr.LPProfile.DisplayRealName == true && wr.LPProfile.LPUser.GivenName != null && wr.LPProfile.LPUser.Surname != null)
             {
                 byline = " by " + wr.LPProfile.LPUser.GivenName + " " + wr.LPProfile.LPUser.Surname;
             }
@@ -1154,22 +1154,22 @@ namespace LandingPad.Controllers
 
             toRemove = w.Where(i => i.ProfileID == id).ToList();
 
-            foreach(var item in toRemove)
+            foreach (var item in toRemove)
             {
                 w.Remove(item);
             }
 
-            if(isMinor)
+            if (isMinor)
             {
                 toRemove = w.Where(i => i.AccessPermission.MinorAccess == false).ToList();
-                foreach(var item in toRemove)
+                foreach (var item in toRemove)
                 {
                     w.Remove(item);
                 }
             }
 
             toRemove = w.Where(i => i.AccessPermission.IndividualAccessRevokes.Select(j => j.RevokeeID).ToList().Contains(id)).ToList();
-            foreach(var item in toRemove)
+            foreach (var item in toRemove)
             {
                 w.Remove(item);
             }
@@ -1181,7 +1181,7 @@ namespace LandingPad.Controllers
             toRemove = toRemove.Except(toRemove.Where(i => i.AccessPermission.PublicAccess == true)).ToList();
 
             //if the user has the publisher role, remove all writings with publisher access
-            if(lpProfile.ProfileRoles.Select(i => i.RoleID).ToList().Contains(2))
+            if (lpProfile.ProfileRoles.Select(i => i.RoleID).ToList().Contains(2))
             {
                 toRemove = toRemove.Except(toRemove.Where(i => i.AccessPermission.PublisherAccess == true)).ToList();
             }
@@ -1189,7 +1189,7 @@ namespace LandingPad.Controllers
             //remove the writings that have friend access and are by friends of the user
             toRemove = toRemove.Except(toRemove.Where(i => i.AccessPermission.FriendAccess == true).ToList().Where(i => i.LPProfile.Friends.Select(j => j.SecondFriendID).ToList().Contains(id))).ToList();
 
-            foreach(var item in toRemove)
+            foreach (var item in toRemove)
             {
                 w.Remove(item);
             }
@@ -1201,10 +1201,10 @@ namespace LandingPad.Controllers
         {
             DateTime now = DateTime.Today;
 
-            if(p.LPUser.Birthdate != null)
+            if (p.LPUser.Birthdate != null)
             {
                 DateTime bDay = p.LPUser.Birthdate.Value;
-                if(now.Year - bDay.Year > 17 ||
+                if (now.Year - bDay.Year > 17 ||
                     (now.Year - bDay.Year == 17 && (now.Month > bDay.Month || (now.Month == bDay.Month && now.Date >= bDay.Date))))
                 {
                     return false;
@@ -1272,16 +1272,16 @@ namespace LandingPad.Controllers
             List<GenreCategory> ForN = FictionOrNonfictionOnly();
 
             //if the GenreID passed in is fiction or nonfiction only
-            if(ForN.Select(i => i.GenreID).ToList().Contains(id))
+            if (ForN.Select(i => i.GenreID).ToList().Contains(id))
             {
                 GenreCategory FicOrNon = ForN.Where(i => i.GenreID == id).FirstOrDefault();
 
                 //if FicOrNon only has a Parent ID
-                if(FicOrNon.SecondaryParentID == null)
+                if (FicOrNon.SecondaryParentID == null)
                 {
                     return FicOrNon.ParentID;
                 } //if FicOrNon has a SecondaryParentID but not a TertiaryParentID
-                else if(FicOrNon.TertiaryParentID == null)
+                else if (FicOrNon.TertiaryParentID == null)
                 {
                     return FicOrNon.SecondaryParentID.Value;
                 } //if FicOrNon has a TertiaryParentID
@@ -1300,9 +1300,9 @@ namespace LandingPad.Controllers
         public List<int> GetFictionOrNonfictionForGenre(int id, string name)
         {
             List<GenreCategory> ForN = FictionOrNonfictionOnly();
-            
 
-            if(String.Compare(name, "genre") == 0)
+
+            if (String.Compare(name, "genre") == 0)
             {
                 int fnGenreID = GetFictionOrNonfiction(id);
                 if (fnGenreID != 0)
@@ -1323,11 +1323,11 @@ namespace LandingPad.Controllers
             }
             else
             {
-                if(id == 1)
+                if (id == 1)
                 {
                     return db.GenreFormats.Where(i => i.GenreID == 2).Select(i => i.ParentFormatID).ToList();
                 }
-                else if(id == 2)
+                else if (id == 2)
                 {
                     return db.GenreFormats.Where(i => i.GenreID == 1).Select(i => i.ParentFormatID).ToList();
                 }
@@ -1342,11 +1342,11 @@ namespace LandingPad.Controllers
         public List<int> GetFictionOrNonfictionForFormat(int id)
         {
             //if this format tag is fiction only
-            if(db.FormatTags.Find(id).ChildGenres.Select(i => i.GenreID).ToList().Contains(1))
+            if (db.FormatTags.Find(id).ChildGenres.Select(i => i.GenreID).ToList().Contains(1))
             {
                 return db.GenreFormats.Where(i => i.GenreID == 2).Select(i => i.ParentFormatID).ToList();
             } //if the format tag is nonfiction only
-            else if(db.FormatTags.Find(id).ChildGenres.Select(i => i.GenreID).ToList().Contains(2))
+            else if (db.FormatTags.Find(id).ChildGenres.Select(i => i.GenreID).ToList().Contains(2))
             {
                 return db.GenreFormats.Where(i => i.GenreID == 1).Select(i => i.ParentFormatID).ToList();
             }
@@ -1373,7 +1373,7 @@ namespace LandingPad.Controllers
         /// <returns> tf if the user is logged in</returns>
         private bool CheckLogin()
         {
-            if(User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 return true;
             }

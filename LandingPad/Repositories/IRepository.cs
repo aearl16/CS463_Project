@@ -19,5 +19,8 @@ namespace LandingPad.Repositories
 
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
+
+        void SaveChanges();
+        void SetModified(object entity);
     }
 }
