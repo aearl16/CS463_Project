@@ -498,6 +498,8 @@
     <Content Include="Views\Error\EditError.cshtml" />
     <Content Include="Views\Error\DeleteError.cshtml" />
     <Content Include="Views\Error\DownloadError.cshtml" />
+    <Content Include="Views\Error\PageNotFound.cshtml" />
+    <Content Include="Views\Error\InternalError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Writing\_SelectGenre.cshtml" />
