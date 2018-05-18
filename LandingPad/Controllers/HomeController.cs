@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
-using System.Net;
 using TweetSharp;
 using LandingPad.DAL;
 using LandingPad.Repositories;
@@ -10,6 +8,7 @@ using LandingPad.Models;
 using Moq;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
+using System.Web;
 
 namespace LandingPad.Controllers
 {

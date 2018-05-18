@@ -27,5 +27,17 @@ namespace LandingPad.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public ActionResult PageNotFound()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult InternalError()
+        {
+            return View();
+        }
     }
 }
