@@ -38,12 +38,9 @@ namespace LandingPad.Controllers
 
         public bool CheckSquareOne(int id)
         {
-           if(this.twitterRepo.GetTwitterId(id) == id)
-            {
+           if(this.twitterRepo.FindTwitter(id) != null) {
                 return true;
-            }
-            else
-            {
+            }else{
                 return false;
             }
         }

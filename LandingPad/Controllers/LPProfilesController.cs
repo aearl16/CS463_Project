@@ -9,6 +9,9 @@ using System.Web.Mvc;
 using LandingPad.DAL;
 using LandingPad.Models;
 using System.Data.Entity.Infrastructure;
+using LandingPad.Repositories;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.Identity;
 
 namespace LandingPad.Controllers
 {
@@ -17,29 +20,54 @@ namespace LandingPad.Controllers
     public class LPProfilesController : Controller
     {
         private LandingPadContext db = new LandingPadContext();
+        ILProfilesRepository lprepo = new LProfilesRepository(new LandingPadContext());
+
+
+        private ApplicationUserManager _userManager;
+
+        /// <summary>
+        /// Used to get the user manager for helper methods
+        /// </summary>
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+        }
 
         // GET: LPProfiles
 
         public ActionResult Index()
         {
-            var lPProfiles = db.LPProfiles.Include(l => l.LPUser); 
-            return View(lPProfiles.ToList());
-
-            //var model = new ProfileUser();
-            //model.LPProfile = db.LPProfiles.ToList();
-            //model.LPUser = db.LPUsers.ToList();
-            //model.Pseudonym = db.Pseudonyms.ToList();
-            //return View(model);
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
+            return View(lprepo.GetAll());
         }
 
         // GET: LPProfiles/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details()
         {
-            if (id == null)
+            if (!CheckLogin())
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "Account");
             }
-            LPProfile lPProfile = db.LPProfiles.Find(id);
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
+            LPProfile lPProfile = lprepo.Get(lpCurrentUser.UserID);
+
             if (lPProfile == null)
             {
                 return HttpNotFound();
@@ -65,8 +93,8 @@ namespace LandingPad.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    db.LPProfiles.Add(lPProfile);
-                    db.SaveChanges();
+                    lprepo.SetModified(lPProfile);
+                    lprepo.Save();
                     return RedirectToAction("Index");
                 }
             }
@@ -79,20 +107,25 @@ namespace LandingPad.Controllers
         }
 
         // GET: LPProfiles/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit()
         {
-            if (id == null)
+            if (!CheckLogin())
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "Account");
             }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
+            LPProfile lPProfile = lprepo.Get(lpCurrentUser.UserID);
 
-            LPProfile lPProfile = db.LPProfiles.Find(id);
-
-            if (lPProfile == null)
+            if (lpCurrentUser == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", lPProfile.UserID);
+            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", lpCurrentUser.UserID);
             return View(lPProfile);
         }
 
@@ -108,9 +141,10 @@ namespace LandingPad.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    
-                    db.Entry(lPProfile).State = EntityState.Modified;
-                    db.SaveChanges();
+
+                    //db.Entry(lPProfile).State = EntityState.Modified;
+                    lprepo.SetModified(lPProfile);
+                    lprepo.Save();
                     return RedirectToAction("Index");
                 }
             }
@@ -123,14 +157,21 @@ namespace LandingPad.Controllers
         }
 
         // GET: LPProfiles/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete()
         {
-            if (id == null)
+            if (!CheckLogin())
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Login", "Account");
             }
-            LPProfile lPProfile = db.LPProfiles.Find(id);
-            if (lPProfile == null)
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
+            LPProfile lPProfile = lprepo.Get(lpCurrentUser.UserID);
+
+            if (lprepo.Get(lpCurrentUser.UserID) == null)
             {
                 return HttpNotFound();
             }
@@ -140,11 +181,21 @@ namespace LandingPad.Controllers
         // POST: LPProfiles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed()
         {
-            LPProfile lPProfile = db.LPProfiles.Find(id);
-            db.LPProfiles.Remove(lPProfile);
-            db.SaveChanges();
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
+
+            lprepo.Remove(lpCurrentUser.UserID);
+            lprepo.Save();
             return RedirectToAction("Index");
         }
 
@@ -156,5 +207,64 @@ namespace LandingPad.Controllers
             }
             base.Dispose(disposing);
         }
+
+        /*
+* Begin Helper method section
+*/
+        /// <summary>
+        /// Helper method that checks if a user is logged in
+        /// </summary>
+        /// <returns> tf if the user is logged in</returns>
+        private bool CheckLogin()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the currently logged in user's ID
+        /// </summary>
+        /// <returns> string id of the current user</returns>
+        private string GetUserID()
+        {
+            return User.Identity.GetUserId();
+        }
+
+        /// <summary>
+        /// Gets the user object from the database
+        /// </summary>
+        /// <returns> ApplicationUser object of the current user </returns>
+        private ApplicationUser GetUser(string id)
+        {
+            return UserManager.FindById(id);
+        }
+
+        /// <summary>
+        /// Gets the LP user object based on e-mail link
+        /// Can also be used separately for obtaining the user object
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns> LPUser object after ApplicationUser object</returns>
+        private LPUser GetLPUser(string email)
+        {
+            return db.LPUsers.Where(em => em.Email == email).SingleOrDefault();
+        }
+
+        /// <summary>
+        /// Get the curent user's profile based on the LPUser id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>LPProfile object</returns>
+        private LPProfile GetLPProfile(int id)
+        {
+            return db.LPProfiles.Where(lid => lid.UserID == id).SingleOrDefault();
+        }
+
     }
 }

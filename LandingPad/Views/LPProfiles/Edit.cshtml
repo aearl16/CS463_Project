@@ -118,10 +118,10 @@
 }
 <p>
     <button>
-        @Html.ActionLink("Back", "Index")
+        @Html.ActionLink("Back", "Details", "LPProfiles")
     </button>
     <button>
-        @Html.ActionLink("Profile", "Details", new { id = Model.ProfileID })
+        @Html.ActionLink("TimeLine", "Index", "Home")
     </button>
 </p>
 @section Scripts {
