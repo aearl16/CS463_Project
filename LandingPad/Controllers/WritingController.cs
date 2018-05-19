@@ -1139,7 +1139,7 @@ namespace LandingPad.Controllers
                 return null;
 
             string output = Encoding.Unicode.GetString(input);
-            output = output.Replace("&lt;", "<").Replace("&gt;", ">").Replace("'", "&#39;").Replace('"'.ToString(), "&#34;");
+            output = output.Replace("&lt;", "<").Replace("&gt;", ">").Replace("'", "&#39;");
 
 
             return output;
