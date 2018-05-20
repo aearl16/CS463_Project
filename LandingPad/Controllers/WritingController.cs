@@ -580,11 +580,19 @@ namespace LandingPad.Controllers
         [ChildActionOnly]
         public PartialViewResult _Menu()
         {
+            //Get the user's ID
+            string id = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(id);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+
+            LPProfile pAuthor = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).FirstOrDefault();
             ViewBag.Pseudonyms = String.Join(",", db.Pseudonyms.Select(i => i.PseudonymID));
             ViewBag.FormatTags = String.Join(",", db.FormatTags.Select(i => i.FormatID));
             ViewBag.GenreTags = String.Join(",", db.GenreTags.Select(i => i.GenreID));
 
-            return PartialView();
+            return PartialView(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).FirstOrDefault());
         }
 
         [HttpGet]
