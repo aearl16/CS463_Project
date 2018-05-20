@@ -391,6 +391,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\login.css" />
     <Content Include="Content\penfolio.css" />
+    <Content Include="Content\snowOverwrite.css" />
     <Content Include="Content\SquareOneLogo.png" />
     <Content Include="Content\writingPreviewMin.css" />
     <Content Include="favicon.ico" />
