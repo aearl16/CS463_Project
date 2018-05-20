@@ -529,12 +529,39 @@ namespace LandingPad.Controllers
         [ChildActionOnly]
         public PartialViewResult _SelectFormat()
         {
+            List<GenreFormat> FictionOnly = GetFictionOnly();
+            List<GenreFormat> NonfictionOnly = GetNonfictionOnly();
+
+            ViewBag.FictionOnly = String.Join(",", FictionOnly.Select(i => i.ParentFormatID));
+            ViewBag.NonfictionOnly = String.Join(",", NonfictionOnly.Select(i => i.ParentFormatID));
+
             return PartialView(db.FormatTags.ToList());
         }
 
         [ChildActionOnly]
         public PartialViewResult _SelectGenre()
         {
+            List<GenreCategory> FictionOnly = db.GenreCategories
+                .GroupBy(i => i.GenreID)
+                .Where(j => j.Select(k => k.TertiaryParentID).ToList().Contains(2) == false)
+                .Where(j => j.Select(k => k.SecondaryParentID).ToList().Contains(2) == false)
+                .Where(j => j.Select(k => k.ParentID).ToList().Contains(2) == false)
+                .SelectMany(r => r)
+                .Where(r => r.ParentID == 1 || r.SecondaryParentID == 1 || r.TertiaryParentID == 1)
+                .ToList();
+
+            List<GenreCategory> NonfictionOnly = db.GenreCategories
+                .GroupBy(i => i.GenreID)
+                .Where(j => j.Select(k => k.TertiaryParentID).ToList().Contains(1) == false)
+                .Where(j => j.Select(k => k.SecondaryParentID).ToList().Contains(1) == false)
+                .Where(j => j.Select(k => k.ParentID).ToList().Contains(1) == false)
+                .SelectMany(r => r)
+                .Where(r => r.ParentID == 2 || r.SecondaryParentID == 2 || r.TertiaryParentID == 2)
+                .ToList();
+
+            ViewBag.FictionOnly = String.Join(",", FictionOnly.Select(i => i.GenreID));
+            ViewBag.NonfictionOnly = String.Join(",", NonfictionOnly.Select(i => i.GenreID));
+
             return PartialView(db.GenreTags.ToList());
         }
 
