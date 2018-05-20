@@ -1,11 +1,12 @@
 ﻿@model LandingPad.Models.Writing
 
-@{ 
+@{
 }
 
-<div id="editWriting"></div>
+<div id="editWriting" class="@ViewBag.Collapse"><a href="~/Writing/Edit/@Model.WritingID">Edit</a> | <a href="~/Writing/Delete/@Model.WritingID">Delete</a></div>
 <h2>@Model.Title</h2>
 <div id="byline">@ViewBag.Byline</div>
 
 <div id="content" class="ql-editor">@Html.Raw(ViewBag.Document)</div>
 
+@Html.ActionLink("Back to List", "Index")
