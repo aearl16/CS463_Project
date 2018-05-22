@@ -40,13 +40,14 @@
                 10 an array of children with a secondary parent and no tertiary parent (single dependency) that have alternate parents
                 11 an array of possible alternate parents for the children in the last array with matching indexes
                 12 an array of dependencies for the last two arrays with matching indexes
-                13 an array of genres that are only fiction if the current genre is only nonfiction or are only nonfiction if the current genre is only fiction
-                14 a string that states whether this tag is only fiction, only nonfiction, or neither
-                15 an array of parent formats-->
+                13 a bool that states whether or not this tag is fiction only,
+                14 a bool that states whether or not this tag is nonfiction only,
+                15 an array of genres that are fiction only,
+                16 an array of genres that are nonfiction only,
+                17 an array of parent formats-->
             <!--Top level tags that can be either fiction or nonfiction-->
             @foreach(var item in Model.Where(i => i.ParentGenres.Select(j => j.ParentID).ToList().Contains(1) && i.ParentGenres.Select(j => j.ParentID).ToList().Contains(2)))
-            { 
-                <span class="@item.GenreID checkItem"  onmouseover='showExplanationNotFT("genreTagDescription", "@item.Explanation")'><input type="checkbox" value="@item.GenreID" name="GenreTags" onchange='gtChildren(@item.GenreID, 
+            {<span class="@item.GenreID checkItem"  onmouseover='showExplanationNotFT("genreTagDescription", "@item.Explanation")'><input type="checkbox" value="@item.GenreID" name="GenreTags" onchange='gtChildren(@item.GenreID, 
                     [@Html.Raw(String.Join(",", item.ChildGenres.Where(i => i.SecondaryParentID == null).Select(i => i.GenreID)))], 
                     [@Html.Raw(String.Join(",", item.ChildGenres.Where(i => i.TertiaryParentID == null).Where(i => i.SecondaryParentID != null).Select(i => i.GenreID)))], 
                     [@Html.Raw(String.Join(",", item.ChildGenres.Where(i => i.TertiaryParentID == null).Where(i => i.SecondaryParentID != null).Select(i => i.SecondaryParentID)))], 
@@ -58,14 +59,14 @@
                     [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID != null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.GenreID)))], 
                     [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID != null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.ParentID)))], 
                     [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID != null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.SecondaryParentID)))], 
-                    [], 
-                    null, 
-                    [@Html.Raw(String.Join(",", item.GenreFormats.Select(i => i.ParentFormatID)))])' /> <span class="genreName">@item.GenreName</span></span> 
-            }
+                    false,
+                    false,
+                    [@ViewBag.FictionOnly],
+                    [@ViewBag.NonfictionOnly],
+                    [@Html.Raw(String.Join(",", item.GenreFormats.Select(i => i.ParentFormatID)))])' /> <span class="genreName">@item.GenreName</span></span>}
             <!--Tags that are below the top level or which are nonfiction only or fiction only-->
             @foreach (var item in Model.Where(i => i.GenreID > 2).Except(Model.Where(i => (i.ParentGenres.Select(j => j.ParentID).ToList().Contains(1) && i.ParentGenres.Select(j => j.ParentID).ToList().Contains(2)))))
-            {
-                <span class="@item.GenreID checkItem collapse" onmouseover='showExplanationNotFT("genreTagDescription", "@item.Explanation")'>
+            {<span class="@item.GenreID checkItem collapse" onmouseover='showExplanationNotFT("genreTagDescription", "@item.Explanation")'>
                     <input type="checkbox" value="@item.GenreID" name="GenreTags" onchange='gtChildren(@item.GenreID,
                     [@Html.Raw(String.Join(",", item.ChildGenres.Where(i => i.SecondaryParentID == null).Select(i => i.GenreID)))],
                     [@Html.Raw(String.Join(",", item.ChildGenres.Where(i => i.TertiaryParentID == null).Where(i => i.SecondaryParentID != null).Select(i => i.GenreID)))],
@@ -78,10 +79,11 @@
                     [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID != null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.GenreID)))],
                     [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID != null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.ParentID)))],
                     [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID != null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.SecondaryParentID)))],
-                    [@Html.Raw(String.Join(",", controller.GetFictionOrNonfictionForGenre(item.GenreID, "genre")))],
-                    "@controller.IsFictionOrNonfictionOnlyForGenre(item.GenreID)", 
-                    [@Html.Raw(String.Join(",", item.GenreFormats.Select(i => i.ParentFormatID)))])' /> <span class="genreName">@item.GenreName</span></span> 
-            }
+                    @item.IsFictionOnly,
+                    @item.IsNonfictionOnly,
+                    [@ViewBag.FictionOnly],
+                    [@ViewBag.NonfictionOnly],
+                    [@Html.Raw(String.Join(",", item.GenreFormats.Select(i => i.ParentFormatID)))])' /> <span class="genreName">@item.GenreName</span></span>}
         </div>
     </div> <!--genreTagContainer-->
 
