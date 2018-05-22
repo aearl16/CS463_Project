@@ -72,7 +72,8 @@ function showExplanation(explanation) {
  * mp stands for multiple parent; this is different than md because md REQUIRES both parents while mp can have ANY of the parents
  */
 function ftChildren(id, sdChildren, mdChildren, dependencies, mpChildren, altParents, childGenres, isFictionOnly, isNonfictionOnly, fictionOnly, nonfictionOnly) {
-    var True = true, False = false;
+    True = true;
+    False = false;
 
     //if the checkbox for the format tag with a FormatID of id was checked
     if ($("#formatTagContainer span." + id + " input[type=checkbox]").is(":checked")) {
