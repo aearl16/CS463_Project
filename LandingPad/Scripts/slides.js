@@ -203,13 +203,13 @@ function loadSlideAndConfirm(current, next, pseudonyms, formatTags, genreTags) {
     //this field is for use on the normal create and edit pages where you are working with the editor
     //the upload pages do not use a submit button with this ID, so they will not be effected by this
     //if the writing doesn't have a title or an author or text, inform the user and disable the submit button
-    //if (isEmpty($("#confirmTitle")) || isEmpty($("#confirmText"))) {
-    //    $("#validationMessage").append("Writing cannot be saved without a title, author, and body of text.");
-    //    $("#createWriting").prop("disabled", true);
-    //}
-    //else { //otherwise, if the writing is valid, remove the disabled property from the submit button
-    //    $("#createWriting").prop("disabled", false);
-    //}
+    if (isEmpty($("#confirmTitle")) || isEmpty($("#confirmText"))) {
+        $("#validationMessage").append("Writing cannot be saved without a title, author, and body of text.");
+        $("#createWriting").prop("disabled", true);
+    }
+    else { //otherwise, if the writing is valid, remove the disabled property from the submit button
+        $("#createWriting").prop("disabled", false);
+    }
 }
 
 /*
