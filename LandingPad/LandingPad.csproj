@@ -168,6 +168,9 @@
     <Reference Include="PreMailer.Net, Version=1.2.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PreMailer.Net.1.2.7\lib\net40\PreMailer.Net.dll</HintPath>
     </Reference>
+    <Reference Include="Recaptcha.Web, Version=2.1.0.0, Culture=neutral, PublicKeyToken=171a6ec5fa4b1644, processorArchitecture=MSIL">
+      <HintPath>..\packages\RecaptchaNet.2.1.0\lib\net451\Recaptcha.Web.dll</HintPath>
+    </Reference>
     <Reference Include="SautinSoft.PdfFocus, Version=6.9.4.10, Culture=neutral, PublicKeyToken=0b79b934109b3e9e, processorArchitecture=MSIL">
       <HintPath>..\packages\sautinsoft.pdffocus.6.9.4.10\lib\net461\SautinSoft.PdfFocus.dll</HintPath>
     </Reference>
@@ -401,6 +404,7 @@
     <Content Include="Content\Images\Penfolio\leftdivbackground.png" />
     <Content Include="Content\Images\Penfolio\penfoliobackground.png" />
     <Content Include="Content\Images\Penfolio\rightdivbackround.png" />
+    <Content Include="RecaptchaNet.Readme.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
