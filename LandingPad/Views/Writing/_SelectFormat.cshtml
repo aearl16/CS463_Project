@@ -58,8 +58,8 @@
                 [@Html.Raw(String.Join(",", fc.GroupBy(i => i.FormatID).Where(j => j.Select(k => k.ParentID).ToList().Contains(item.FormatID)).SelectMany(r => r).Where(r => r.ParentID != item.FormatID).Select(i => i.FormatID)))],
                 [@Html.Raw(String.Join(",", fc.GroupBy(i => i.FormatID).Where(j => j.Select(k => k.ParentID).ToList().Contains(item.FormatID)).SelectMany(r => r).Where(r => r.ParentID != item.FormatID).Select(i => i.ParentID)))],
                 [@Html.Raw(String.Join(",", item.ChildGenres.Select(i => i.GenreID)))],
-                "@item.IsFictionOnly",
-                "@item.IsNonfictionOnly",
+                "@item.IsFictionOnly.ToString()",
+                "@item.IsNonfictionOnly.ToString()",
                 [@ViewBag.FictionOnly],
                 [@ViewBag.NonfictionOnly])' class="@item.FormatID" /> <span class="formatName">@item.FormatName</span></span>
         } <!--For each of the lower level formats (aka the formats that have at least one parent)-->
@@ -71,8 +71,8 @@
                 [@Html.Raw(String.Join(",", fc.GroupBy(i => i.FormatID).Where(j => j.Select(k => k.ParentID).ToList().Contains(item.FormatID)).SelectMany(r => r).Where(r => r.ParentID != item.FormatID).Select(i => i.FormatID)))],
                 [@Html.Raw(String.Join(",", fc.GroupBy(i => i.FormatID).Where(j => j.Select(k => k.ParentID).ToList().Contains(item.FormatID)).SelectMany(r => r).Where(r => r.ParentID != item.FormatID).Select(i => i.ParentID)))],
                 [@Html.Raw(String.Join(",", item.ChildGenres.Select(i => i.GenreID)))],
-                "@item.IsFictionOnly",
-                "@item.IsNonfictionOnly",
+                "@item.IsFictionOnly.ToString()",
+                "@item.IsNonfictionOnly.ToString()",
                 [@ViewBag.FictionOnly],
                 [@ViewBag.NonfictionOnly])' class="@item.FormatID" /> <span class="formatName">@item.FormatName</span></span>
         }
