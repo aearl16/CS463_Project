@@ -70,7 +70,8 @@ function fictionOrNonfiction(name, fictionOrNonfictionOnly, children, parentForm
  * @param {int[]} parentFormats (array of formats that are parents of the current tag)
  */
 function gtChildren(id, ndChildren, sdChildren, sDependencies, mdChildren, mdfDependencies, mdsDependencies, mpndChildren, mpndParents, mpsdChildren, mpsdParents, mpsDependencies, isFictionOnly, isNonfictionOnly, fictionOnly, nonfictionOnly, parentFormats) {
-    var True = true, False = false;
+    True = true;
+    False = false;
 
     //if the checkbox for the genre tag with a GenreID of id was checked
     if ($("#genreTagContainer span." + id + " input").is(":checked")) {
