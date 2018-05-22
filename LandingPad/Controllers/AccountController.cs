@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using LandingPad.Models;
 using LandingPad.DAL;
+using Recaptcha.Web;
+using Recaptcha.Web.Mvc;
 
 namespace LandingPad.Controllers
 {
@@ -166,6 +168,22 @@ namespace LandingPad.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            RecaptchaVerificationHelper recaptchaHelper = this.GetRecaptchaVerificationHelper();
+            if (string.IsNullOrEmpty(recaptchaHelper.Response))
+            {
+                ModelState.AddModelError("reCAPTCHA", "Please complete the reCAPTCHA");
+                return View(model);
+            }
+            else
+            {
+                RecaptchaVerificationResult recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
+                if (recaptchaResult != RecaptchaVerificationResult.Success)
+                {
+                    ModelState.AddModelError("reCAPTCHA", "The reCAPTCHA is incorrect");
+                    return View(model);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Username, Email = model.Email };

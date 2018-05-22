@@ -1,4 +1,4 @@
-﻿using LandingPad.DAL;
+using LandingPad.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +28,10 @@ namespace LandingPad.Controllers
             get
             {
                 return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
             }
         }
 
