@@ -33,6 +33,10 @@ namespace LandingPad.Controllers
             {
                 return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
+            private set
+            {
+                _userManager = value;
+            }
         }
 
         /// <summary>
