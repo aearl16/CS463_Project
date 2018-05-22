@@ -45,7 +45,7 @@ namespace LandingPad.Controllers
 
             if(_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
@@ -104,7 +104,7 @@ namespace LandingPad.Controllers
         {
             if (_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
@@ -124,7 +124,7 @@ namespace LandingPad.Controllers
 
             if (_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
@@ -152,7 +152,7 @@ namespace LandingPad.Controllers
 
             if (_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
@@ -186,7 +186,7 @@ namespace LandingPad.Controllers
 
             if (_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
@@ -431,7 +431,7 @@ namespace LandingPad.Controllers
 
             if (_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
@@ -515,7 +515,7 @@ namespace LandingPad.Controllers
         {
             if (_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
@@ -578,7 +578,7 @@ namespace LandingPad.Controllers
         {
             if (_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
@@ -600,7 +600,7 @@ namespace LandingPad.Controllers
 
             if (_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
@@ -620,7 +620,7 @@ namespace LandingPad.Controllers
 
             if (_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
@@ -666,7 +666,7 @@ namespace LandingPad.Controllers
 
             if (_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
@@ -790,7 +790,7 @@ namespace LandingPad.Controllers
 
             if (_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
@@ -808,7 +808,7 @@ namespace LandingPad.Controllers
 
             if (_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
@@ -1115,7 +1115,7 @@ namespace LandingPad.Controllers
 
             if (_profileID == 0)
             {
-                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
                 _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
             }
 
