@@ -73,14 +73,14 @@ function gtChildren(id, ndChildren, sdChildren, sDependencies, mdChildren, mdfDe
     //if the checkbox for the genre tag with a GenreID of id was checked
     if ($("#genreTagContainer span." + id + " input").is(":checked")) {
         //if this is a fiction only genre tag
-        if (isFictionOnly === true) {
+        if (isFictionOnly === "true") {
             //if fiction isn't already selected, select it and call the onchange function for fiction
             if ($("#genreTagContainer span.1 input").is(":checked") === false) {
                 $("#genreTagContainer span.1 input").prop("checked", true).trigger("click");
                 $("#genreTagContainer span.1 input").change();
             }
         } //if this is a nonfiction only genre tag
-        else if (isNonfictionOnly === true) {
+        else if (isNonfictionOnly === "true") {
             //if nonfiction isn't already selected, select it and call the onchange function for nonfiction
             if ($("#genreTagContainer span.2 input").is(":checked") === false) {
                 $("#genreTagContainer span.2 input").prop("checked", true).trigger("click");
@@ -113,7 +113,7 @@ function gtChildren(id, ndChildren, sdChildren, sDependencies, mdChildren, mdfDe
     } //if we are loading children
     else { //if we are unloading children, we only care about dependencies of mpsdChildren
         //if this genre tag is fiction only 
-        if (isFictionOnly === true) {
+        if (isFictionOnly === "true") {
             //for each tag that is nonfiction only
             for (i = 0; i < nonfictionOnly.length; i++) {
                 //check to make sure it isn't one of the parents in mpndParents
@@ -158,7 +158,7 @@ function gtChildren(id, ndChildren, sdChildren, sDependencies, mdChildren, mdfDe
                 } //check to make sure it isn't one of the parents in mpsdParents
             } //for each genre tag that is nonfiction only
         } //if this genre tag is fiction only
-        else if (isNonfictionOnly === true) { //if this genre tag is nonfiction only
+        else if (isNonfictionOnly === "true") { //if this genre tag is nonfiction only
             //for each tag that is fiction only
             for (i = 0; i < fictionOnly.length; i++) {
                 //check to make sure it isn't one of the parents in mpndParents
@@ -240,9 +240,9 @@ function gtChildren(id, ndChildren, sdChildren, sDependencies, mdChildren, mdfDe
         //and multi-dependency children with only one possible combination of parents; remove
         //the children with multiple possible parents or combination of parents only if none of
         //the parents or combination of parents are selected
-        if (isFictionOnly === true)
+        if (isFictionOnly === "true")
             unloadGenres(ndChildren, mpndChildren, mpndParents, mpsdChildren, mpsdParents, mpsDependencies, nonfictionOnly);
-        else if (isNonfictionOnly === true)
+        else if (isNonfictionOnly === "true")
             unloadGenres(ndChildren, mpndChildren, mpndParents, mpsdChildren, mpsdParents, mpsDependencies, fictionOnly);
         else
             unloadGenres(ndChildren, mpndChildren, mpndParents, mpsdChildren, mpsdParents, mpsDependencies, []);
