@@ -29,6 +29,10 @@ namespace LandingPad.Models
 
         public string Explanation { get; set; }
 
+        public bool IsFictionOnly { get; set; }
+
+        public bool IsNonfictionOnly { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AltGenreName> AltGenreNames { get; set; }
 

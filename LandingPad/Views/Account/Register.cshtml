@@ -1,4 +1,5 @@
-﻿@using LandingPad.Models 
+﻿@using LandingPad.Models
+@using Recaptcha.Web.Mvc
 @model LandingPad.Models.RegisterViewModel
 @{
     ViewBag.Title = "Create an Account";
@@ -37,8 +38,11 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="g-recaptcha" data-sitekey=@System.Configuration.ConfigurationManager.AppSettings["CTSiteKey"]></div>
-        <br />
+        <div>
+            @Html.Recaptcha(theme: Recaptcha.Web.RecaptchaTheme.Clean)
+        </div>
+    </div>
+    <div class="form-group">
         <div>
             <input type="submit" class="btn btn-default" value="Register" />
         </div>

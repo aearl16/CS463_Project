@@ -252,6 +252,8 @@ CREATE TABLE dbo.FormatTag
 	FormatID INT IDENTITY(1,1) NOT NULL,
 	FormatName VARCHAR(MAX) NOT NULL,
 	Explanation VARCHAR(MAX),
+	IsFictionOnly BIT,
+	IsNonfictionOnly BIT,
 	CONSTRAINT [PK_dbo.FormatTag] PRIMARY KEY (FormatID)
 );
 
@@ -313,6 +315,8 @@ CREATE TABLE dbo.GenreTag
 	GenreID INT IDENTITY(1,1) NOT NULL,
 	GenreName VARCHAR(MAX) NOT NULL,
 	Explanation VARCHAR(MAX) NOT NULL,
+	IsFictionOnly BIT,
+	IsNonfictionOnly BIT,
 	CONSTRAINT [PK_dbo.GenreTag] PRIMARY KEY (GenreID)
 );
 
@@ -481,109 +485,109 @@ INSERT INTO dbo.LPRole(RoleName, SecondaryRoleName) VALUES
 --(3, 6), --Hokey Folk Tales, Treed 4
 --(3, 7); --Hokey Folk Tales, JustGeorge 5
 
-INSERT INTO dbo.FormatTag (FormatName, Explanation) VALUES
+INSERT INTO dbo.FormatTag (FormatName, Explanation, IsFictionOnly, IsNonfictionOnly) VALUES
 --Top category
-('Poetry', 'Writing that uses meter and/or concrete form to enhance the impact of the language.'), --1
-('Prose', 'The ordinary form of written language that lacks the metrical structure of poetry. If you aren''t sure, it''s probably prose.'), --2
-('Script', 'A mix of dialogue and direction meant to be performed or incorporate other media into a final product like a comic or video game. Sometimes known as drama.'), --3
+('Poetry', 'Writing that uses meter and/or concrete form to enhance the impact of the language.', 0, 0), --1
+('Prose', 'The ordinary form of written language that lacks the metrical structure of poetry. If you aren''t sure, it''s probably prose.', 0, 0), --2
+('Script', 'A mix of dialogue and direction meant to be performed or incorporate other media into a final product like a comic or video game. Sometimes known as drama.', 0, 0), --3
 
 --Crosscategories that require the user to select two categories in order to show up
-('Prose poetry', 'Poetry written in prose rather than verse, which preserves poetic qualities like short sentences and heightened imagery.'), --4
-('Rhymed prose', 'Prose that is written in unmetrical rhymes.'), --5
-('Uta monogatari', 'A type of literature originating in Japan that intersperses poetry with narrative prose.'), --6
+('Prose poetry', 'Poetry written in prose rather than verse, which preserves poetic qualities like short sentences and heightened imagery.', 0, 0), --4
+('Rhymed prose', 'Prose that is written in unmetrical rhymes.', 0, 0), --5
+('Uta monogatari', 'A type of literature originating in Japan that intersperses poetry with narrative prose.', 0, 0), --6
 
 --Subcategories that show up when the user selects Poetry
-('Rhyming poetry', 'A poem that repeats a similar sound in two or more words across or within the lines of the poem.'), --7
-('Unrhymed poetry', 'A poem that doesn''t have a rhyme scheme.'), --8
+('Rhyming poetry', 'A poem that repeats a similar sound in two or more words across or within the lines of the poem.', 0, 0), --7
+('Unrhymed poetry', 'A poem that doesn''t have a rhyme scheme.', 0, 0), --8
 
 --Subcategories that show up when the user selects Prose
-('Fiction prose', 'A piece of prose writing that tells a story derived from the creator''s imagination.'), --9
-('Nonfiction prose', 'A piece of prose writing where the creator assumes good faith responsibility for the accuracy of the events, people, and information contained within.'), --10
+('Fiction prose', 'A piece of prose writing that tells a story derived from the creator''s imagination.', 1, 0), --9
+('Nonfiction prose', 'A piece of prose writing where the creator assumes good faith responsibility for the accuracy of the events, people, and information contained within.', 0, 1), --10
 
 --Subcategories that show up when the user selects Script; these don't have any categories under them
-('Comic script', 'A document that uses detail to describe the dialogue and narrative of a comic. A script is typically used rather than a story board when the art and the writing of the comic are done by different people.'), --11
-('Musical', 'A play or screenplay that combines traditional spoken dialogue with songs with lyrics that are relevant to the plot and help advance the narrative or develop the characters.'), --12
-('One act', 'A short play with only a single act. Typically has limited or no scene or location changes.'), --13
-('Opera', 'A type of drama in which all of the interactions between characters are sung.'), --14
-('Play', 'A piece of writing meant to be performed on stage.'), --15
-('Screenplay', 'A piece of writing meant to be acted, filmed (or animated), and edited into a final product like a TV show or movie.'), --16
+('Comic script', 'A document that uses detail to describe the dialogue and narrative of a comic. A script is typically used rather than a story board when the art and the writing of the comic are done by different people.', 0, 0), --11
+('Musical', 'A play or screenplay that combines traditional spoken dialogue with songs with lyrics that are relevant to the plot and help advance the narrative or develop the characters.', 0, 0), --12
+('One act', 'A short play with only a single act. Typically has limited or no scene or location changes.', 0, 0), --13
+('Opera', 'A type of drama in which all of the interactions between characters are sung.', 0, 0), --14
+('Play', 'A piece of writing meant to be performed on stage.', 0, 0), --15
+('Screenplay', 'A piece of writing meant to be acted, filmed (or animated), and edited into a final product like a TV show or movie.', 0, 0), --16
 
 --"Tercategories" that show up when the user selects one of the subcategories for Poetry
-('Concrete poetry', 'A poem that displays one of its elements typographically through the rearrangement of letter within words or arranging words into a shape.'), --17
-('Couplet', 'A two line poem or part of a poem that can be rhymed or unrhymed.'), --18
-('Iambic pentameter', 'A metrical line structure of five sets of an unstressed syllable followed by a stressed syllable.'), --19
-('Japanese poetry', 'A poem written in a form originating in Japan such as a haiku, senryu, or tanka. Doesn''t rhyme and generally uses a set number of syllables.'), --20
-('Ode', 'A lengthy lyric poem with an elevated style and formal stanza structure.'), --21
-('Sonnet', 'A fourteen-line poem that typically contains one or more conventional rhyme schemes.'), --22
-('Quatrain', 'A four-line stanza or poem where lines 2 and 4 have a similar number of syllables and rhyme.'), --23
+('Concrete poetry', 'A poem that displays one of its elements typographically through the rearrangement of letter within words or arranging words into a shape.', 0, 0), --17
+('Couplet', 'A two line poem or part of a poem that can be rhymed or unrhymed.', 0, 0), --18
+('Iambic pentameter', 'A metrical line structure of five sets of an unstressed syllable followed by a stressed syllable.', 0, 0), --19
+('Japanese poetry', 'A poem written in a form originating in Japan such as a haiku, senryu, or tanka. Doesn''t rhyme and generally uses a set number of syllables.', 0, 0), --20
+('Ode', 'A lengthy lyric poem with an elevated style and formal stanza structure.', 0, 0), --21
+('Sonnet', 'A fourteen-line poem that typically contains one or more conventional rhyme schemes.', 0, 0), --22
+('Quatrain', 'A four-line stanza or poem where lines 2 and 4 have a similar number of syllables and rhyme.', 0, 0), --23
 
 --"Tercategories" that show up when the user selects one of the subcategories for Prose
-('Article', 'A short piece of writing such as might be found in a journalism publication that discusses a subject in an accessable format.'), --24
-('Creative nonfiction', 'A piece of writing that uses literary techniques and styles to discuss factual information.'), --25
-('Essay', 'A piece of writing in which the writer gives an argument on the essay''s subject.'), --26
-('Personal journal', 'An informal piece of writing that covers the writer''s thoughts and impressions on events in their life.'), --27
-('Technical writing', 'Writing intended to share information within a professional setting.'), --28
+('Article', 'A short piece of writing such as might be found in a journalism publication that discusses a subject in an accessable format.', 0, 1), --24
+('Creative nonfiction', 'A piece of writing that uses literary techniques and styles to discuss factual information.', 0, 1), --25
+('Essay', 'A piece of writing in which the writer gives an argument on the essay''s subject.', 0, 1), --26
+('Personal journal', 'An informal piece of writing that covers the writer''s thoughts and impressions on events in their life.', 0, 1), --27
+('Technical writing', 'Writing intended to share information within a professional setting.', 0, 1), --28
 
 --"Teritems" that show up when the user selects one of the subcategories for Poetry; the difference between a tercategory and a teritem is that tercategories have items underneath them and teritems don't
-('ABC', 'A five-line poem where lines 1-4 are phrases or clauses that begin with words in alphabetical order and line 5 is a complete sentence beginning with any letter.'), --29
-('Acrostic', 'A poem where each line begins with a letter that spell a phrase or word when read in order.'), --30
-('Ballade', 'A poem with three stanzas of seven, eight, or ten lines each followed by a final stanza of four or five lines. All four stanzas end with the same one line refrain.'), --31
-('Canzone', 'A poem with five or six stanzas followed by a shorter ending stanza. Originated in medieval Italy.'), --32
-('Cinquain', 'A five-line poem where line 1 is a one word title, line 2 is a two word title description, line 3 tells the action in three words, line 4 expresses the feeling in four words, and line 5 recalls the title in a single word.'), --33
-('Free verse', 'A poem made up of rhymed or unrhymed lines that lack a fixed metrical pattern.'), --34
-('Found poetry', 'A poem made up of words, phrases, and passages from other sources and re-framed through text alterations, rearrangement, or text and line additions.'), --35
-('Limerick', 'A poem with five anapestic lines where lines 1, 2, and 5 rhyme and have seven to ten syllables and a consistent verbal rhythm that differs from the rhyme and consistent verbal rhythm found in the five-to-seven-syllable line 3 and line 4.'), --36
-('List poetry', 'A poem made of a list of rhymed or unrhymed list of items or events.'), --37
-('Rondeau', 'A lyric poem with ten or thirteen lines with two rhymes and an opening line that is repeated twice as a refrain. Originated in France.'), --38
-('Sestina', 'A poem with six six-line stanzas and a three-line envoy. The final words of the first stanza get repeated in a variable order as ending lines of other stanzas and as part of the envoy.'), --39
-('Sound poetry', 'Sometimes called “verse without words”, a sound poem uses the phonetics of human speech to form a poem. They are generally intended for performance.'), --40
-('Terza Rima', 'A poem made up of three-line tercets with ten or eleven syllables a line.'), --41
-('Villanelle', 'A nineteen-line poem made from five tercets and a concluding quatrain on two rhymes. The first and third lines from the first tercet are alternately repeated as the closing refrain for the succeeding stanzas and joined as the quatrain''s final couplet.'), --42
+('ABC', 'A five-line poem where lines 1-4 are phrases or clauses that begin with words in alphabetical order and line 5 is a complete sentence beginning with any letter.', 0, 0), --29
+('Acrostic', 'A poem where each line begins with a letter that spell a phrase or word when read in order.', 0, 0), --30
+('Ballade', 'A poem with three stanzas of seven, eight, or ten lines each followed by a final stanza of four or five lines. All four stanzas end with the same one line refrain.', 0, 0), --31
+('Canzone', 'A poem with five or six stanzas followed by a shorter ending stanza. Originated in medieval Italy.', 0, 0), --32
+('Cinquain', 'A five-line poem where line 1 is a one word title, line 2 is a two word title description, line 3 tells the action in three words, line 4 expresses the feeling in four words, and line 5 recalls the title in a single word.', 0, 0), --33
+('Free verse', 'A poem made up of rhymed or unrhymed lines that lack a fixed metrical pattern.', 0, 0), --34
+('Found poetry', 'A poem made up of words, phrases, and passages from other sources and re-framed through text alterations, rearrangement, or text and line additions.', 0, 0), --35
+('Limerick', 'A poem with five anapestic lines where lines 1, 2, and 5 rhyme and have seven to ten syllables and a consistent verbal rhythm that differs from the rhyme and consistent verbal rhythm found in the five-to-seven-syllable line 3 and line 4.', 0, 0), --36
+('List poetry', 'A poem made of a list of rhymed or unrhymed list of items or events.', 0, 0), --37
+('Rondeau', 'A lyric poem with ten or thirteen lines with two rhymes and an opening line that is repeated twice as a refrain. Originated in France.', 0, 0), --38
+('Sestina', 'A poem with six six-line stanzas and a three-line envoy. The final words of the first stanza get repeated in a variable order as ending lines of other stanzas and as part of the envoy.', 0, 0), --39
+('Sound poetry', 'Sometimes called “verse without words”, a sound poem uses the phonetics of human speech to form a poem. They are generally intended for performance.', 0, 0), --40
+('Terza Rima', 'A poem made up of three-line tercets with ten or eleven syllables a line.', 0, 0), --41
+('Villanelle', 'A nineteen-line poem made from five tercets and a concluding quatrain on two rhymes. The first and third lines from the first tercet are alternately repeated as the closing refrain for the succeeding stanzas and joined as the quatrain''s final couplet.', 0, 0), --42
 
 --"Teritems" that show up when the user selects one of the subcategories for Prose; the difference between a tercategory and a teritem is that tercategories have items underneath them and teritems don't
-('Chapter', 'A subsection of a larger work of fictional prose narrative. Unlike a short story, a chapter does not tell a complete story on its own.'), --43
-('Short story', 'A fictional prose narrative that is typically under 7,500 words.'), --44
-('Novelette', 'A fictional prose narrative that is typically 7,500 to 17,499 words.'), --45
-('Novella', 'A fictional prose narrative that is typically 17,500 to 39,999 words.'), --46
-('Novel', 'A fictional prose narrative that is typically at least 40,000 words.'), --47
+('Chapter', 'A subsection of a larger work of fictional prose narrative. Unlike a short story, a chapter does not tell a complete story on its own.', 1, 0), --43
+('Short story', 'A fictional prose narrative that is typically under 7,500 words.', 1, 0), --44
+('Novelette', 'A fictional prose narrative that is typically 7,500 to 17,499 words.', 1, 0), --45
+('Novella', 'A fictional prose narrative that is typically 17,500 to 39,999 words.', 1, 0), --46
+('Novel', 'A fictional prose narrative that is typically at least 40,000 words.', 1, 0), --47
 
 --Items that show up when the user selects one of the subcategories or one of the tercategories for Poetry
-('Ballad', 'A poem with an often repeated refrain that tells a story in the style of a folk tale or legend.'), --48
-('Blank verse', 'A poem written in unrhymed iambic pentameter.'), --49
-('Ghazal', 'A lyrical poem of five to fifteen couplets of equal length that all express their own contained poetic thought. A rhyme established in the first couplet and continued in the second line of each connects the couplets. The form is of Arabian origin.'), --50
-('Memoriam stanza', 'A quatrain written in iambic tetrameter with an abba rhyme scheme.'), --51
-('Petrachan', 'A sonnet with fourteen lines made up of an octave with the rhyme scheme abbaabba followed by a sestet of cddcee or cdecde.'), --52
-('Rhyme royal', 'A poem made of seven-line stanzas where the lines are in iambic pentameter.'), --53
+('Ballad', 'A poem with an often repeated refrain that tells a story in the style of a folk tale or legend.', 0, 0), --48
+('Blank verse', 'A poem written in unrhymed iambic pentameter.', 0, 0), --49
+('Ghazal', 'A lyrical poem of five to fifteen couplets of equal length that all express their own contained poetic thought. A rhyme established in the first couplet and continued in the second line of each connects the couplets. The form is of Arabian origin.', 0, 0), --50
+('Memoriam stanza', 'A quatrain written in iambic tetrameter with an abba rhyme scheme.', 0, 0), --51
+('Petrachan', 'A sonnet with fourteen lines made up of an octave with the rhyme scheme abbaabba followed by a sestet of cddcee or cdecde.', 0, 0), --52
+('Rhyme royal', 'A poem made of seven-line stanzas where the lines are in iambic pentameter.', 0, 0), --53
 
 --Items that show up when the user selects one of the subcategories or one of the tercategories for Prose
-('Research paper', 'A piece of writing that presents new or compiled research on a topic and comes to some sort of conclusion based on it.'), --54
-('Review', 'A piece of writing that discusses a place, product, service, or piece of media, judges its merits, and gives it a rating.'), --55
+('Research paper', 'A piece of writing that presents new or compiled research on a topic and comes to some sort of conclusion based on it.', 0, 1), --54
+('Review', 'A piece of writing that discusses a place, product, service, or piece of media, judges its merits, and gives it a rating.', 0, 1), --55
 
 --Items that show up when the user selects one of the tercategories for Poetry
-('Haiku', 'A type of poem originating in Japan that is made up of three unrhymed lines where the first and third lines are five morae (or syllables) each and the second line is seven. Features a seasonal word known as a kigo.'), --56
-('Horatian ode', 'A short lyric poem made up of two- or four-lined stanzas with a common metrical pattern.'), --57
-('Irregular ode', 'A type of ode characterized by irregularity of structure and verse and a lack of correspondence between parts. Cannot be classified as either a pindaric or Horatian ode.'), --58
-('Italian sonnet', 'A sonnet made from an octave with an abbaabba rhyme scheme that is followed by six lines that have a rhyme scheme of cdecde or cdccdc.'), --59
-('Pindaric ode', 'A poem that starts with a strophe, or two or more lines repeated as a unit, and is followed by an antistrophe that uses the same metrical pattern. The poem concludes with a summary line (known as an epode) in a different meter.'), --60
-('Senryu', 'A Japanese poem type that has the same unrhymed three lines of five, seven, and five morae or syllables each found in a haiku. Unlike a haiku, a senryu will not have a seasonal word (kigo) and is about humanity rather than nature.'), --61
-('Shakespearean sonnet', 'A fourteen-line sonnet made up of three quatrains with the rhyme scheme abab cdcd efef and a final couplet gg. Usually written in iambic pentameter'), --62
-('Shape poetry', 'A type of concrete poem that is written in the shape or form of an object.'), --63
-('Tanka', 'A five-line poem of Japanese origin that uses the syllable pattern of five, seven, five, seven, seven in its various lines.'), --64
-('Visual poetry', 'A poem that arranges text, images, and symbols in a way that conveys the meaning of the work. A form of concrete poetry.'), --65
+('Haiku', 'A type of poem originating in Japan that is made up of three unrhymed lines where the first and third lines are five morae (or syllables) each and the second line is seven. Features a seasonal word known as a kigo.', 0, 0), --56
+('Horatian ode', 'A short lyric poem made up of two- or four-lined stanzas with a common metrical pattern.', 0, 0), --57
+('Irregular ode', 'A type of ode characterized by irregularity of structure and verse and a lack of correspondence between parts. Cannot be classified as either a pindaric or Horatian ode.', 0, 0), --58
+('Italian sonnet', 'A sonnet made from an octave with an abbaabba rhyme scheme that is followed by six lines that have a rhyme scheme of cdecde or cdccdc.', 0, 0), --59
+('Pindaric ode', 'A poem that starts with a strophe, or two or more lines repeated as a unit, and is followed by an antistrophe that uses the same metrical pattern. The poem concludes with a summary line (known as an epode) in a different meter.', 0, 0), --60
+('Senryu', 'A Japanese poem type that has the same unrhymed three lines of five, seven, and five morae or syllables each found in a haiku. Unlike a haiku, a senryu will not have a seasonal word (kigo) and is about humanity rather than nature.', 0, 0), --61
+('Shakespearean sonnet', 'A fourteen-line sonnet made up of three quatrains with the rhyme scheme abab cdcd efef and a final couplet gg. Usually written in iambic pentameter', 0, 0), --62
+('Shape poetry', 'A type of concrete poem that is written in the shape or form of an object.', 0, 0), --63
+('Tanka', 'A five-line poem of Japanese origin that uses the syllable pattern of five, seven, five, seven, seven in its various lines.', 0, 0), --64
+('Visual poetry', 'A poem that arranges text, images, and symbols in a way that conveys the meaning of the work. A form of concrete poetry.', 0, 0), --65
 
 --Items that show up when the user selects one of the tercategories for Prose
-('Blog post', 'A first person, informal account of something that the writer finds of interest.'), --66
-('Descriptive essay', 'An essay in which the writer describes a person, place, object, or memory using evocative details.'), --67
-('Documentation', 'Information on how a problem was solved, how an item works, or the steps required to complete a task.'), --68
-('Expository essay', 'An essay that informs the reader about a topic in a fair and balanced manner.'), --69
-('Literary analysis', 'A piece of writing that uses evidence from a text and outside sources to analyze an aspect of a piece of fiction.'), --70
-('Narrative essay', 'An essay in which the writer shares a story about a real-life experience.'), --71
-('News article', 'A piece of writing which gives an impartial account for a general audience by covering the facts about a recent news item.'), --72
-('Opinion piece', 'A piece of writing where the author talks about their opinion on a topic, often in an impassioned way.'), --73
-('Persuasive essay', 'An essay in which the writer takes a stance on an issue and attempts to use logic and arguments to convince the reader to agree with their conclusion.'), --74
-('Self-help', 'A piece of writing in which the author attempts to provide the reader with information and advice that will allow them to help themselves.'), --75
-('Textbook', 'A book for use in academic settings that aims to teach the reader a new skill or about a subject.'), --76
-('Travelogue', 'An account of the writer''s travels to different locations.'); --77
+('Blog post', 'A first person, informal account of something that the writer finds of interest.', 0, 1), --66
+('Descriptive essay', 'An essay in which the writer describes a person, place, object, or memory using evocative details.', 0, 1), --67
+('Documentation', 'Information on how a problem was solved, how an item works, or the steps required to complete a task.', 0, 1), --68
+('Expository essay', 'An essay that informs the reader about a topic in a fair and balanced manner.', 0, 1), --69
+('Literary analysis', 'A piece of writing that uses evidence from a text and outside sources to analyze an aspect of a piece of fiction.', 0, 1), --70
+('Narrative essay', 'An essay in which the writer shares a story about a real-life experience.', 0, 1), --71
+('News article', 'A piece of writing which gives an impartial account for a general audience by covering the facts about a recent news item.', 0, 1), --72
+('Opinion piece', 'A piece of writing where the author talks about their opinion on a topic, often in an impassioned way.', 0, 1), --73
+('Persuasive essay', 'An essay in which the writer takes a stance on an issue and attempts to use logic and arguments to convince the reader to agree with their conclusion.', 0, 1), --74
+('Self-help', 'A piece of writing in which the author attempts to provide the reader with information and advice that will allow them to help themselves.', 0, 1), --75
+('Textbook', 'A book for use in academic settings that aims to teach the reader a new skill or about a subject.', 0, 1), --76
+('Travelogue', 'An account of the writer''s travels to different locations.', 0, 1); --77
 
 INSERT INTO dbo.AltFormatName (FormatID, AltName) VALUES
 (1, 'Verse'), --Poetry (1)
@@ -731,187 +735,187 @@ INSERT INTO dbo.FormatCategory(FormatID, ParentID, SecondaryParentID) VALUES
 --(3, 36), --Hokey Folk Tales, Limerick
 --(3, 44); --Hokey Folk Tales, Short story
 
-INSERT INTO dbo.GenreTag (GenreName, Explanation) VALUES
+INSERT INTO dbo.GenreTag (GenreName, Explanation, IsFictionOnly, IsNonfictionOnly) VALUES
 --Top tier
-('Fiction', 'A piece of writing that tells a story derived from the creator''s imagination.'), --1
-('Nonfiction', 'A piece of writing where the creator assumes good faith responsibility for the accuracy of the events, people, and information contained within.'), --2
+('Fiction', 'A piece of writing that tells a story derived from the creator''s imagination.', 1, 0), --1
+('Nonfiction', 'A piece of writing where the creator assumes good faith responsibility for the accuracy of the events, people, and information contained within.', 0, 1), --2
 
 --Immediate children of fiction ONLY
-('Drama', 'Fiction that is intended to be more serious than humerous in tone.'), --3
-('Fan fiction', 'Writing that uses characters or a fictional setting belonging to another author.'), --4
-('Historical fiction', 'A piece of fiction that takes place in the past.'), --5
-('Pseudo-documentary', 'A film or video production that takes the form of a documentary but does not cover real events.'), --6
-('Realistic fiction', 'Fiction covering present-day events that could actually happen in reality. Lacks supernatural or fantastic elements.'), --7
-('Slice of life', 'A genre of fiction that covers the everyday events of the character''s lives. Slice of life narratives are generally character-driven rather than plot-driven.'), --8
-('Speculative fiction', 'Fiction with futuristic or supernatural elements or which is intended to answer a “what if” question such as “What if steam-power maintained mainstream useage long enough for technology to become highly advanced?” or “What if magic was real?”'), --9
-('Thriller', 'Fiction intended to give the one consuming it heightened feelings of suspense, excitement, surprise, anticipation, and anxiety.'), --10
+('Drama', 'Fiction that is intended to be more serious than humerous in tone.', 1, 0), --3
+('Fan fiction', 'Writing that uses characters or a fictional setting belonging to another author.', 1, 0), --4
+('Historical fiction', 'A piece of fiction that takes place in the past.', 1, 0), --5
+('Pseudo-documentary', 'A film or video production that takes the form of a documentary but does not cover real events.', 1, 0), --6
+('Realistic fiction', 'Fiction covering present-day events that could actually happen in reality. Lacks supernatural or fantastic elements.', 1, 0), --7
+('Slice of life', 'A genre of fiction that covers the everyday events of the character''s lives. Slice of life narratives are generally character-driven rather than plot-driven.', 1, 0), --8
+('Speculative fiction', 'Fiction with futuristic or supernatural elements or which is intended to answer a “what if” question such as “What if steam-power maintained mainstream useage long enough for technology to become highly advanced?” or “What if magic was real?”', 1, 0), --9
+('Thriller', 'Fiction intended to give the one consuming it heightened feelings of suspense, excitement, surprise, anticipation, and anxiety.', 1, 0), --10
 
 --Immediate children of Drama, fiction ONLY
-('Melodrama', 'A drama subgenre that strives for sensationalism and appeal to emotions over the creation of complex characters.'), --11
-('Medical drama', 'A piece of fiction with events that center on a hospital, ambulance staff, or other medical environment.'), --12
-('Soap opera', 'A serialized work of fiction with many characters that focuses on the emotional relationships between them, sometimes to the point of melodrama. Similar styles in other parts of the world include Latin America''s telenovelas, Filipino teleseryes, French Canadian téléromans, and Asian or Arabic dramas.'), --13
+('Melodrama', 'A drama subgenre that strives for sensationalism and appeal to emotions over the creation of complex characters.', 1, 0), --11
+('Medical drama', 'A piece of fiction with events that center on a hospital, ambulance staff, or other medical environment.', 1, 0), --12
+('Soap opera', 'A serialized work of fiction with many characters that focuses on the emotional relationships between them, sometimes to the point of melodrama. Similar styles in other parts of the world include Latin America''s telenovelas, Filipino teleseryes, French Canadian téléromans, and Asian or Arabic dramas.', 1, 0), --13
 
 --Immediate children of Fan fiction, fiction ONLY
-('Alternate universe', 'A type of fan fiction that takes the characters from an existing piece of work, puts them in a different setting or gives them different roles, and explores how this changes things.'), --14
-('Crossover', 'A type of fanfiction that takes characters or settings from more than one preexisting piece and includes them in a single work.'), --15
+('Alternate universe', 'A type of fan fiction that takes the characters from an existing piece of work, puts them in a different setting or gives them different roles, and explores how this changes things.', 1, 0), --14
+('Crossover', 'A type of fanfiction that takes characters or settings from more than one preexisting piece and includes them in a single work.', 1, 0), --15
 
 --Immediate children of Historical fiction, fiction ONLY
-('Docudrama', 'A dramatization of historical events that strives to be accurate where historical fact is clear, but allows the writer to use a combination of general period research and their imagination to fill in the places where there are gaps in the historical record. '), --16
+('Docudrama', 'A dramatization of historical events that strives to be accurate where historical fact is clear, but allows the writer to use a combination of general period research and their imagination to fill in the places where there are gaps in the historical record.', 1, 0), --16
 
 --Immediate children of Speculative fiction, fiction ONLY
-('Alternate history', 'A type of speculative fiction that explores how the world would be changed if one or more historical event had occured differently. Will sometimes involve time travel or multiple universes.'), --17
-('Apocalyptic', 'A piece of fiction that documents the collapse of human civilization. May also be concerned with the end of the world.'), --18
-('Dystopian', 'A type of speculative fiction that is set in a society that with oppressive rules and values that are counter to the author''s worldview.'), --19
-('Fantasy', 'A type of speculative fiction where magical or supernatural elements are real and are a main influence on the plot, setting, or theme.'), --20
-('Horror', 'A type of fiction intended to invoke fright or disgust. Frequently features supernatural themes, though this is not a requirement of the genre.'), --21
-('Post-apocalyptic', 'A genre of fiction that takes place after some sort of catastrophic event that has led to the collapse of known civilization. The story will follow pockets of survivors as they attempt to navigate the utterly changed world.'), --22
-('Science fiction', 'A genre of speculative fiction with a focus on advanced science and technology, time travel, spaceflight, or extraterrestrial life.'), --23
-('Superhero', 'Works that follow the lives and adventures of costumed fighters with superhuman powers. The source of the superhuman powers can be either fantastic or scientific in origin.'), --24
-('Utopian', 'Fiction that is set in the writer''s idea of an ideal society.'), --25
+('Alternate history', 'A type of speculative fiction that explores how the world would be changed if one or more historical event had occured differently. Will sometimes involve time travel or multiple universes.', 1, 0), --17
+('Apocalyptic', 'A piece of fiction that documents the collapse of human civilization. May also be concerned with the end of the world.', 1, 0), --18
+('Dystopian', 'A type of speculative fiction that is set in a society that with oppressive rules and values that are counter to the author''s worldview.', 1, 0), --19
+('Fantasy', 'A type of speculative fiction where magical or supernatural elements are real and are a main influence on the plot, setting, or theme.', 1, 0), --20
+('Horror', 'A type of fiction intended to invoke fright or disgust. Frequently features supernatural themes, though this is not a requirement of the genre.', 1, 0), --21
+('Post-apocalyptic', 'A genre of fiction that takes place after some sort of catastrophic event that has led to the collapse of known civilization. The story will follow pockets of survivors as they attempt to navigate the utterly changed world.', 1, 0), --22
+('Science fiction', 'A genre of speculative fiction with a focus on advanced science and technology, time travel, spaceflight, or extraterrestrial life.', 1, 0), --23
+('Superhero', 'Works that follow the lives and adventures of costumed fighters with superhuman powers. The source of the superhuman powers can be either fantastic or scientific in origin.', 1, 0), --24
+('Utopian', 'Fiction that is set in the writer''s idea of an ideal society.', 1, 0), --25
 
 --Immediate children of Fantasy
-('Fairy tale', 'A short story often targeted at children that has fantastic elements and is intended to provide a lesson or moral.'), --26
-('Hard fantasy', 'A subgenre of fantasy that is characterized by a world with fantastic elements that is nevertheless rational and knowable.'), --27
-('Heroic fantasy', 'A subgenre of fantasy characterized by the presence of characters with high ideals and the focus on the individual journey of a single or group of protagonists rather than quests that involve the fate of the world itself.'), --28
-('High fantasy', 'A subgenre of fantasy set in a world other than our own. An emphasis is placed on themes of good and evil and events are often epic in scale..'), --29
-('Magical realism', 'A type of fantasy that features supernatural or fantastic elements in a setting that is otherwise real-world or mundane.'), --30
-('Urban fantasy', 'Fantasy characterized by the urban setting of its narrative. Usually overlaps with magic realism and often has a contemporary setting.'), --31
+('Fairy tale', 'A short story often targeted at children that has fantastic elements and is intended to provide a lesson or moral.', 1, 0), --26
+('Hard fantasy', 'A subgenre of fantasy that is characterized by a world with fantastic elements that is nevertheless rational and knowable.', 1, 0), --27
+('Heroic fantasy', 'A subgenre of fantasy characterized by the presence of characters with high ideals and the focus on the individual journey of a single or group of protagonists rather than quests that involve the fate of the world itself.', 1, 0), --28
+('High fantasy', 'A subgenre of fantasy set in a world other than our own. An emphasis is placed on themes of good and evil and events are often epic in scale.', 1, 0), --29
+('Magical realism', 'A type of fantasy that features supernatural or fantastic elements in a setting that is otherwise real-world or mundane.', 1, 0), --30
+('Urban fantasy', 'Fantasy characterized by the urban setting of its narrative. Usually overlaps with magic realism and often has a contemporary setting.', 1, 0), --31
 
 --Immediate children of Horror
-('Gothic', 'A genre characterized by a combination of the elements of fear, horror, death, and gloom with elements of romanticism such as nature, individuality, and high emotion.'), --32
-('Slasher', 'A subgenre of horror that is focused on the stalking and murder of a group of people by a violent and psychopathic individual.'), --33
-('Supernatural', 'A subgenre of horror dealing with events caused by entities that lie outside of the natural world. Sometimes the events are presented in an ambiguous manner where there is an alternate psychological interpretation for them.'), --34
+('Gothic', 'A genre characterized by a combination of the elements of fear, horror, death, and gloom with elements of romanticism such as nature, individuality, and high emotion.', 1, 0), --32
+('Slasher', 'A subgenre of horror that is focused on the stalking and murder of a group of people by a violent and psychopathic individual.', 1, 0), --33
+('Supernatural', 'A subgenre of horror dealing with events caused by entities that lie outside of the natural world. Sometimes the events are presented in an ambiguous manner where there is an alternate psychological interpretation for them.', 1, 0), --34
 
 --Immediate children of Science fiction
-('Hard science fiction', 'Science fiction that is characterized by its emphasis on scientific accuracy. All of the technology, phenomena, and scenerios in a hard science fiction story should be within the realm of theoretical possibility.'), --35
-('Punk', 'A subgenre of science fiction with origins in the punk movement. Punk fiction is urban in setting and features a world built on a particular technology advanced to highly sophisticated levels. Individual subversion of a corrupt elite is a common theme and to reflect this, the societies of punk fiction are often dystopian in nature.'), --36
-('Soft science fiction', 'Science fiction that is not scientifically accurate or which explores soft sciences such as anthropology, sociology, or psychology.'), --37
-('Space opera', 'Science fiction that is set primarily in outer space and deals with themes of space warfare, melodramatic adventure, interplanetary battles, and risk and romance.'), --38
+('Hard science fiction', 'Science fiction that is characterized by its emphasis on scientific accuracy. All of the technology, phenomena, and scenerios in a hard science fiction story should be within the realm of theoretical possibility.', 1, 0), --35
+('Punk', 'A subgenre of science fiction with origins in the punk movement. Punk fiction is urban in setting and features a world built on a particular technology advanced to highly sophisticated levels. Individual subversion of a corrupt elite is a common theme and to reflect this, the societies of punk fiction are often dystopian in nature.', 1, 0), --36
+('Soft science fiction', 'Science fiction that is not scientifically accurate or which explores soft sciences such as anthropology, sociology, or psychology.', 1, 0), --37
+('Space opera', 'Science fiction that is set primarily in outer space and deals with themes of space warfare, melodramatic adventure, interplanetary battles, and risk and romance.', 1, 0), --38
 
 --Immediate children of Punk
-('Atompunk', 'A subgenre of punk fiction with retro-futuristic technology and aesthetics relating to the period of history between 1945 and 1965. Explores the idea of advanced technologies powered by atomic energy.'), --39
-('Biopunk', 'Focuses on near-future unintended consequences of the biotechnogy revolution such as human experimentation and misuse of biotechnologies for the purpose of social control or profiteering.'), --40
-('Clockpunk', 'A subgenre of punk fiction with Renaissance-era aesthetics and technology based on the science of the era and premodern designs of individuals like Leonardo da Vinci. As the name would suggest, advanced technologies are often powered by clockwork.'), --41
-('Cyberpunk', 'The original genre of punk, cyberpunk explores the underside of a society with advanced computer-based technologies. Has many similarities to hardboiled, noir, and postmodern fiction.'), --42
-('Dieselpunk', 'A subgenre of punk fiction with retro-futuristic technology and aesthetics related to the period between World War I and the end of World War II.'), --43
-('Steampunk', 'A subgenre of punk fiction with retro-futuristic technology and aesthetics of the Victorian era.'), --44
+('Atompunk', 'A subgenre of punk fiction with retro-futuristic technology and aesthetics relating to the period of history between 1945 and 1965. Explores the idea of advanced technologies powered by atomic energy.', 1, 0), --39
+('Biopunk', 'Focuses on near-future unintended consequences of the biotechnogy revolution such as human experimentation and misuse of biotechnologies for the purpose of social control or profiteering.', 1, 0), --40
+('Clockpunk', 'A subgenre of punk fiction with Renaissance-era aesthetics and technology based on the science of the era and premodern designs of individuals like Leonardo da Vinci. As the name would suggest, advanced technologies are often powered by clockwork.', 1, 0), --41
+('Cyberpunk', 'The original genre of punk, cyberpunk explores the underside of a society with advanced computer-based technologies. Has many similarities to hardboiled, noir, and postmodern fiction.', 1, 0), --42
+('Dieselpunk', 'A subgenre of punk fiction with retro-futuristic technology and aesthetics related to the period between World War I and the end of World War II.', 1, 0), --43
+('Steampunk', 'A subgenre of punk fiction with retro-futuristic technology and aesthetics of the Victorian era.', 1, 0), --44
 
 --Immediate child of BOTH Fantasy and Science fiction
-('Science fantasy', 'A subgenre of speculative fiction that combines elements of both fantasy and science fiction.'), --45
+('Science fantasy', 'A subgenre of speculative fiction that combines elements of both fantasy and science fiction.', 1, 0), --45
 
 --Immediate children of Thriller, fiction ONLY
-('Conspiracy', 'A type of thriller in which a conspiracy, or a secret act which a group uses to obtain some sort of goal, is uncovered and explored by the protagonist.'), --46
-('Psychological thriller', 'A type of thriller that focuses on the unstable or disillusioned psychological state of its characters. Often has a dissolving sense of reality.'), --47
+('Conspiracy', 'A type of thriller in which a conspiracy, or a secret act which a group uses to obtain some sort of goal, is uncovered and explored by the protagonist.', 1, 0), --46
+('Psychological thriller', 'A type of thriller that focuses on the unstable or disillusioned psychological state of its characters. Often has a dissolving sense of reality.', 1, 0), --47
 
 --Immediate children of either fiction or nonfiction
-('Action', 'Characterized by an emphasis on exciting action scenes.'), --48
-('Comedy', 'A work meant to be humorous and make people laugh.'), --49
-('Crime', 'A work that in some way deals with illegal activity or the justice system.'), --50
-('Family saga', 'A work that chronicles the lives and actions of a single family or group of related and interconnected families over a period of time.'), --51
-('Inspirational', 'Writing meant to uplift and encourage the reader or listener.'), --52
-('Music', 'A piece of music or a piece of writing about music.'), --53
-('Mystery', 'Characterized by the presence of a crime, death, or strange event of unknown cause or culprit, a mystery details the search to uncover the truth of what happened.'), --54
-('Nature', 'A work concerned with plants, animals, and other natural creatures or phenomena.'), --55
-('Philosophical', 'A work that centers around making sense of or inspiring thought on philosophical issues such as ethics and morals, the purpose of life, the role of society, etc.'), --56
-('Political', 'A work centered around the process or theory of government and leadership.'), --57
-('Religious', 'A work centered around or with themes of faith, theology, and religious doctrine.'), --58
-('Romance', 'A work centered around the relationship and romantic love of two (or occasionally more) people. Not to be confused with Romanticism, which was a literary movement during the Romantic era from roughly 1800 to 1850.'), --59
-('Tragedy', 'A work focusing on human suffering or a catastrophic event.'), --60
+('Action', 'Characterized by an emphasis on exciting action scenes.', 0, 0), --48
+('Comedy', 'A work meant to be humorous and make people laugh.', 0, 0), --49
+('Crime', 'A work that in some way deals with illegal activity or the justice system.', 0, 0), --50
+('Family saga', 'A work that chronicles the lives and actions of a single family or group of related and interconnected families over a period of time.', 0, 0), --51
+('Inspirational', 'Writing meant to uplift and encourage the reader or listener.', 0, 0), --52
+('Music', 'A piece of music or a piece of writing about music.', 0, 0), --53
+('Mystery', 'Characterized by the presence of a crime, death, or strange event of unknown cause or culprit, a mystery details the search to uncover the truth of what happened.', 0, 0), --54
+('Nature', 'A work concerned with plants, animals, and other natural creatures or phenomena.', 0, 0), --55
+('Philosophical', 'A work that centers around making sense of or inspiring thought on philosophical issues such as ethics and morals, the purpose of life, the role of society, etc.', 0, 0), --56
+('Political', 'A work centered around the process or theory of government and leadership.', 0, 0), --57
+('Religious', 'A work centered around or with themes of faith, theology, and religious doctrine.', 0, 0), --58
+('Romance', 'A work centered around the relationship and romantic love of two (or occasionally more) people. Not to be confused with Romanticism, which was a literary movement during the Romantic era from roughly 1800 to 1850.', 0, 0), --59
+('Tragedy', 'A work focusing on human suffering or a catastrophic event.', 0, 0), --60
 
 --Immediate children of Action, fiction or nonfiction
-('Adventure', 'A work characterized by the presence of danger and excitement.'), --61
+('Adventure', 'A work characterized by the presence of danger and excitement.', 0, 0), --61
 
 --Immediate children of Historical Fictition, Action, or Adventure, fiction ONLY
-('Western', 'Fiction set in the Old American Western frontier from roughly the late 18th to late 19th centuries.'), --62
+('Western', 'Fiction set in the Old American Western frontier from roughly the late 18th to late 19th centuries.', 1, 0), --62
 
 --Immediate children of Action or Adventure, fiction or nonfiction
-('Survivalism', 'A work about survival under extreme conditions that can range from anything between subzero temperatures to nuclear fallout or zombie apocalypse.'), --63
+('Survivalism', 'A work about survival under extreme conditions that can range from anything between subzero temperatures to nuclear fallout or zombie apocalypse.', 0, 0), --63
 
 --Immediate children of Action or Adventure or Drama, fiction or nonfiction
-('Military', 'A work with a focus on armed forces, organized militias, battles, and other related subjects.'), --64
-('War', 'A work about the organized, sustained conflict between two powers.'), --65
+('Military', 'A work with a focus on armed forces, organized militias, battles, and other related subjects.', 0, 0), --64
+('War', 'A work about the organized, sustained conflict between two powers.', 0, 0), --65
 
 --Immediate child of Action or Adventure or Thriller, fiction or nonfiction
-('Spy', 'A work centered around espionage, undercover work, or secret operations.'), --66
+('Spy', 'A work centered around espionage, undercover work, or secret operations.', 0, 0), --66
 
 --Immediate children of Action or Adventure or Crime, fiction or nonfiction
-('Gangster', 'A work centered around organized crime.'), --67
+('Gangster', 'A work centered around organized crime.', 0, 0), --67
 
 --Immediate children of Comedy, fiction ONLY
-('Absurdist', 'A form of comedy that studies human behavior in pointless or philosophically absurb circumstances.'), --68
-('Farce', 'A comedy with highly exaggerated, extravagant, and improbable situations.'), --69
-('Parody', 'A work that is an imitation or spoof of another work for the purpose of commenting on, making fun of, or affectionately calling notice to aspects of the original.'), --70
-('Sketch comedy', 'A series of short comedy scenes or vignettes, known as “sketches”, which commonly range from one to ten minutes each.'), --71
+('Absurdist', 'A form of comedy that studies human behavior in pointless or philosophically absurb circumstances.', 1, 0), --68
+('Farce', 'A comedy with highly exaggerated, extravagant, and improbable situations.', 1, 0), --69
+('Parody', 'A work that is an imitation or spoof of another work for the purpose of commenting on, making fun of, or affectionately calling notice to aspects of the original.', 1, 0), --70
+('Sketch comedy', 'A series of short comedy scenes or vignettes, known as “sketches”, which commonly range from one to ten minutes each.', 1, 0), --71
 
 --Immediate children of Comedy or Pseudo-documentary, fiction ONLY
-('Mockumentary', 'A comedic work of fiction that is presented as a documentary.'), --72
+('Mockumentary', 'A comedic work of fiction that is presented as a documentary.', 1, 0), --72
 
 --Immediate children of Comedy or Political, fiction ONLY
-('Satire', 'A work that uses comedy and sometimes exaggeration to draw attention to and ridicule vices, follies, abuses, and shortcomings with the intention of creating social change. Though they often use similar methods, satire is differentiated from parody in that satire has an intended message behind it and is always meant as criticism, whereas parodies can be affectionate tributes by fans of the original.'), --73
+('Satire', 'A work that uses comedy and sometimes exaggeration to draw attention to and ridicule vices, follies, abuses, and shortcomings with the intention of creating social change. Though they often use similar methods, satire is differentiated from parody in that satire has an intended message behind it and is always meant as criticism, whereas parodies can be affectionate tributes by fans of the original.', 1, 0), --73
 
 --Immediate children of Satire and Comedy, fiction ONLY
-('Comedy of manners', 'A type of comedy which satirizes society''s manners and affections while questioning societal standards.'), --74
+('Comedy of manners', 'A type of comedy which satirizes society''s manners and affections while questioning societal standards.', 1, 0), --74
 
 --Immediate children of Comedy, fiction or nonfiction
-('Black comedy', 'A comedy which makes light of subjects which are normally considered serious or painful to discuss and are therefore generally seen as taboo.'), --75
-('Stand-up comedy', 'A comedy act performed before a live audience and spoken directly to them.'), --76
+('Black comedy', 'A comedy which makes light of subjects which are normally considered serious or painful to discuss and are therefore generally seen as taboo.', 0, 0), --75
+('Stand-up comedy', 'A comedy act performed before a live audience and spoken directly to them.', 0, 0), --76
 
 --Immediate children of Comedy and Drama, fiction ONLY
-('Comedy-drama', 'A work of fiction that combines elements of both comedy and drama.'), --77
+('Comedy-drama', 'A work of fiction that combines elements of both comedy and drama.', 1, 0), --77
 
 --Immediate children of Comedy and Slice of life, fiction ONLY
-('Sitcom', 'Short for situation comedy, a sitcom is a largely episodic comedy that is focused a fixed cast of characters as they go about their daily lives.'), --78
+('Sitcom', 'Short for situation comedy, a sitcom is a largely episodic comedy that is focused a fixed cast of characters as they go about their daily lives.', 1, 0), --78
 
 --Immediate children of Crime, fiction ONLY
-('Phantom thief', 'A story centered around a charming, well-mannered, courteous, and stylish thief who avoids using physical force or intimidation to steal. Generally steals to either fix a moral wrong that cannot be corrected from inside the law or for the thrill of act rather than to gain material wealth.'), --79
+('Phantom thief', 'A story centered around a charming, well-mannered, courteous, and stylish thief who avoids using physical force or intimidation to steal. Generally steals to either fix a moral wrong that cannot be corrected from inside the law or for the thrill of act rather than to gain material wealth.', 1, 0), --79
 
 --Immediate child of Crime, nonfiction ONLY
-('True crime', 'A work that centers around a real crime and the related investigation as it actually happened.'), --80
+('True crime', 'A work that centers around a real crime and the related investigation as it actually happened.', 0, 1), --80
 
 --Immediate child of Drama or Crime, fiction ONLY
-('Courtroom drama', 'A work of fiction that centers around law enforcement, crime, detective-based mystery solving, and civil and criminal litigation.'), --81
-('Noir', 'A stylish crime drama that emphasizes cynical attitudes and sexual motivations.'), --82
+('Courtroom drama', 'A work of fiction that centers around law enforcement, crime, detective-based mystery solving, and civil and criminal litigation.', 1, 0), --81
+('Noir', 'A stylish crime drama that emphasizes cynical attitudes and sexual motivations.', 1, 0), --82
 
 --Immediate child of Thriller or Crime, fiction ONLY
-('Legal thriller', 'A thriller in which lawyers and their employees are major characters and there is a focus on the justice system.'), --83
+('Legal thriller', 'A thriller in which lawyers and their employees are major characters and there is a focus on the justice system.', 1, 0), --83
 
 --Immediate child of Crime or Mystery, fiction or nonfiction
-('Detective story', 'A work centered around the investigation and solving of crime by a detective or investigator.'), --84
+('Detective story', 'A work centered around the investigation and solving of crime by a detective or investigator.', 0, 0), --84
 
 --Immediate child of Detective story, fiction ONLY
-('Hardboiled', 'A type of detective story with a detective who has been rendered cynical by witnessing the cycle of violence that comes from organized crime and a corrupt legal system. The protagonist of hardboiled fiction is often an antihero.'), --85
+('Hardboiled', 'A type of detective story with a detective who has been rendered cynical by witnessing the cycle of violence that comes from organized crime and a corrupt legal system. The protagonist of hardboiled fiction is often an antihero.', 1, 0), --85
 
 --Immediate child of Detective story, fiction or nonfiction
-('Police procedural', 'A type of detective story where the culprit is often made known to the audience early into the story and the mystery is not who commited a crime, but how the police will manage to catch the criminal.'), --86
+('Police procedural', 'A type of detective story where the culprit is often made known to the audience early into the story and the mystery is not who commited a crime, but how the police will manage to catch the criminal.', 0, 0), --86
 
 --Immediate child of Drama or Political, fiction ONLY
-('Political drama', 'A work of fiction centered around a politician or a series of political events.'), --87
+('Political drama', 'A work of fiction centered around a politician or a series of political events.', 1, 0), --87
 
 --Immediate child of Romance, fiction or nonfiction
-('Erotic', 'A work with sexually explicit content. Selecting erotic as a genre or subject matter will automatically mark your work as not allowing minor access.'), --88
+('Erotic', 'A work with sexually explicit content. Selecting erotic as a genre or subject matter will automatically mark your work as not allowing minor access.', 0, 0), --88
 
 --Immediate child of both Comedy and Romance, fiction ONLY
-('Romantic comedy', 'A work of fiction that combines aspects of romance and comedy.'), --89
+('Romantic comedy', 'A work of fiction that combines aspects of romance and comedy.', 1, 0), --89
 
 --Immediate children of nonfiction ONLY
-('Art', 'A nonfiction work about art.'), --90
-('Biography', 'A nonfiction account about the life of a real person.'), --91
-('Culture', 'A nonfiction work about society.'), --92
-('Documentary', 'A nonfiction film intended to document true events or teaching.'), --93
-('Food', 'A nonfiction work about food.'), --94
-('History', 'A nonfiction work about the past.'), --95
-('Language', 'A nonfiction work about language, whether a specific language or linguists, grammar, or style in general. Can also be writing about writing.'), --96
-('Mathematics', 'A nonfiction work about math and numbers.'), --97
-('Science', 'A nonfiction work about some variety of science, whether hard or soft.'), --98
-('Technology', 'A nonfiction work about technology and industry.'), --99
-('Travel', 'A nonfiction work about travel, whether national or global.'), --100
+('Art', 'A nonfiction work about art.', 0, 1), --90
+('Biography', 'A nonfiction account about the life of a real person.', 0, 1), --91
+('Culture', 'A nonfiction work about society.', 0, 1), --92
+('Documentary', 'A nonfiction film intended to document true events or teaching.', 0, 1), --93
+('Food', 'A nonfiction work about food.', 0, 1), --94
+('History', 'A nonfiction work about the past.', 0, 1), --95
+('Language', 'A nonfiction work about language, whether a specific language or linguists, grammar, or style in general. Can also be writing about writing.', 0, 1), --96
+('Mathematics', 'A nonfiction work about math and numbers.', 0, 1), --97
+('Science', 'A nonfiction work about some variety of science, whether hard or soft.', 0, 1), --98
+('Technology', 'A nonfiction work about technology and industry.', 0, 1), --99
+('Travel', 'A nonfiction work about travel, whether national or global.', 0, 1), --100
 
 --Immediate child of Food, nonfiction ONLY
-('Cookbook', 'A collection of recipes.'), --101
+('Cookbook', 'A collection of recipes.', 0, 1), --101
 
 --Immediate children of Biography, nonfiction ONLY
-('Autobiography', 'A self-written account of the author''s life.'), --102
-('Memoir', 'A collection of memories relating to moments or events in the author''s life. Differentiated from an autobiography because of its smaller scope or focus on a particular aspect of the life rather than the whole.'); --103
+('Autobiography', 'A self-written account of the author''s life.', 0, 1), --102
+('Memoir', 'A collection of memories relating to moments or events in the author''s life. Differentiated from an autobiography because of its smaller scope or focus on a particular aspect of the life rather than the whole.', 0, 1); --103
 
 INSERT INTO dbo.AltGenreName(GenreID, AltName) VALUES
 (10, 'Suspense'), --Thriller 1

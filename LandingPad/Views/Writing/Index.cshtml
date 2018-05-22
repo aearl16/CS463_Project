@@ -35,11 +35,14 @@
         (function () {
             //when the document has fully loaded, uncollapse the edit and delete links on the writing previews that are under the My Writing heading
             $(document).ready(function () {
-                $(".myWriting .forUserWriting").removeClass("collapse");
+                var True = true, False = false;
 
                 //if this user doesn't have the writer role
                 if (@Model.ProfileRoles.Select(i => i.RoleID).ToList().Contains(1) !== true) {
                     $(".myWriting").addClass("collapse");
+                }
+                else {
+                    $(".myWriting .forUserWriting").removeClass("collapse");
                 }
             });
         })();
