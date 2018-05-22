@@ -77,8 +77,8 @@
                     [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID != null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.GenreID)))],
                     [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID != null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.ParentID)))],
                     [@Html.Raw(String.Join(",", gc.Where(i => i.SecondaryParentID != null).GroupBy(i => i.GenreID).Where(j => j.Count() > 1).Where(k => k.Select(l => l.ParentID).ToList().Contains(item.GenreID)).SelectMany(r => r).Where(r => r.ParentID != item.GenreID).Select(s => s.SecondaryParentID)))],
-                    "@item.IsFictionOnly.ToString()",
-                    "@item.IsNonfictionOnly.ToString()",
+                    "@item.IsFictionOnly.ToString().ToLower()",
+                    "@item.IsNonfictionOnly.ToString().ToLower()",
                     [@ViewBag.FictionOnly],
                     [@ViewBag.NonfictionOnly],
                     [@Html.Raw(String.Join(",", item.GenreFormats.Select(i => i.ParentFormatID)))])' /> <span class="genreName">@item.GenreName</span></span>}
