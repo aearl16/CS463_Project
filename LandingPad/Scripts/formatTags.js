@@ -75,11 +75,11 @@ function ftChildren(id, sdChildren, mdChildren, dependencies, mpChildren, altPar
     //if the checkbox for the format tag with a FormatID of id was checked
     if ($("#formatTagContainer span." + id + " input[type=checkbox]").is(":checked")) {
         //if the current tag is fiction only
-        if (isFictionOnly === true) {
+        if (isFictionOnly === "true") {
             //change the genre to fiction and uncheck any format tags that are no longer valid
             changeFictionOrNonfiction(1, nonfictionOnly);
         } //if the current tag is fiction only
-        else if (isNonfictionOnly === true) { //if the current tag is nonfiction only
+        else if (isNonfictionOnly === "true") { //if the current tag is nonfiction only
             //change the genre to nonfiction and uncheck any format tags that are no longer valid
             changeFictionOrNonfiction(2, fictionOnly);
         } //if the current tag is nonfiction only
