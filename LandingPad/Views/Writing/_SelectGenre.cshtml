@@ -63,7 +63,7 @@
                     "false",
                     [@ViewBag.FictionOnly],
                     [@ViewBag.NonfictionOnly],
-                    [@Html.Raw(String.Join(",", item.GenreFormats.Select(i => i.ParentFormatID)))])' /> <span class="genreName">@item.GenreName</span></span>}
+                    [@Html.Raw(String.Join(",", item.GenreFormats.Select(i => i.ParentFormatID)))])' /> <span class="genreName">@item.GenreName</span></span> }
             <!--Tags that are below the top level or which are nonfiction only or fiction only-->@foreach (var item in Model.Where(i => i.GenreID > 2).Except(Model.Where(i => (i.ParentGenres.Select(j => j.ParentID).ToList().Contains(1) && i.ParentGenres.Select(j => j.ParentID).ToList().Contains(2)))))
             {<span class="@item.GenreID checkItem collapse" onmouseover='showExplanationNotFT("genreTagDescription", "@item.Explanation")'><input type="checkbox" value="@item.GenreID" name="GenreTags" onchange='gtChildren(@item.GenreID,
                     [@Html.Raw(String.Join(",", item.ChildGenres.Where(i => i.SecondaryParentID == null).Select(i => i.GenreID)))],
@@ -81,7 +81,7 @@
                     "@item.IsNonfictionOnly.ToString().ToLower()",
                     [@ViewBag.FictionOnly],
                     [@ViewBag.NonfictionOnly],
-                    [@Html.Raw(String.Join(",", item.GenreFormats.Select(i => i.ParentFormatID)))])' /> <span class="genreName">@item.GenreName</span></span>}
+                    [@Html.Raw(String.Join(",", item.GenreFormats.Select(i => i.ParentFormatID)))])' /> <span class="genreName">@item.GenreName</span></span> }
         </div>
     </div> <!--genreTagContainer-->
 
