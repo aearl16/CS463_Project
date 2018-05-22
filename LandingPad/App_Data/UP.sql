@@ -782,7 +782,7 @@ INSERT INTO dbo.GenreTag (GenreName, Explanation, IsFictionOnly, IsNonfictionOnl
 ('Urban fantasy', 'Fantasy characterized by the urban setting of its narrative. Usually overlaps with magic realism and often has a contemporary setting.', 1, 0), --31
 
 --Immediate children of Horror
-('Gothic', 'A genre characterized by a combination of the elements of fear, horror, death, and gloom with elements of romanticism such as nature, individuality, and high emotion.'), --32
+('Gothic', 'A genre characterized by a combination of the elements of fear, horror, death, and gloom with elements of romanticism such as nature, individuality, and high emotion.', 1, 0), --32
 ('Slasher', 'A subgenre of horror that is focused on the stalking and murder of a group of people by a violent and psychopathic individual.', 1, 0), --33
 ('Supernatural', 'A subgenre of horror dealing with events caused by entities that lie outside of the natural world. Sometimes the events are presented in an ambiguous manner where there is an alternate psychological interpretation for them.', 1, 0), --34
 
