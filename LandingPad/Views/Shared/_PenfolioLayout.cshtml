@@ -8,10 +8,12 @@
     @Scripts.Render("~/bundles/modernizr")
     <!-- Google Web Fonts for Penfolio -->
     <link href="https://fonts.googleapis.com/css?family=Homemade+Apple|Love+Ya+Like+A+Sister|La+Belle+Aurore" rel="stylesheet" />
-    <!-- Include Quill stylesheet -->
-    <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet" />
     <!-- Penfolio layout styling -->
     <link href="~/Content/penfolio.css" rel="stylesheet" />
+    <!-- Include Quill stylesheet -->
+    <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet" />
+    <!--Styles for overwriting the parts of snow that were messing up my styles-->
+    <link href="~/Content/snowOverwrite.css" rel="stylesheet" />
 </head>
 <body>
     @Html.Partial("_NavBar")

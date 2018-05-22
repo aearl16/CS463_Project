@@ -18,6 +18,7 @@ namespace LandingPad.Controllers
     {
         private LandingPadContext db = new LandingPadContext();
         private ApplicationUserManager _userManager;
+        private int _profileID = 0;
 
         /// <summary>
         /// Used to get the user manager for helper methods
@@ -37,13 +38,14 @@ namespace LandingPad.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            //Get the user's ID
-            string id = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(id);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            return View(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).FirstOrDefault());
+
+            if(_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
+
+            return View(db.LPProfiles.Find(_profileID));
         }
 
         public List<Writing> OrderByNewest(List<Writing> wr)
@@ -96,14 +98,13 @@ namespace LandingPad.Controllers
         [ChildActionOnly]
         public PartialViewResult _GetPermissionWritings()
         {
-            //Get the user's ID
-            string id = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(id);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
 
-            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault());
+            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(_profileID);
 
             return PartialView(OrderByNewest(w));
         }
@@ -116,16 +117,15 @@ namespace LandingPad.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            //Get the user's ID
-            string uID = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(uID);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
-            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(pID);
-            List<LandingPad.Models.Writing> uw = db.Writings.Where(i => i.ProfileID == pID).ToList();
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
+
+            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(_profileID);
+            List<LandingPad.Models.Writing> uw = db.Writings.Where(i => i.ProfileID == _profileID).ToList();
 
             foreach (var item in uw)
             {
@@ -145,16 +145,15 @@ namespace LandingPad.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            //Get the user's ID
-            string uID = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(uID);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
-            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(pID);
-            List<LandingPad.Models.Writing> uw = db.Writings.Where(i => i.ProfileID == pID).ToList();
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
+
+            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(_profileID);
+            List<LandingPad.Models.Writing> uw = db.Writings.Where(i => i.ProfileID == _profileID).ToList();
 
             foreach (var item in uw)
             {
@@ -180,14 +179,12 @@ namespace LandingPad.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            //Get the user's ID
-            string uid = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(uid);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            //Get the LPProfile
-            LPProfile lpProfile = GetLPProfile(lpCurrentUser.UserID);
+
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
 
             if (id == null)
             {
@@ -203,7 +200,7 @@ namespace LandingPad.Controllers
             }
 
             //If the ProfileIDs don't match redirect to an error page
-            if (wr.ProfileID != lpProfile.ProfileID)
+            if (wr.ProfileID != _profileID)
             {
                 return RedirectToAction("EditError", "Error");
             }
@@ -427,14 +424,12 @@ namespace LandingPad.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            //Get the user's ID
-            string uid = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(uid);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            //Get the LPProfile
-            LPProfile lpProfile = GetLPProfile(lpCurrentUser.UserID);
+
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
 
             if (id == null)
             {
@@ -448,7 +443,7 @@ namespace LandingPad.Controllers
             }
 
             //If the ProfileIDs don't match redirect to an error page
-            if (wr.ProfileID != lpProfile.ProfileID)
+            if (wr.ProfileID != _profileID)
             {
                 return RedirectToAction("DeleteError", "Error");
             }
@@ -514,27 +509,51 @@ namespace LandingPad.Controllers
         [ChildActionOnly]
         public PartialViewResult _SelectAuthor()
         {
-            //Get the user's ID
-            string id = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(id);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
 
-            LPProfile pAuthor = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).FirstOrDefault();
-
-            return PartialView(pAuthor);
+            return PartialView(db.LPProfiles.Find(_profileID));
         }
 
         [ChildActionOnly]
         public PartialViewResult _SelectFormat()
         {
+            List<GenreFormat> FictionOnly = GetFictionOnly();
+            List<GenreFormat> NonfictionOnly = GetNonfictionOnly();
+
+            ViewBag.FictionOnly = String.Join(",", FictionOnly.Select(i => i.ParentFormatID));
+            ViewBag.NonfictionOnly = String.Join(",", NonfictionOnly.Select(i => i.ParentFormatID));
+
             return PartialView(db.FormatTags.ToList());
         }
 
         [ChildActionOnly]
         public PartialViewResult _SelectGenre()
         {
+            List<GenreCategory> FictionOnly = db.GenreCategories
+                .GroupBy(i => i.GenreID)
+                .Where(j => j.Select(k => k.TertiaryParentID).ToList().Contains(2) == false)
+                .Where(j => j.Select(k => k.SecondaryParentID).ToList().Contains(2) == false)
+                .Where(j => j.Select(k => k.ParentID).ToList().Contains(2) == false)
+                .SelectMany(r => r)
+                .Where(r => r.ParentID == 1 || r.SecondaryParentID == 1 || r.TertiaryParentID == 1)
+                .ToList();
+
+            List<GenreCategory> NonfictionOnly = db.GenreCategories
+                .GroupBy(i => i.GenreID)
+                .Where(j => j.Select(k => k.TertiaryParentID).ToList().Contains(1) == false)
+                .Where(j => j.Select(k => k.SecondaryParentID).ToList().Contains(1) == false)
+                .Where(j => j.Select(k => k.ParentID).ToList().Contains(1) == false)
+                .SelectMany(r => r)
+                .Where(r => r.ParentID == 2 || r.SecondaryParentID == 2 || r.TertiaryParentID == 2)
+                .ToList();
+
+            ViewBag.FictionOnly = String.Join(",", FictionOnly.Select(i => i.GenreID));
+            ViewBag.NonfictionOnly = String.Join(",", NonfictionOnly.Select(i => i.GenreID));
+
             return PartialView(db.GenreTags.ToList());
         }
 
@@ -553,11 +572,17 @@ namespace LandingPad.Controllers
         [ChildActionOnly]
         public PartialViewResult _Menu()
         {
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
+
             ViewBag.Pseudonyms = String.Join(",", db.Pseudonyms.Select(i => i.PseudonymID));
             ViewBag.FormatTags = String.Join(",", db.FormatTags.Select(i => i.FormatID));
             ViewBag.GenreTags = String.Join(",", db.GenreTags.Select(i => i.GenreID));
 
-            return PartialView();
+            return PartialView(db.LPProfiles.Find(_profileID));
         }
 
         [HttpGet]
@@ -568,13 +593,14 @@ namespace LandingPad.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            //Get the user's ID
-            string uID = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(uID);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            ViewBag.ProfileID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
+
+            ViewBag.ProfileID = _profileID;
 
             return View(db.LPProfiles.ToList());
         }
@@ -587,19 +613,18 @@ namespace LandingPad.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            //Get the user's ID
-            string uID = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(uID);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
 
             if (Int32.Parse(form["ProfileID-" + id]) == 0)
             {
                 FriendRequest fr = new FriendRequest()
                 {
-                    RequesterProfileID = pID,
+                    RequesterProfileID = _profileID,
                     RequesteeProfileID = id,
                     RequesterPseudonymID = null,
                     RequesteePseudonymID = null,
@@ -612,7 +637,7 @@ namespace LandingPad.Controllers
             {
                 FriendRequest fr = new FriendRequest()
                 {
-                    RequesterProfileID = pID,
+                    RequesterProfileID = _profileID,
                     RequesteeProfileID = id,
                     RequesterPseudonymID = Int32.Parse(form["ProfileID-" + id]),
                     RequesteePseudonymID = null,
@@ -634,19 +659,18 @@ namespace LandingPad.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            //Get the user's ID
-            string uID = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(uID);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
 
             if (Int32.Parse(form["PseudonymID-" + id]) == 0)
             {
                 FriendRequest fr = new FriendRequest()
                 {
-                    RequesterProfileID = pID,
+                    RequesterProfileID = _profileID,
                     RequesteeProfileID = db.Pseudonyms.Where(i => i.PseudonymID == id).FirstOrDefault().ProfileID,
                     RequesterPseudonymID = null,
                     RequesteePseudonymID = id,
@@ -659,7 +683,7 @@ namespace LandingPad.Controllers
             {
                 FriendRequest fr = new FriendRequest()
                 {
-                    RequesterProfileID = pID,
+                    RequesterProfileID = _profileID,
                     RequesteeProfileID = db.Pseudonyms.Where(i => i.PseudonymID == id).FirstOrDefault().ProfileID,
                     RequesterPseudonymID = Int32.Parse(form["PseudonymID-" + id]),
                     RequesteePseudonymID = id,
@@ -737,13 +761,6 @@ namespace LandingPad.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            //Get the user's ID
-            string uID = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(uID);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
 
             Friendship f1 = db.Friendships.Find(id);
             Friendship f2 = db.Friendships.Where(i => i.FirstFriendID == f1.SecondFriendID && i.SecondFriendID == f1.FirstFriendID && i.FirstPseudonymID == f1.SecondPseudonymID && i.SecondPseudonymID == f1.FirstPseudonymID).FirstOrDefault();
@@ -766,14 +783,14 @@ namespace LandingPad.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            //Get the user's ID
-            string uID = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(uID);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
 
-            return View(db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault());
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
+
+            return View(db.LPProfiles.Find(_profileID));
         }
 
         [HttpPost]
@@ -784,17 +801,16 @@ namespace LandingPad.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            //Get the user's ID
-            string uID = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(uID);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser((string)currentUser.Email);
-            int pID = db.LPProfiles.Where(i => i.UserID == lpCurrentUser.UserID).Select(i => i.ProfileID).FirstOrDefault();
+
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
 
             ProfileRole pr = new ProfileRole()
             {
-                ProfileID = pID,
+                ProfileID = _profileID,
                 RoleID = id
             };
             db.ProfileRoles.Add(pr);
@@ -1087,6 +1103,18 @@ namespace LandingPad.Controllers
         [HttpGet]
         public ActionResult ViewWriting(int? id)
         {
+            //Check if logged in ==> Should be caught by [Authorize] but just in case
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Email == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
+
             if (id == null)
             {
                 return RedirectToAction("Index", "Writing");
@@ -1130,6 +1158,13 @@ namespace LandingPad.Controllers
 
             ViewBag.Byline = byline;
 
+            ViewBag.Collapse = "collapse";
+
+            if(wr.LPProfile.ProfileID == _profileID)
+            {
+                ViewBag.Collapse = "";
+            }
+
             return View(wr);
         }
 
@@ -1139,7 +1174,7 @@ namespace LandingPad.Controllers
                 return null;
 
             string output = Encoding.Unicode.GetString(input);
-            output = output.Replace("&lt;", "<").Replace("&gt;", ">").Replace("'", "&#39;").Replace('"'.ToString(), "&#34;");
+            output = output.Replace("&lt;", "<").Replace("&gt;", ">").Replace("'", "&#39;");
 
 
             return output;

@@ -1,4 +1,5 @@
-﻿<!--Menu that holds the editor and the other "pages" that are used for picking the options you want for that writing-->
+﻿@model LandingPad.Models.LPProfile
+<!--Menu that holds the editor and the other "pages" that are used for picking the options you want for that writing-->
 <div class="editorMenu">
     <div class="slideshowContainer">
         <form method="post" id="editorForm">
@@ -19,7 +20,14 @@
 
                 <!--when you click next, slide1 collapses and slide2 uncollapses-->
                 <div class="buttonGroup">
-                    <a class="nextPage" onclick='loadSlide("slide1", "slide2")'>Next</a>
+                    @if(Model.Pseudonyms.Count > 0)
+                    {
+                        <a class="nextPage" onclick='loadSlide("slide1", "slide2")'>Next</a>
+                    }
+                    else
+                    {
+                        <a class="nextPage" onclick='loadSlide("slide1", "slide3")'>Next</a>
+                    }
                 </div>
             </div> <!--slide1-->
 
@@ -46,7 +54,14 @@
 
                 <!--back uncollapses slide2 and next uncollapses slide4; both collapse slide3-->
                 <div class="buttonGroup">
-                    <a class="prevPage" onclick='loadSlide("slide3", "slide2")'>Back</a>
+                    @if(Model.Pseudonyms.Count > 0)
+                    {
+                        <a class="prevPage" onclick='loadSlide("slide3", "slide2")'>Back</a>
+                    }
+                    else
+                    {
+                        <a class="prevPage" onclick='loadSlide("slide3", "slide1")'>Back</a>
+                    }
                     <a class="nextPage" onclick='loadSlide("slide3", "slide4")'>Next</a>
                 </div>
             </div> <!--slide3-->
