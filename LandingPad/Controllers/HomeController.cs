@@ -65,7 +65,8 @@ namespace LandingPad.Controllers
             string Key = System.Configuration.ConfigurationManager.AppSettings["twKey"];
             string Secret = System.Configuration.ConfigurationManager.AppSettings["twSecret"];
             TwitterService service = new TwitterService(Key, Secret);
-            OAuthRequestToken requestToken = service.GetRequestToken("https://localhost:44315/Home/TwitterCallback" + "?id=" + sid);
+            OAuthRequestToken requestToken = service.GetRequestToken("https://landingpad.azurewebsites.net/Home/TwitterCallback" + "?id=" + sid); //For deployment
+           // OAuthRequestToken requestToken = service.GetRequestToken("https://localhost:44315/Home/TwitterCallback" + "?id=" + sid); //For testing purposes
             Uri uri = service.GetAuthenticationUrl(requestToken);
             if (CheckToken(Key))
             {
