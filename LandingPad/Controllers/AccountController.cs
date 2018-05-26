@@ -446,7 +446,7 @@ namespace LandingPad.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Manage");
+                return RedirectToAction("Index", "Writing");
             }
 
             if (ModelState.IsValid)
