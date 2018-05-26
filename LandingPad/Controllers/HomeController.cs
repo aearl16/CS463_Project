@@ -65,8 +65,8 @@ namespace LandingPad.Controllers
             string Key = System.Configuration.ConfigurationManager.AppSettings["twKey"];
             string Secret = System.Configuration.ConfigurationManager.AppSettings["twSecret"];
             TwitterService service = new TwitterService(Key, Secret);
-            OAuthRequestToken requestToken = service.GetRequestToken("https://landingpad.azurewebsites.net/Home/TwitterCallback" + "?id=" + sid); //For deployment
-           // OAuthRequestToken requestToken = service.GetRequestToken("https://localhost:44315/Home/TwitterCallback" + "?id=" + sid); //For testing purposes
+           // OAuthRequestToken requestToken = service.GetRequestToken("https://landingpad.azurewebsites.net/Home/TwitterCallback" + "?id=" + sid); //For deployment
+            OAuthRequestToken requestToken = service.GetRequestToken("https://localhost:44315/Home/TwitterCallback" + "?id=" + sid); //For testing purposes
             Uri uri = service.GetAuthenticationUrl(requestToken);
             if (CheckToken(Key))
             {
@@ -107,8 +107,8 @@ namespace LandingPad.Controllers
             string Key = System.Configuration.ConfigurationManager.AppSettings["twKey"];
             string Secret = System.Configuration.ConfigurationManager.AppSettings["twSecret"];
             Twitter twitterUser = new Twitter { };
-            //try
-            //{
+            try
+            {
                 TwitterService service = new TwitterService(Key, Secret);
                 OAuthAccessToken accessToken = service.GetAccessToken(requestToken, oauth_verifier);
                 service.AuthenticateWith(accessToken.Token, accessToken.TokenSecret);
@@ -136,11 +136,11 @@ namespace LandingPad.Controllers
                 repository.Add(twitterUser);
                 repository.Save();
                 return RedirectToAction("Settings/" + lpCurrentUser.UserID);
-        //}
-            //catch
-            //{
-            //    throw new System.InvalidOperationException("Twitter didnt like it");
-            //}
+        }
+            catch
+            {
+                throw new System.InvalidOperationException("Twitter didnt like it");
+            }
         }
 
         public ActionResult Index()
