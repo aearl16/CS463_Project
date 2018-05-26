@@ -53,59 +53,6 @@ namespace LandingPad.Controllers
             return View(lprepo.GetAll());
         }
 
-        // GET: LPProfiles/Details/5
-        public ActionResult Details()
-        {
-            if (!CheckLogin())
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            //Get the user's ID
-            string uid = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(uid);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
-            LPProfile lPProfile = lprepo.Get(lpCurrentUser.UserID);
-
-            if (lPProfile == null)
-            {
-                return HttpNotFound();
-            }
-            return View(lPProfile);
-        }
-
-        // GET: LPProfiles/Create
-        public ActionResult Create()
-        {
-            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email");
-            return View();
-        }
-
-        // POST: LPProfiles/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProfileID,UserID,PseudonymID,Birthdate,PhoneNumber,LPDescription,ProfilePhoto,DisplayRealName,Friends,Followers,Writers,Pseudonym")] LPProfile lPProfile)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    lprepo.SetModified(lPProfile);
-                    lprepo.Save();
-                    return RedirectToAction("Index");
-                }
-            }
-            catch (RetryLimitExceededException)
-            {
-                ModelState.AddModelError("", "Failed to create Profile");
-            }
-            ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", lPProfile.UserID);
-            return View(lPProfile);
-        }
-
         // GET: LPProfiles/Edit/5
         public ActionResult Edit()
         {
@@ -154,58 +101,6 @@ namespace LandingPad.Controllers
             }
             ViewBag.UserID = new SelectList(db.LPUsers, "UserID", "Email", lPProfile.UserID);
             return View(lPProfile);
-        }
-
-        // GET: LPProfiles/Delete/5
-        public ActionResult Delete()
-        {
-            if (!CheckLogin())
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            //Get the user's ID
-            string uid = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(uid);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
-            LPProfile lPProfile = lprepo.Get(lpCurrentUser.UserID);
-
-            if (lprepo.Get(lpCurrentUser.UserID) == null)
-            {
-                return HttpNotFound();
-            }
-            return View(lPProfile);
-        }
-
-        // POST: LPProfiles/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed()
-        {
-            if (!CheckLogin())
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            //Get the user's ID
-            string uid = GetUserID();
-            //Get ASP.NET User Object
-            ApplicationUser currentUser = GetUser(uid);
-            //Get the LPUser based on ASP.NET User's e-mail
-            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
-
-            lprepo.Remove(lpCurrentUser.UserID);
-            lprepo.Save();
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
 
         /*
