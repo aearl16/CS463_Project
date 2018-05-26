@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data;
 using System.Linq;
-using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LandingPad.DAL;
@@ -51,6 +47,28 @@ namespace LandingPad.Controllers
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser(currentUser.Email);
             return View(lprepo.GetAll());
+        }
+
+        // GET: LPProfiles/Details/5
+        public ActionResult Details()
+        {
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
+            LPProfile lPProfile = lprepo.Get(lpCurrentUser.UserID);
+
+            if (lPProfile == null)
+            {
+                return HttpNotFound();
+            }
+            return View(lPProfile);
         }
 
         // GET: LPProfiles/Edit/5
