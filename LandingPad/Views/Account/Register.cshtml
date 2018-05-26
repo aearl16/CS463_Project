@@ -37,7 +37,7 @@
             @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Username" })
         </div>
     </div>
-   *<div class="form-group">
+   <div class="form-group">
         <div>
             @Html.Recaptcha(theme: Recaptcha.Web.RecaptchaTheme.Clean)
         </div>
@@ -58,5 +58,4 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <link href="@Url.Content("~/Content/login.css")" rel="stylesheet" type="text/css" />
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 }
