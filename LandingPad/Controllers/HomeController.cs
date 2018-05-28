@@ -9,6 +9,7 @@ using Moq;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
 using System.Web;
+using System.Diagnostics;
 
 namespace LandingPad.Controllers
 {
@@ -58,6 +59,7 @@ namespace LandingPad.Controllers
             catch (Exception e)
             {
                 //do nothing
+                Debug.WriteLine(e.Message);
             }
 
             String sid = lpCurrentUser.UserID.ToString();
