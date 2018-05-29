@@ -394,7 +394,6 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\login.css" />
-    <Content Include="Content\newlogin.css" />
     <Content Include="Content\penfolio.css" />
     <Content Include="Content\snowOverwrite.css" />
     <Content Include="Content\SquareOneLogo.png" />
@@ -506,6 +505,7 @@
     <Content Include="Views\Error\InternalError.cshtml" />
     <Content Include="Views\LPProfiles\Details.cshtml" />
     <Content Include="Views\Error\ProfileEditError.cshtml" />
+    <Content Include="Views\Shared\_LoginLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Writing\_SelectGenre.cshtml" />
