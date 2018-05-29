@@ -504,6 +504,7 @@
     <Content Include="Views\Error\PageNotFound.cshtml" />
     <Content Include="Views\Error\InternalError.cshtml" />
     <Content Include="Views\LPProfiles\Details.cshtml" />
+    <Content Include="Views\Error\ProfileEditError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Writing\_SelectGenre.cshtml" />
