@@ -1,9 +1,10 @@
-﻿@model LandingPad.Models.LPProfile
+@model LandingPad.Models.LPProfile
+
 @{
     ViewBag.Title = "Profile";
 }
-<h2>
-    @if (Model.DisplayRealName == false)
+
+<h2>@if (Model.DisplayRealName == false)
 {
     @Html.DisplayFor(model => model.LPUser.Username)
 }
@@ -13,39 +14,51 @@ else
         @Html.DisplayFor(model => model.LPUser.GivenName)  @Html.DisplayFor(model => model.LPUser.Surname)
     </p>
 }
-</h2>
+    </h2>
+
 <div>
     <h4>Profile Page</h4>
+
     <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.LPUser.GivenName)
         </dt>
+
         <dd>
             @Html.DisplayFor(model => model.LPUser.GivenName)
         </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.LPUser.Surname)
         </dt>
+
         <dd>
             @Html.DisplayFor(model => model.LPUser.Surname)
         </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.ProfilePhoto)
         </dt>
+
         <dd>
             @Html.DisplayFor(model => model.ProfilePhoto)
         </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.LPUser.Birthdate)
         </dt>
+
         <dd>
             @Html.DisplayFor(model => model.LPUser.Birthdate)
         </dd>
+
         <dt>
             Age :
         </dt>
+
         <dd>
+
             @if (Model.LPUser.Birthdate.HasValue)
             {
                 var today = DateTime.Today;
@@ -56,51 +69,63 @@ else
                 }
                 <span>@age </span>
             }
+
         </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.LPUser.Email)
         </dt>
+
         <dd>
             @Html.DisplayFor(model => model.LPUser.Email)
         </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.LPDescription)
         </dt>
+
         <dd>
             @Html.DisplayFor(model => model.LPDescription)
         </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.Friends)
         </dt>
+
         <dd>
             @Html.DisplayFor(model => model.Friends)
         </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.Followers)
         </dt>
+
         <dd>
             @Html.DisplayFor(model => model.Followers)
         </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.Writers)
         </dt>
+
         <dd>
             @Html.DisplayFor(model => model.Writers)
         </dd>
 
-        <dt>
-            Current @Html.DisplayNameFor(model => model.Pseudonyms)
-        </dt>
+    
+    <dt>
+        Current @Html.DisplayNameFor(model => model.Pseudonyms)
+    </dt>
         <th>:</th>
-        @foreach (var item in Model.Pseudonyms)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(model => item.Pseudonym1)
-                </td>
-            </tr>
-        }
-    </dl>
+    @foreach (var item in Model.Pseudonyms)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => item.Pseudonym1)
+            </td>
+        </tr>
+    }
+        </dl>
 </div>
 <p>
     <button>
