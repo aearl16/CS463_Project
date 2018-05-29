@@ -136,6 +136,23 @@ namespace LPTesting
             TestRouteMatch("~/Error/DeleteError", "Error", "DeleteError");
         }
 
+        [Test]
+        public void StoreURL_ShouldMapTo_StoreView()
+        {
+            TestRouteMatch("~/Upload/Store", "Upload", "Store");
+        }
+
+        [Test]
+        public void ProfileEditErrorURL_ShouldMapTo_ProfileEditError()
+        {
+            TestRouteMatch("~/Error/ProfileEditError", "Error", "ProfileEditError");
+        }
+
+        [Test]
+        public void HomeIndexURL_ShouldMapTo_Index()
+        {
+            TestRouteMatch("~/Home/Index", "Home", "Index");
+        }
 
     }
 }

@@ -48,7 +48,7 @@
         <div class="descriptionText">
             <p>@Html.DisplayFor(model => model.DescriptionText)</p>
             <!--Links to view the full writing and to interact with it in other ways, such as edit and delete; edit and delete are in a separate span that can be collapsed if the writing doesn't belong to the user-->
-            <span class="viewMore"><a href="~/Writing/ViewWriting/@Model.WritingID">Read More</a><span class="forUserWriting collapse"> | <a href="~/Writing/Edit/@Model.WritingID">Edit</a> | <a href="~/Writing/Delete/@Model.WritingID">Delete</a></span></span>
+            <span class="viewMore"><a href="~/Writing/ViewWriting/@Model.WritingID">Read More</a><span class="forUserWriting collapse"> | <a href="~/Writing/Edit/@Model.WritingID">Edit</a> | <a href="~/Writing/Delete/@Model.WritingID">Delete</a></span> | <a href="~/Upload/Download/@Model.WritingID">Download</a></span>
         </div> <!--descriptionText-->
     </div> <!--writingDescription-->
     <!--A container to hold all of the tags associated with this piece of writing; has arrow buttons on each side that can be used to scroll through tags; each tag is also a link to a view that returns writings that share that tag-->
