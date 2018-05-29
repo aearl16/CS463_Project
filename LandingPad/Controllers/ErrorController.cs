@@ -39,5 +39,11 @@ namespace LandingPad.Controllers
         {
             return View();
         }
+
+       [HttpGet]
+       public ActionResult ProfileEditError()
+        {
+            return View();
+        }
     }
 }
