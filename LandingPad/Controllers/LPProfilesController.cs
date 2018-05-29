@@ -62,6 +62,7 @@ namespace LandingPad.Controllers
             ApplicationUser currentUser = GetUser(uid);
             //Get the LPUser based on ASP.NET User's e-mail
             LPUser lpCurrentUser = GetLPUser(currentUser.Email);
+            //Get the current user's profile based on the user ID
             LPProfile lPProfile = lprepo.Get(lpCurrentUser.UserID);
 
             if (lPProfile == null)

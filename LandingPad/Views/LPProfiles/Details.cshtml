@@ -1,47 +1,73 @@
 ﻿@model LandingPad.Models.LPProfile
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Profile";
 }
-
-@*<h2>@Html.DisplayFor(model => model.LPUser.Username) </h2>*@
-@*@Html.DisplayFor(model => model.LPUser.FirstName) @Html.DisplayFor(model => model.LPUser.LastName)*@
-<h2 id="Name" style="display:block">
+<h2>
+    @if (Model.DisplayRealName == false)
+{
     @Html.DisplayFor(model => model.LPUser.Username)
+}
+else
+{
+    <p>
+        @Html.DisplayFor(model => model.LPUser.GivenName)  @Html.DisplayFor(model => model.LPUser.Surname)
+    </p>
+}
 </h2>
 <div>
+    <h4>Profile Page</h4>
+    <hr />
     <dl class="dl-horizontal">
         <dt>
-            Birthday
+            @Html.DisplayNameFor(model => model.LPUser.GivenName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.LPUser.Birthdate)
+            @Html.DisplayFor(model => model.LPUser.GivenName)
         </dd>
         <dt>
-            Email
+            @Html.DisplayNameFor(model => model.LPUser.Surname)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.LPUser.Email)
-        </dd>
-        <dt>
-            Phone Number
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.LPUser.PhoneNumber)
-        </dd>
-        <dt>
-            Display Real Name
-        </dt>
-        <dd>
-            <input type="checkbox" id="FullName"
-                   onclick="DisplayFullName()" /> By checking this box, you allow others to view your FULL real name
-
-            @*@Html.DisplayFor(model => model.DisplayRealName)*@
+            @Html.DisplayFor(model => model.LPUser.Surname)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.ProfilePhoto)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.ProfilePhoto)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LPUser.Birthdate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LPUser.Birthdate)
+        </dd>
+        <dt>
+            Age :
+        </dt>
+        <dd>
+            @if (Model.LPUser.Birthdate.HasValue)
+            {
+                var today = DateTime.Today;
+                var age = today.Year - Model.LPUser.Birthdate.Value.Year;
+                if (Model.LPUser.Birthdate > today.AddYears(-age))
+                {
+                    age--;
+                }
+                <span>@age </span>
+            }
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LPUser.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LPUser.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LPDescription)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LPDescription)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Friends)
@@ -61,27 +87,26 @@
         <dd>
             @Html.DisplayFor(model => model.Writers)
         </dd>
+
+        <dt>
+            Current @Html.DisplayNameFor(model => model.Pseudonyms)
+        </dt>
+        <th>:</th>
+        @foreach (var item in Model.Pseudonyms)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => item.Pseudonym1)
+                </td>
+            </tr>
+        }
     </dl>
 </div>
 <p>
     <button>
         @Html.ActionLink("Settings", "Edit", new { id = Model.ProfileID })
-    </button> |
+    </button>
     <button>
-        @Html.ActionLink("Back", "Index")
+        @Html.ActionLink("TimeLine", "Index", "Home")
     </button>
 </p>
-<script>
-    function DisplayFullName() {
-        var checkBox = document.getElementById("FullName");
-        var Name = document.getElementById("Name");
-        if (checkBox.checked == true) {
-            Name.innerHTML = " @Html.DisplayFor(model => model.LPUser.FirstName) @Html.DisplayFor(model => model.LPUser.LastName)";
-            Name.style.display = "block";
-        } else {
-            Name.innerHTML = "@Html.DisplayFor(model => model.LPUser.Username)";
-            Name.style.display = "block";
-        }
-    }
-
-</script>
