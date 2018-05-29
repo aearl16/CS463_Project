@@ -136,6 +136,39 @@ namespace LPTesting
             TestRouteMatch("~/Error/DeleteError", "Error", "DeleteError");
         }
 
+        //Melissa
+        [Test]
+        public void CreateURL_ShouldMapTo_Create()
+        {
+            TestRouteMatch("~/Writing/Create", "Writing", "Create");
+        }
 
+        //Melissa
+        [Test]
+        public void FileUploadURL_ShouldMapTo_FileUpload()
+        {
+            TestRouteMatch("~/Upload/FileUpload", "Upload", "FileUpload");
+        }
+
+        //Melissa
+        [Test]
+        public void StoreURL_ShouldMapTo_Store()
+        {
+            TestRouteMatch("~/Upload/Store", "Upload", "Store");
+        }
+
+        //Melissa
+        [Test]
+        public void UploadEditURL_ShouldMapTo_UploadEdit()
+        {
+            TestRouteMatch("~/Upload/UploadEdit", "Upload", "UploadEdit");
+        }
+
+        //Melissa
+        [Test]
+        public void LoginURL_ShouldMapTo_Login()
+        {
+            TestRouteMatch("~/Account/Login", "Account", "Login");
+        }
     }
 }
