@@ -1,0 +1,6 @@
+﻿@model IEnumerable<LandingPad.Models.Writing>
+
+@foreach (var item in Model)
+{
+    @Html.Partial("_WritingPreview", item)
+}

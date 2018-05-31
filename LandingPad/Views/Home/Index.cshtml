@@ -47,8 +47,8 @@
             <div class="center">
                 @if (Convert.ToDateTime(@ViewBag.EndTime) > DateTime.Now)
                 {
-                    //<button id="fixedbutton" onclick="tweetTweet()">Tweet</button>
-                    <a href="https://twitter.com/intent/tweet" class="twitter-share-button" ></a> //This makes it work on local? for somereason without it it doesnt work
+                    <button id="fixedbutton" onclick="tweetTweet()">Tweet</button>
+                    //<a href="https://twitter.com/intent/tweet" class="twitter-share-button" ></a> //This makes it work on local? for somereason without it it doesnt work
 
                 }
                 <input type="button" value="Create Writing" onclick="location.href='@Url.Action("Create", "Writing", new {controller = "Writing" })'" />
@@ -98,8 +98,5 @@
 </body>
 @*<input type="button" value="View" onclick="location.href='@Url.Action("ViewWriting", "Writing", new { id = item.WritingID, controller = "Writing" })'" />*@
 
-@foreach (var item in Model)
-{
-    @Html.Partial("../Writing/_WritingPreview", item)
-}
+@Html.Action("_IfYouWantSomethingDone", "Writing");
 
