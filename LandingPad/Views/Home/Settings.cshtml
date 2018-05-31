@@ -52,18 +52,27 @@
     {
         <p>&#10060; You are not currently connected! </p>
     }
-    @*<input type="button" value="Logout of Twitter"
-        onclick="window.open('https://twitter.com/login?lang=en')">*@
 
-    <input type="button" value="Logout of Twitter"
-           onclick="window.open('https://twitter.com/logout')">
+    @using (Html.BeginForm("TwitterLogOut", "Home", FormMethod.Get))
+    { <br /> <button class="btn btn-info"
+                     type="submit"
+                     id="twitter">
+        Logout of Twitter
+    </button>
+    }
 
+@if (Convert.ToDateTime(@ViewBag.EndTime) > DateTime.Now)
+{
+    <br />
+    <br />
 
-    @*@using (Html.BeginForm("TwitterAuth", "Home", FormMethod.Get))
-        {
-            <br />
-                <button type="submit" id="twitter">Login with Twitter</button>
-        }*@
+    //<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a>//on local this makes it work? but without it it breaks?
+
+    <a class="twitter-timeline" data-width="800" data-height="400" data-link-color="#19CF86" href="https://twitter.com/@ViewBag.TwitterName/likes">Tweets Liked by </a>
+
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+}
+
 
 </body>
 
