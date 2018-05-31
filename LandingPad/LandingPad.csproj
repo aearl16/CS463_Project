@@ -395,7 +395,6 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\login.css" />
     <Content Include="Content\LP MINI.png" />
-    <Content Include="Content\newlogin.css" />
     <Content Include="Content\penfolio.css" />
     <Content Include="Content\snowOverwrite.css" />
     <Content Include="Content\SquareOneLogo.png" />
