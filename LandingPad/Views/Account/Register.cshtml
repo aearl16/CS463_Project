@@ -3,6 +3,7 @@
 @model LandingPad.Models.RegisterViewModel
 @{
     ViewBag.Title = "Create an Account";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
 
 <body id="bgGreen">
@@ -63,8 +64,3 @@
     </div>
 }
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    <link href="@Url.Content("~/Content/newlogin.css")" rel="stylesheet" type="text/css" />
-}
