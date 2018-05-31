@@ -14,26 +14,10 @@ namespace LandingPad.Controllers
 {
     [RequireHttps]
     [Authorize]
-    public class WritingController : Controller
+    public class WritingController : AccessController
     {
         private LandingPadContext db = new LandingPadContext();
-        private ApplicationUserManager _userManager;
         private int _profileID = 0;
-
-        /// <summary>
-        /// Used to get the user manager for helper methods
-        /// </summary>
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
 
         public ActionResult Index()
         {
@@ -1401,64 +1385,6 @@ namespace LandingPad.Controllers
             return db.GenreCategories
                 .Where(i => i.TertiaryParentID == null)
                 .ToList();
-        }
-
-        /*
-         * Begin Helper method section
-         */
-        /// <summary>
-        /// Helper method that checks if a user is logged in
-        /// </summary>
-        /// <returns> tf if the user is logged in</returns>
-        private bool CheckLogin()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets the currently logged in user's ID
-        /// </summary>
-        /// <returns> string id of the current user</returns>
-        private string GetUserID()
-        {
-            return User.Identity.GetUserId();
-        }
-
-        /// <summary>
-        /// Gets the user object from the database
-        /// </summary>
-        /// <returns> ApplicationUser object of the current user </returns>
-        private ApplicationUser GetUser(string id)
-        {
-            return UserManager.FindById(id);
-        }
-
-        /// <summary>
-        /// Gets the LP user object based on e-mail link
-        /// Can also be used separately for obtaining the user object
-        /// </summary>
-        /// <param name="email"></param>
-        /// <returns> LPUser object after ApplicationUser object</returns>
-        private LPUser GetLPUser(string email)
-        {
-            return db.LPUsers.Where(em => em.Email == email).SingleOrDefault();
-        }
-
-        /// <summary>
-        /// Get the curent user's profile based on the LPUser id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>LPProfile object</returns>
-        private LPProfile GetLPProfile(int id)
-        {
-            return db.LPProfiles.Where(lid => lid.UserID == id).SingleOrDefault();
         }
     }
 }

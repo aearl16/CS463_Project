@@ -136,6 +136,7 @@ namespace LPTesting
             TestRouteMatch("~/Error/DeleteError", "Error", "DeleteError");
         }
 
+<<<<<<< HEAD
         //Melissa
         [Test]
         public void CreateURL_ShouldMapTo_Create()
@@ -169,6 +170,24 @@ namespace LPTesting
         public void LoginURL_ShouldMapTo_Login()
         {
             TestRouteMatch("~/Account/Login", "Account", "Login");
+=======
+        [Test]
+        public void StoreURL_ShouldMapTo_StoreView()
+        {
+            TestRouteMatch("~/Upload/Store", "Upload", "Store");
+        }
+
+        [Test]
+        public void ProfileEditErrorURL_ShouldMapTo_ProfileEditError()
+        {
+            TestRouteMatch("~/Error/ProfileEditError", "Error", "ProfileEditError");
+        }
+
+        [Test]
+        public void HomeIndexURL_ShouldMapTo_Index()
+        {
+            TestRouteMatch("~/Home/Index", "Home", "Index");
+>>>>>>> 7b6445d704d8d1aeccb12e6b9bf5cc1c4a31589f
         }
     }
 }

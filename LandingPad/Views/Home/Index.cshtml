@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Home Page";
 }
+
 <body>
 
     <style>
@@ -32,9 +33,11 @@
         @*Testing to see if this works*@
         @if (Convert.ToDateTime(@ViewBag.EndTime) > DateTime.Now)
         {
-           // <a class="twitter-timeline" data-width="600" data-height="300" data-theme="dark" data-link-color="#19CF86" href="https://twitter.com/@ViewBag.TwitterName">Tweets by @ViewBag.TwitterName</a>
-            <a class="twitter-timeline" data-width="600" data-height="300" data-link-color="#19CF86" href="https://twitter.com/@ViewBag.TwitterName?ref_src=twsrc%5Etfw">Tweets by @ViewBag.TwitterName</a>
-           // <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                //<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a>
+
+
+            <a class="twitter-timeline" data-width="600" data-height="300" data-link-color="#19CF86" href="https://twitter.com/@ViewBag.TwitterName">Tweets by @ViewBag.TwitterName</a>
+            //<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
         }
 
@@ -45,6 +48,8 @@
                 @if (Convert.ToDateTime(@ViewBag.EndTime) > DateTime.Now)
                 {
                     <button id="fixedbutton" onclick="tweetTweet()">Tweet</button>
+                    //<a href="https://twitter.com/intent/tweet" class="twitter-share-button" ></a> //This makes it work on local? for somereason without it it doesnt work
+
                 }
                 <input type="button" value="Create Writing" onclick="location.href='@Url.Action("Create", "Writing", new {controller = "Writing" })'" />
             </div>
@@ -96,14 +101,5 @@
 @foreach (var item in Model)
 {
     @Html.Partial("../Writing/_WritingPreview", item)
-}
-
-
-
-@section Scripts {
-
-    @Scripts.Render("~/bundles/jqueryval")
-    <link href="@Url.Content("~/Content/penfolio.css")" rel="stylesheet" type="text/css" />
-    @*should be in normal layout page*@
 }
 
