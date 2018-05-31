@@ -507,6 +507,7 @@
     <Content Include="Views\LPProfiles\Details.cshtml" />
     <Content Include="Views\Error\ProfileEditError.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\Writing\_IfYouWantSomethingDone.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Writing\_SelectGenre.cshtml" />

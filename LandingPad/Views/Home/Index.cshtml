@@ -98,8 +98,5 @@
 </body>
 @*<input type="button" value="View" onclick="location.href='@Url.Action("ViewWriting", "Writing", new { id = item.WritingID, controller = "Writing" })'" />*@
 
-@foreach (var item in Model)
-{
-    @Html.Partial("../Writing/_WritingPreview", item)
-}
+@Html.Action("_IfYouWantSomethingDone", "Writing");
 

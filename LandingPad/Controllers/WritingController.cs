@@ -97,6 +97,25 @@ namespace LandingPad.Controllers
             return PartialView(OrderByNewest(w));
         }
 
+        [ChildActionOnly]
+        public PartialViewResult _IfYouWantSomethingDone()
+        {
+            if (_profileID == 0)
+            {
+                int userId = db.LPUsers.Where(i => i.Username == User.Identity.Name).FirstOrDefault().UserID;
+                _profileID = db.LPProfiles.Where(i => i.UserID == userId).FirstOrDefault().ProfileID;
+            }
+
+            List<LandingPad.Models.Writing> w = GetAllWritingAvailable(_profileID);
+
+            foreach(var item in db.Writings.Where(i => i.ProfileID == _profileID).ToList())
+            {
+                w.Add(item);
+            }
+
+            return PartialView(OrderByNewest(w));
+        }
+
         //Displays writings that have the format tag with a FormatID of id
         public ActionResult SearchByFormatTag(int id)
         {
