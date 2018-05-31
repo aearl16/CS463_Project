@@ -21,6 +21,34 @@ namespace LandingPad.Controllers
         ITwitterRepository repository = new TwitterRepository(new LandingPadContext());
         IWritingRepository wrepo = new WritingRepository(new LandingPadContext());
 
+
+        [HttpGet]
+        public ActionResult TwitterLogOut()
+        {
+            if (!CheckLogin())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //Get the user's ID
+            string uid = GetUserID();
+            //Get ASP.NET User Object
+            ApplicationUser currentUser = GetUser(uid);
+            //Get the LPUser based on ASP.NET User's e-mail
+            LPUser lpCurrentUser = GetLPUser(currentUser.Email);
+            try
+            {
+                repository.Remove(lpCurrentUser.UserID);
+                repository.Save();
+            }
+            catch (Exception e)
+            {
+                //do nothing
+                Debug.WriteLine(e.Message);
+            }
+
+            return RedirectToAction("Settings/" + lpCurrentUser.UserID);
+        }
+
         [HttpGet]
         public ActionResult TwitterAuth()
         {
